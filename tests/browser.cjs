@@ -12,11 +12,11 @@ await page.evaluate(()=>{for(let i=0;i<30;i++)$('character').dispatchEvent(new P
 assert.equal(await page.locator('#points').innerText(),'30');
 await page.waitForTimeout(400);assert.ok(await page.evaluate(()=>visualGrowth>0));
 await page.locator('#upgrade0').click();assert.equal(await page.locator('#points').innerText(),'10');assert.equal(await page.locator('#clickstat').innerText(),'+2원');
-await page.evaluate(()=>{state.total=1000;render()});assert.equal(await page.locator('[data-photo="2"]').getAttribute('aria-pressed'),'true');
+await page.evaluate(()=>{state.total=1000001;render()});assert.equal(await page.locator('[data-photo="2"]').getAttribute('aria-pressed'),'true');
 await page.locator('[data-photo="0"]').click();await page.waitForTimeout(350);await page.reload();assert.equal(await page.locator('[data-photo="0"]').getAttribute('aria-pressed'),'true');
 const fever=await page.evaluate(()=>{snackUntil=Date.now()+12000;$('feverSnack').click();const before=state.points;tap(100,100);return{delta:state.points-before,cooldown:nextSnack-Date.now()}});
 assert.equal(fever.delta,4);assert.ok(fever.cooldown>=89000&&fever.cooldown<=90000);await page.waitForTimeout(300);assert.ok(await page.locator('body').evaluate(e=>e.classList.contains('fever-active')));
-await page.evaluate(()=>{state.counts[2]=2;render()});await page.waitForTimeout(1100);assert.equal(await page.locator('#autoRate').innerText(),'초당 +4원');assert.ok(await page.locator('.income-bubble').count()>0);
+await page.evaluate(()=>{state.counts[2]=2;render()});await page.waitForTimeout(1100);assert.equal(await page.locator('#autoRate').innerText(),'초당 +1만 1500원');assert.ok(await page.locator('.income-bubble').count()>0);
 assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
 await page.evaluate(()=>{state.counts[0]=32000000000});assert.equal(await page.evaluate(()=>format(183429830000)),'1834억 2983만');await page.evaluate(()=>{state.counts[0]=1;state.taps=100;render()});await page.locator('#achButton0').click();assert.equal(await page.evaluate(()=>questGoal(achievements[0])),200);assert.equal(await page.locator('#achButton0').isEnabled(),false);
 const downloadPromise=page.waitForEvent('download');await page.locator('#shareCard').click();assert.equal((await downloadPromise).suggestedFilename(),'woojin-record.png');
