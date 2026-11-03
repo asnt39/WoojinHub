@@ -14,7 +14,7 @@ def run(cps):
   candidates=[]
   for i in range(8):
    if lvl<i+1:continue
-   cost=math.ceil(base[i]*1.72**cnt[i]);full=cost+(0 if opened[i] else base[i]*12)
+   cost=math.ceil(base[i]*2.25**cnt[i]);full=cost+(0 if opened[i] else base[i]*12)
    gain=(prod(i,cnt[i]+1)-prod(i,cnt[i]))*(cps if types[i]=='c' else 1)
    score=max(0,full-cash)/max(rate,1)+full/max(gain,.01)
    candidates.append((score,i,full))
