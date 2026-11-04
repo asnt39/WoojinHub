@@ -165,3 +165,24 @@ All passed in this environment with `/usr/bin/chromium`:
 `docs/GTW-GRAPHICS-HANDOFF.md` and the latest commit. Do not redo completed assets.
 Verify the current game before editing; prioritize the highest unfinished visual
 quality item and commit/test each unit.”
+
+## Confirmed remote save and private deployment
+- Working branch: `feat/gtw-graphics`.
+- Last tested product/source commit, confirmed pushed to GitHub and Sites source:
+  `d1e13bee9a795f084c519bb2cedec288497f6400`.
+- GitHub checkpoint history: `b4e42dc` analysis; `3477ebf` first integrated art;
+  `a0f84a3` merge of remote checkpoint; `d1e13be` actions and final verification.
+- GitHub default branch was NOT merged or force-pushed. Existing saved game data and
+  hosting/access manifest unchanged. Any subsequent commit here is documentation only.
+- Private deployment SUCCEEDED at 2026-11-04 22:47 UTC.
+  URL: https://woojingame.asnt1.chatgpt.site/#city
+  Version: `appgprj_6ae9c47115308191b262fff9998049d6~appgver_edb1be9c2c588191ab8e111f380630ef`
+  Deployment: `appgdep_6aebb600786c8191991c198dc927b61d`
+- Before publishing, access revision 3 was confirmed custom owner-only: one owner,
+  no groups/external visitors. Used the owner-private deployment operation, which
+  checks and preserves that audience. No access setting mutation was made.
+- Browser gameplay verification was local Chromium; no physical-phone playtest or
+  post-deployment authenticated browser playthrough is claimed.
+- To inspect the last tested state safely: `git worktree add /tmp/gtw-tested d1e13be`.
+  To inspect the pre-graphics state use `0e1805e` in a separate worktree. Do not reset
+  current work or deploy an older version without checking the user's intent.
