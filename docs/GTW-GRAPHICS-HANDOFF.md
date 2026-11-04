@@ -1,4 +1,6 @@
-# GTW graphics — work in progress
+# GTW graphics — playable graphics update, overall PARTIAL
+
+Latest status is the final checkpoint at the end of this file; earlier entries are chronological.
 
 ## Baseline / recovery
 - Working branch: `feat/gtw-graphics`, based on `feat/gtw-city` at `0e1805e`.
@@ -85,3 +87,81 @@ Its original handoff is preserved in `GTW-GRAPHICS-CHECKPOINT-B.md`.
 Kept `city-scene.js` loaded for improved fallback outer-district buildings; first
 district uses the new raster sprites and ground. Both remote smoke tests retained;
 updated runtime smoke harness to load actual PNGs and await asset initialization.
+
+
+## Final graphics checkpoint (before private deployment)
+Last confirmed GitHub remote checkpoint: `a0f84a3` (includes remote `55a2567`).
+
+### Implemented and actually verified
+- Separate generated environment sprites derived from A, and high-viewpoint hero/NPC
+  sprites derived from A/B/C. Original uploads untouched. D used for new action atlas.
+- Four-direction idle, two walking contacts and two distinct running contacts for
+  Woojin, foot-anchored at (20,44). Animation advances with actual travelled distance.
+- Four-direction interaction reach/extend, crouch on entry, step on exit, brief surprise
+  on pickup/reward, automatically returning to normal. These are short transitions,
+  not full-length cinematic animation. Hurt pose exists but is NOT wired to damage;
+  anger, fall/recovery animations are NOT implemented.
+- Three NPC roles with directional idle/walk poses, stopping while approached.
+  Two side-walk contact poses remain too similar; polish needed for stronger gait.
+- Two building sprites in the first district, detailed sedan, two tree variants,
+  lamps, bench, vending, bins, bicycle; layered ground and opaque sprite outlines.
+  Second generated car (van) is prepared but not placed in the world.
+- Retained remote checkpoint's outer-district procedural buildings; these remain
+  visibly lower quality and have NOT been reported as finished final artwork.
+- Fixed bag render order (now sorted by feet), expanded tree fade coverage to actual
+  canopy, solid prop-base collisions, lighter road grain, scrollable short-screen menu.
+
+### Validation actually run
+All passed in this environment with `/usr/bin/chromium`:
+- `node tests/city.cjs`: real keyboard, 8 directions, swept collision, car entry/drive/
+  steering/exit, mission sequence, reward, save/backup, retained hub iframe, touch cancel.
+- `node tests/city-stability.cjs`: Chromium CDP two-finger joystick + run and release;
+  60,000 simulated ticks / 1,000 simulated seconds without invalid positions.
+- `node tests/city-graphics.cjs`: loads all runtime assets, frame opacity/bounds/feet,
+  separate walk/run frames and keyboard speed, standing NPC, timed interaction,
+  pause/resume, PC/mobile/landscape/tablet layout, actual screenshots.
+- `node tests/city-runtime.cjs`: native canvas runtime smoke including same saves,
+  mission, driving, 60,000 ticks. Harness updated for actual image loading.
+- `node tests/city-scene.cjs`: retained previous checkpoint's procedural renderer test.
+  Its 361-color count describes that fallback, NOT proof of new art quality.
+- `node tests/browser.cjs`, `node tests/merge.cjs`, `node tests/quality.cjs`,
+  `node tests/adventure-geometry.cjs`: all passed for existing three games.
+- Re-ran city and graphics tests after final tree-anchor/bag-order/short-menu changes.
+- 600 repeated browser draw calls averaged ~0.05ms CPU submission on this runner.
+  This is NOT measured end-to-end FPS or a real long-duration mobile performance test.
+- Full combat bot `tests/adventure.cjs` not re-run: its known stage-3 baseline failure
+  remains outside this change. No grow/merge/adventure product code changed.
+- Screenshots genuinely opened and inspected: `docs/gtw-graphics/desktop.png`
+  (1280×800), `mobile.png` (390×844), `intersection.png`, `park.png`, `frames.png`,
+  `action-frames.png`. `reference-comparison.jpg` puts A next to actual gameplay.
+
+### Honest quality assessment
+1. Material detail: store, trees and car much closer to A; ground and park still simpler.
+2. Consistency: first district uses one muted palette and logical pixel grid; outer
+   procedural buildings do not yet match that quality.
+3. Perspective: regenerated overhead actors replace low-view input, roof/facade view
+   broadly matches. Original urban layout differs from A and is intentionally retained.
+4. Proportions/readability: normal adult bodies, slight belly, high-view hair/shoulders,
+   common feet anchors; emotions could use further hand-tuned facial pixel work.
+5. Density: first storefront detailed; park and residential streets still sparse.
+6. Lighting: upper-left highlights and lower-right ground shadows consistent in first
+   district. Generated facade lighting and simple world shadows need finer matching.
+7. Motion: sprites remain crisp in actual browser play; few animation contacts are
+   visibly less fluid than a finished commercial sprite set.
+**Overall PARTIAL. Not claiming parity with reference or commercial release quality.**
+
+### Next session, exact starting point
+1. Read this document, `git status`, `git log -5`, fetch and inspect remote before pushing.
+2. Run `node tests/city.cjs` with local server 8766; inspect the stored comparison.
+3. Highest priority: finish first-district ground/park material and NPC walk contacts.
+4. Adapt remaining five NPC designs (C fourth role and all E); do not paste low-view
+   static source directly or claim recoloring equals a new animated character.
+5. Improve/complete facial states, multi-frame boarding and hit/recovery; then extend
+   sprite building quality to the two outer neighborhoods. Keep saves/access unchanged.
+6. Use functional checkpoints and pushes. Re-run relevant checks before each commit.
+
+### Restart command
+“Continue GTW graphics in asnt39/woojingame. First read
+`docs/GTW-GRAPHICS-HANDOFF.md` and the latest commit. Do not redo completed assets.
+Verify the current game before editing; prioritize the highest unfinished visual
+quality item and commit/test each unit.”

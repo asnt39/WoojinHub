@@ -70,6 +70,12 @@ for top,bottom in [(100,405),(450,760),(800,1105),(1160,1470)]:
         hero.append((left,top,right,bottom))
 atlas('woojin','woojin',hero,41)
 
+# Actions have a larger drawn head relative to their total height: use 38px rather
+# than blindly scaling every silhouette to 41px. Crouches retain their lower height.
+action_rows=[(30,280),(280,525),(525,765),(765,1010)]
+action_cols=[(100,285),(325,530),(550,745),(785,960),(1010,1200),(1240,1425)]
+atlas('actions','actions',[(l,t,r,b) for t,b in action_rows for l,r in action_cols],38)
+
 # NPC sheet is 1760×880; 9 visually inspected columns, four distinct direction rows.
 cols=[(55,200),(260,405),(455,610),(650,805),(850,1000),(1040,1200),(1235,1390),(1420,1570),(1605,1758)]
 rows=[(0,220),(220,445),(445,665),(665,880)]

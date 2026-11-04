@@ -11,7 +11,7 @@ window.CityGround = (A, size) => {
   }));
   const asphalt=Array.from({length:5},()=>A.tile(32,32,c=>{
     R(c,0,0,32,32,'#53535c');
-    for(let n=0;n<700;n++)R(c,random()*32,random()*32,1,1,random()>.5?'#b2a6a11a':'#1b223120');
+    for(let n=0;n<700;n++)R(c,random()*32,random()*32,1,1,random()>.5?'#b2a6a10c':'#1b223112');
   }));
   return A.tile(size,size,c=>{
     for(let y=0;y<size;y+=16)for(let x=0;x<size;x+=16)c.drawImage(sidewalk[Math.floor(random()*8)],x,y);
@@ -21,7 +21,7 @@ window.CityGround = (A, size) => {
       for(let i=0;i<Math.max(w,h);i+=12)R(c,x+(w>h?i:0),y+(h>w?i:0),w>h?1:w,h>w?1:h,'#857e75');}
     for(const [y,h]of[[0,395],[495,705]]){curb(384,y,6,h);curb(600,y,6,h);R(c,391,y,2,h,'#d9b45e');R(c,597,y,2,h,'#d9b45e');}
     for(const [x,w]of[[0,390],[600,600]]){curb(x,389,w,6);curb(x,495,w,6);R(c,x,396,w,2,'#d9b45e');R(c,x,492,w,2,'#d9b45e');}
-    function paint(x,y,w,h,color='#dcd4c1'){R(c,x,y,w,h,color);for(let i=0;i<w*h/12;i++)R(c,x+random()*w,y+random()*h,1,1,'#62616888');}
+    function paint(x,y,w,h,color='#dcd4c1'){R(c,x,y,w,h,color);for(let i=0;i<w*h/32;i++)R(c,x+random()*w,y+random()*h,1,1,'#62616855');}
     for(let y=0;y<size;y+=48)if(y<350||y>535){paint(491,y,2,26,'#d7b776');paint(498,y,2,26,'#d7b776');}
     for(let x=0;x<size;x+=48)if(x<320||x>655)paint(x,444,27,2);
     for(let x=411;x<582;x+=13){paint(x,355,7,35);paint(x,504,7,35);}

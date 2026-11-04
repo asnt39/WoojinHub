@@ -2,7 +2,7 @@
 // Source artwork is kept outside dist. See assets/city/manifest.json for provenance.
 window.CitySprites = (() => {
   const images = {}, frames = new Map();
-  const names = ['store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','npc-0','npc-1','npc-2'];
+  const names = ['store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','actions','npc-0','npc-1','npc-2'];
   const ready = Promise.all(names.map(name => new Promise((resolve,reject) => {
     const img = new Image();
     img.onload = () => { images[name] = img; resolve(); };
@@ -26,5 +26,14 @@ window.CitySprites = (() => {
   function shadow(c,x,y,width=12) {
     c.fillStyle='#20232c48';c.beginPath();c.ellipse(Math.round(x)+2,Math.round(y)-1,width,3,0,0,Math.PI*2);c.fill();
   }
-  return {ready,images,person,shadow};
+  function action(dir,pose){
+    const index=directionRow[dir]*6+pose,key='action:'+index;
+    if(!frames.has(key)){
+      const frame=document.createElement('canvas');frame.width=40;frame.height=48;
+      frame.getContext('2d').drawImage(images.actions,index*40,0,40,48,0,0,40,48);
+      frames.set(key,frame);
+    }
+    return frames.get(key);
+  }
+  return {ready,images,person,action,shadow};
 })();

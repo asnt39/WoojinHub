@@ -5,3 +5,5 @@
 header small{color:#e6dcc7;text-shadow:1px 1px #252831}
 #mission{background:#252b34ed;border-left-color:#dcb878;box-shadow:0 3px 0 #181f2580,0 0 0 1px #ffffff12}
 #map{border-color:#cec3ac;box-shadow:0 3px 0 #252a3280}
+
+#pause article{max-height:calc(100dvh - 24px);overflow:auto}
