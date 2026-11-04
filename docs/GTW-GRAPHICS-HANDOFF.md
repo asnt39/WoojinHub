@@ -78,3 +78,10 @@ repeat completed extraction or claim unverified graphics meet the source quality
   close to one another, need manual animation review. Actions/emotions still pending.
 - Vehicle boarding has a short positional transition, not yet dedicated sprite poses.
 - Current edits not deployed. Owner-only access remains unchanged.
+
+## Concurrent remote checkpoint integration
+Remote `55a2567` appeared after local checkpoint A. Merged without force pushing.
+Its original handoff is preserved in `GTW-GRAPHICS-CHECKPOINT-B.md`.
+Kept `city-scene.js` loaded for improved fallback outer-district buildings; first
+district uses the new raster sprites and ground. Both remote smoke tests retained;
+updated runtime smoke harness to load actual PNGs and await asset initialization.
