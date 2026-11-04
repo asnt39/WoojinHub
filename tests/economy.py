@@ -5,12 +5,16 @@ items=json.loads(source.split("const items = ",1)[1].split(";",1)[0])
 base=[x['base'] for x in items]
 p=[x['power'] for x in items];types=['c' if x['type']=='click' else 'a' for x in items]
 def prod(i,n):return round(p[i]*math.expm1(n*math.log(1.3))/.3)
+def threshold(l):
+ v=2500
+ for n in range(1,l):v*=5.5 if n<10 else min(25,5.5+(n-9)*.45)
+ return v
 def run(cps):
  cash=total=0;cnt=[0]*8;opened=[True]+[False]*7;lvl=1;out=[]
  for t in range(7201):
   rate=cps*(1+sum(prod(i,cnt[i]) for i in range(8) if types[i]=='c'))+sum(prod(i,cnt[i]) for i in range(8) if types[i]=='a')
   cash+=rate;total+=rate
-  while total>=10000*100**(lvl-1):lvl+=1
+  while total>=threshold(lvl):lvl+=1
   candidates=[]
   for i in range(8):
    if lvl<i+1:continue
