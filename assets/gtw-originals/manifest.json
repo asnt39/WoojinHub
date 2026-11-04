@@ -1,0 +1,74 @@
+[
+  {
+    "role": "npc-2",
+    "path": "assets/gtw-originals/file_0000000051e4823091606b80f0386496.png",
+    "format": "PNG",
+    "size": [
+      1086,
+      1448
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "74945e6ce2c5b8b04fefe30a50caf06339c4884d13a4643ce7e52235e77aeef6"
+  },
+  {
+    "role": "woojin-walk",
+    "path": "assets/gtw-originals/file_000000008a608209a9fe8b0b713b6786.png",
+    "format": "PNG",
+    "size": [
+      1086,
+      1448
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "b2212bebc8175a0d50dfd14022cc9bf85dc42508fbc63729e818fbc6ed847c04"
+  },
+  {
+    "role": "emotions",
+    "path": "assets/gtw-originals/file_00000000ebc48209ad09db20666fc41e.png",
+    "format": "PNG",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      254
+    ],
+    "sha256": "d5706290e70ca65069b09eef38bd456bbecea4544e886eff45ffd7f788bade6a"
+  },
+  {
+    "role": "npc-1",
+    "path": "assets/gtw-originals/file_000000001a3482099648ee9aa3f3d2ae.png",
+    "format": "PNG",
+    "size": [
+      1086,
+      1448
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "1b57d79b9b40a7603818f561d453173c80582ec3d3ce1335471e041bc5a2dcb6"
+  },
+  {
+    "role": "city-reference",
+    "path": "assets/gtw-originals/file_00000000f8f0820994825260d88eca56.png",
+    "format": "PNG",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "alpha": null,
+    "sha256": "db8c3eda2c5e2d604b5b0d64cc61c312300d16ee204b977b5c97f55fc4b91120"
+  }
+]
