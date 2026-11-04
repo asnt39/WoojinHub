@@ -54,3 +54,27 @@ yet. No new deployment. Last confirmed remote baseline is `0e1805e`.
 Read this file and latest commit first. Verify current game locally before editing.
 Continue highest priority unfinished item; test and commit each useful unit. Do not
 repeat completed extraction or claim unverified graphics meet the source quality.
+
+## Checkpoint B/C/D — first integration
+- Last confirmed remote analysis checkpoint: `b4e42dc`.
+- Image generation tool actually used with supplied A/B/C references. Generated source
+  sheets are preserved under `assets/gtw-generated`. These are new derived assets,
+  not the original character sheets pasted unchanged.
+- Reproducible extraction: `python scripts/prepare-city-art.py` (Pillow/numpy/scipy).
+  15 optimized runtime PNGs in `dist/assets/city`, manifest records source hashes,
+  exact inspected extraction regions, direction order and feet anchor (20,44).
+- Actual sources cover 2 buildings, 2 trees, 2 cars, bench, lamp, vending, bin, bike;
+  player 4 directions × idle/walk A/B/run A/B; 3 NPCs × 4 directions × idle/walk A/B.
+- First district now uses individual sprites, deterministic tiled pavement/asphalt,
+  markings, cracks, drains, manholes, park grass and dirt paths. No backdrop image.
+- New `city-sprites.js` preload/cache; `city-ground.js` creates ground once. Existing
+  world physics/save keys retained. NPC animation now advances by distance, and
+  stops when talking; player no longer walks in place into a wall.
+- `node tests/city.cjs` PASSED after restarting local server. Earlier connection
+  refused was a stopped server, not game logic. New PC/mobile images inspected at
+  `docs/gtw-graphics/{desktop,mobile}.png`; no claims based on old preview files.
+- Quality still PARTIAL: outside first intersection two buildings use old procedural
+  art; 5 supplied NPC designs are not yet integrated. Generated side walk poses are
+  close to one another, need manual animation review. Actions/emotions still pending.
+- Vehicle boarding has a short positional transition, not yet dedicated sprite poses.
+- Current edits not deployed. Owner-only access remains unchanged.
