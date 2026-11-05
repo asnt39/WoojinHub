@@ -86,3 +86,11 @@ Keep saves; never force push. Public site has not been updated by this task.
 - Full input bot remains0/9. Logs retain exact failure coordinates/causes. Next work
   needs approach-aware waiting, combat and platform planning; not relaxed success.
 - Published site is untouched. Both code checkpoints saved on feat/woorio-stage-polish.
+
+## Publication authorization — 2026-11-06 (KST)
+User now explicitly authorized deploying this checkpoint and asked that future edits
+include deployment by default. This supersedes the previous no-publication rule
+above. See DEPLOYMENT-PREFERENCES.md. Fetched Sites HEAD ecdbbae and confirmed it is
+an ancestor, so no newer user code is being overwritten. Current public audience
+revision4 retained. Before packaging, re-ran placement, boss-phases, power-duration
+and actual Chromium PC/mobile polish test successfully. Existing AI limits unchanged.
