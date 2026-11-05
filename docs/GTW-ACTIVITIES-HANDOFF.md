@@ -60,3 +60,11 @@ assets/gtw-candidates-20261105, scripts/prepare-resident-art.py, runtime metadat
 in dist/assets/city/residents-manifest.json. No original source modified.
 Safe rollback uses saved Sites version matching795251f, or checkout that branch
 without deleting current saves. Do not force push or reset user's progress.
+
+## Confirmed publication
+- GitHub pushed feat/gtw-activities, deployed source4fcf695984c1c466fe7b350ad83481c8e3b9e8e3.
+- Sites version24: appgprj_6ae9c47115308191b262fff9998049d6~appgver_43e2b3f559dc8191aaf5f140adaa3a2c.
+- Deployment appgdep_6aec8c8da1fc81918b387ca73d881802 returned succeeded.
+- URL https://woojingame.asnt1.chatgpt.site/#city . Public per explicit user reply;
+  no access settings changed by this task. This final docs-only commit is not needed
+  in the built runtime archive. Local tree was clean after code publication.
