@@ -28,7 +28,7 @@ assert.ok(t,'localhost test control available');
 assert.equal(t.levelCount,8,'three new endgame worlds follow the original five');
 for(let i=5;i<8;i++){
  const w=t.level(i);
- assert.ok(w.hazards.length>=3,`world ${i+1} has more spikes`);
+ assert.ok(w.hazards.length>=3,`world ${i+1} has more spikes (got ${w.hazards.length})`);
  assert.ok(w.platforms.some(p=>p.wall),`world ${i+1} has mandatory climbing obstacles`);
  assert.ok(w.platforms.some(p=>p.moving),`world ${i+1} has moving platforms`);
  assert.ok(w.saws.length>=2,`world ${i+1} has lethal moving hazards`);
@@ -61,7 +61,7 @@ t.state.player.x=nextSpike.x;t.state.player.y=nextSpike.y-8;t.state.player.invul
 t.tick(1/120);
 for(let i=0;i<270;i++)t.tick(1/120);
 assert.equal(t.state.deathPhase,null);
-assert.equal(t.state.player.x,t.state.world.flag-20,'respawn uses checkpoint');
+assert.equal(t.state.player.x,t.state.world.checkpointSpawn.x,'respawn uses the terrain-safe checkpoint');
 
 t.start(0);t.grant('pet');
 assert.match(node('notice').textContent,/두부/,'pet named Doobu');

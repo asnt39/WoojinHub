@@ -20,9 +20,11 @@ function level(i){
  for(const [n,p]of ground.entries()){
   if(p.w<290||n===ground.length-1||n%2===1)continue;
   const bx=p.x+(n===0?315:50);
-  if(bx+207>p.x+p.w-45||bx+207>length-750)continue;
-  const steps=[[-45,true],[-87,true],[-133,false],[-95,true],[-54,true]];
-  steps.forEach(([dy,brick],k)=>boxes.push({x:bx+k*41,y:p.y+dy,w:40,h:40,brick,box:!brick,used:false,broken:false,bump:0,stepBlock:true}));
+  if(bx+214>p.x+p.w-45||bx+214>length-750)continue;
+  // Keep a ground-level approach to each lucky box: stair bricks must not wall off its underside.
+  const steps=[-45,-87,-133];
+  steps.forEach((dy,k)=>boxes.push({x:bx+k*41,y:p.y+dy,w:40,h:40,brick:true,box:false,used:false,broken:false,bump:0,stepBlock:true}));
+  boxes.push({x:bx+174,y:p.y-128,w:40,h:40,brick:false,box:true,used:false,broken:false,bump:0,stepBlock:true});
  }
  platforms.push(...ground,...boxes);
  for(let n=0;n<5+i;n++){
@@ -40,7 +42,7 @@ function level(i){
  const saws=[];
  if(i>=5){
   for(const [n,p] of ground.entries()){
-   if(p.w<255||n===0||n===ground.length-1||n%3===1)continue;
+   if(p.w<255||n===0||n===ground.length-1||n%3===1||boxes.some(b=>b.x>=p.x&&b.x<p.x+p.w))continue;
    const wx=p.x+Math.min(p.w-72,178+(n%3)*12),top=p.y-113;
    for(let h=hazards.length-1;h>=0;h--)if(hazards[h].x<wx+54&&hazards[h].x+hazards[h].w>wx)hazards.splice(h,1);
    platforms.push({x:wx,y:top,w:54,h:p.y-top,stone:true,wall:true});
@@ -50,6 +52,12 @@ function level(i){
    saws.push({x:wx+155,y:top-33,baseX:wx+155,baseY:top-33,r:17,phase:n*1.8,range:42+7*(i-5),speed:1.7+(i-5)*.18});
   }
   if(saws.length<2)for(let n=0;n<2;n++)saws.push({x:900+n*700,y:345,baseX:900+n*700,baseY:345,r:16,phase:n*2,range:55,speed:2});
+  // Alternate ground spikes with the staircase segments. These are jumpable,
+  // never hidden inside the boxes or the tall climbing walls.
+  for(const [n,p] of ground.entries())if(n%2===1&&n!==ground.length-1&&p.w>=250){
+   const hx=p.x+96,w=36;
+   if(!platforms.some(q=>q.wall&&hx<q.x+q.w&&hx+w>q.x))hazards.push({x:hx,y:p.y-21,w,h:21,kind:2,broken:false});
+  }
  }
  const coins=[];
  for(let n=0;n<65+i*12;n++){
@@ -67,9 +75,22 @@ function level(i){
   const type=n%Math.min(4,i+2),ey=type===2?p.y-135:p.y-32;
   enemies.push({x:ex,y:ey,w:34,h:32,vx:(n%2?1:-1)*(32+i*5),min:Math.max(p.x+34,ex-40),max:Math.min(p.x+p.w-70,ex+44),alive:true,type,phase:n,timer:1.5+n%3,baseY:ey,hp:type===1?2:1});
  });
- const middle=ground[Math.floor(ground.length/2)],boss=i===7?{x:length-425,y:327,w:84,h:143,hp:5,maxHp:5,phase:0,attackTimer:1.1,hitTimer:0,defeated:false}:null;
+ // A checkpoint must be a safe standing location on the *current* terrain.
+ // Prefer the world midpoint, but avoid bricks, spikes, enemies, and roaming saws.
+ const checkpointCandidates=[];
+ for(const p of ground)for(let sx=p.x+38;sx+34<=p.x+p.w-38;sx+=12){
+  const body={x:sx,y:p.y-64,w:34,h:64},buffer={x:sx-20,y:p.y-69,w:74,h:69};
+  if(platforms.some(q=>!q.ground&&overlap(body,q)))continue;
+  if(hazards.some(h=>overlap(buffer,h)))continue;
+  if(enemies.some(e=>Math.abs(e.x+e.w/2-sx-17)<85&&Math.abs(e.y+e.h/2-(p.y-32))<95))continue;
+  if(saws.some(s=>Math.abs(s.baseX-sx-17)<s.range+s.r+40&&Math.abs(s.baseY-(p.y-32))<85))continue;
+  checkpointCandidates.push({x:sx,y:p.y-64,groundY:p.y});
+ }
+ checkpointCandidates.sort((a,b)=>Math.abs(a.x-length*.5)-Math.abs(b.x-length*.5));
+ const checkpointSpawn=checkpointCandidates[0]||{x:ground[0].x+55,y:ground[0].y-64,groundY:ground[0].y};
+ const boss=i===7?{x:length-425,y:327,w:84,h:143,hp:5,maxHp:5,phase:0,attackTimer:1.1,hitTimer:0,defeated:false}:null;
  const bossPickups=i===7?[{x:length-950,y:302,used:false,reset:0},{x:length-685,y:267,used:false,reset:0}]:[];
- return{length,platforms,gaps,coins,enemies,hazards,saws,decor,items:[],shots:[],flag:middle.x+70,goal:length-130,rewardBag:[],boss,bossPickups};
+ return{length,platforms,gaps,coins,enemies,hazards,saws,decor,items:[],shots:[],flag:checkpointSpawn.x+17,checkpointSpawn,goal:length-130,rewardBag:[],boss,bossPickups};
 }
 function start(i=stage){stage=i;world=level(i);player={x:70,y:390,vx:0,vy:0,w:34,h:64,ground:false,invulnerable:0,power:null,powerTime:0,pet:false,petGold:false,petX:40,petY:430,petCooldown:0,fireCooldown:0,bossAmmo:0,facing:1};camera=0;time=0;coins=0;checkpoint=false;particles=[];running=true;paused=false;completed=false;stageDone=false;releaseKeys();coyote=0;deathPhase=null;deathCause=null;deathTimer=0;$('deathCurtain').hidden=true;noticeTime=0;$('notice').textContent='';$('panel').classList.add('hidden');updateHud();updateStages();canvas.focus({preventScroll:true})}
 function message(title,text,label){$('panelTitle').textContent=title;$('panelText').textContent=text;$('play').textContent=label;$('panel').classList.remove('hidden')}
@@ -99,7 +120,9 @@ function advanceDeath(dt){deathTimer+=dt;
   world.items=[];world.rewardBag=[];world.shots=[];
   if(world.boss){world.boss.hp=world.boss.maxHp;world.boss.defeated=false;world.boss.hitTimer=0;world.boss.attackTimer=1.1}
   for(const item of world.bossPickups){item.used=false;item.reset=0}
-  resizePlayer(false);player.power=null;player.powerTime=0;player.bossAmmo=0;player.x=checkpoint?world.flag-20:70;player.y=370;player.vx=player.vy=0;player.invulnerable=1.5;player.ground=false;deathPhase=null;deathCause=null;deathTimer=0;keys={};jumpBuffer=coyote=0;$('deathCurtain').hidden=true;updateHud()}}
+  resizePlayer(false);player.power=null;player.powerTime=0;player.bossAmmo=0;
+  const spawn=checkpoint?world.checkpointSpawn:{x:70,y:world.platforms.find(p=>p.ground)?.y-64};
+  player.x=spawn.x;player.y=spawn.y-4;player.vx=player.vy=0;player.invulnerable=1.5;player.ground=false;deathPhase=null;deathCause=null;deathTimer=0;keys={};jumpBuffer=coyote=0;$('deathCurtain').hidden=true;updateHud()}}
 function hurt(){if(player.invulnerable>0||player.power==='giant')return;if(player.power){resizePlayer(false);player.power=null;player.powerTime=0;player.invulnerable=1.8;notice('능력이 사라졌어! 잠시 무적이야.');updateHud()}else die()}
 function kill(e){e.alive=false;burst(e.x+17,e.y+10,['#ed9971','#d1d98c','#c8a0e6','#a4b5eb'][e.type]);sfx(550)}
 function finish(){if(stageDone)return;stageDone=true;running=false;total+=coins;unlocked=Math.max(unlocked,Math.min(names.length-1,stage+1));save();updateStages();sfx(800);if(stage===names.length-1){completed=true;message('여덟 세계를 완주했어!','빛 조각 '+total+'개 · 우진이와 두부의 극한 모험 완주!','처음부터 다시')}else message('STAGE CLEAR','빛 조각 '+coins+'개 · 다음 세계는 더 험난해!','다음 스테이지')}
@@ -175,7 +198,7 @@ function draw(){ctx.clearRect(0,0,W,H);if(background.complete&&background.natura
   ctx.globalAlpha=1;
   for(let n=0;n<3;n++){const sx=b.x+12+n*28,sy=b.y+11+Math.sin(time*5+n)*5;rect(sx,sy,6,6,'#fff0ae')}}
  for(const s of world.shots){rect(s.x-3,s.y+3,18,6,s.hostile?'#ac7edc':'#ed7548');rect(s.x+2,s.y,8,12,s.hostile?'#eee2ff':'#fff2ac')}
- function flag(x,goal){rect(x,310,4,160,'#e3d9aa');rect(x-4,306,12,8,'#f7d875');rect(x+4,316,44,26,goal?'#de9272':checkpoint?'#80d8bc':'#829dc6');rect(x+10,321,12,12,'#fff1b9');rect(x-9,463,22,7,'#384d51')}flag(world.flag,false);flag(world.goal,true);
+ function flag(x,goal){const surface=world.platforms.find(p=>p.ground&&x>=p.x&&x<p.x+p.w),base=surface?.y??470;rect(x,base-160,4,160,'#e3d9aa');rect(x-4,base-164,12,8,'#f7d875');rect(x+4,base-154,44,26,goal?'#de9272':checkpoint?'#80d8bc':'#829dc6');rect(x+10,base-149,12,12,'#fff1b9');rect(x-9,base-7,22,7,'#384d51')}flag(world.flag,false);flag(world.goal,true);
  if(player.pet)PixelArt.draw(ctx,player.petGold?'dogGold':'dog',player.petX,player.petY,34,28,player.facing<0);
  ctx.globalAlpha=player.invulnerable>0&&!deathPhase&&Math.floor(time*12)%2?.5:1;PixelArt.draw(ctx,deathPhase?'heroDead':'hero',player.x-5,player.y,player.w+10,player.h,player.facing<0,!deathPhase&&player.ground&&Math.abs(player.vx)>20?Math.floor(time*10)%2+1:0);ctx.globalAlpha=1;
  if(player.power){rect(player.x-4,player.y-8,player.w+8,3,player.power==='giant'?'#ffcaa0':'#ffaf4b');if(Math.floor(time*8)%2)rect(player.x+(Math.floor(time*5)%2?player.w:0),player.y+player.h*.4,4,4,'#fff5b0')}
