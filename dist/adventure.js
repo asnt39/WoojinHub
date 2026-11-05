@@ -11,151 +11,104 @@ let stage=0,world,player,camera=0,coins=0,deaths=0,checkpoint=false,bossCheckpoi
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 function save(){try{localStorage.setItem('woojin-adventure-v1',JSON.stringify({unlocked,total}))}catch{}}
 function level(i){
- const length=5500+i*800,platforms=[],gaps=[],boxes=[],step=i>=5?485:550-i*24,hasBoss=[2,5,8].includes(i);
- const gapStop=hasBoss?length-1720:length-730;
- for(let x=800,n=0;x<gapStop;x+=Math.max(410,step+((n*7+i*11)%5-2)*(i>=3?19:7)),n++)gaps.push([x,x+(i===8&&n===7?148:Math.min(185,82+i*12+(n%3)*5))]);
- const profiles=[
- {theme:'숲의 산책로',heights:[0,22,38,0,50,22],bridge:0},
- {theme:'무너지는 해안 다리',heights:[0,8,22,8,38,0],bridge:1},
- {theme:'유적의 기둥 회랑',heights:[0,42,72,22,82,38],bridge:2},
- {theme:'수정 동굴의 상하 갈림길',heights:[0,72,38,82,22,50],bridge:3},
- {theme:'다층 성벽의 스위치 통로',heights:[0,38,78,38,8,63],bridge:4},
- {theme:'승강기와 폭풍 교량',heights:[0,50,22,72,38,82],bridge:5},
- {theme:'정밀 가공 라인',heights:[0,22,63,8,78,30],bridge:6},
- {theme:'붕괴하는 공중 성벽',heights:[0,63,30,82,38,72],bridge:7},
- {theme:'최후의 복합 시련',heights:[0,78,24,56,82,38,8,72],bridge:8}];
- const profile=profiles[i],elevation=profile.heights,ground=[];
- let x=0;for(const[a,b]of gaps){const n=ground.length,y=n===0?470:470-elevation[(n+i)%elevation.length];ground.push({x,y,w:a-x,h:600-y,ground:true});x=b}
- ground.push({x,y:hasBoss?470:470-elevation[(ground.length+i)%elevation.length],w:length-x,h:150,ground:true});
- // Every climb uses individual standable bricks, not an inaccessible solid slab.
- for(const [n,p]of ground.entries()){
-  if(p.w<290||n===ground.length-1||n%2===1)continue;
-  const bx=p.x+(n===0?315:50);
-  if(bx+214>p.x+p.w-45||bx+214>length-750)continue;
-  // Keep a ground-level approach to each lucky box: stair bricks must not wall off its underside.
-  // Filled, standable brick columns; every solid step is supported from below.
-  const heights=(n+i)%3===1?[1,2,2]:[1,2,3];
-  heights.forEach((height,k)=>{for(let row=0;row<height;row++)boxes.push({x:bx+k*41,y:p.y-40-row*40,w:40,h:40,brick:true,box:false,used:false,broken:false,bump:0,stepBlock:true})});
-  const rewardTypes=['giant','fire','pet','shoes','shield'],reward=rewardTypes[(i*7+Math.floor(bx/41)+n*3)%rewardTypes.length];
-  boxes.push({x:bx+174,y:p.y-128,w:40,h:40,brick:false,box:true,reward,used:false,broken:false,bump:0,stepBlock:true});
- }
- platforms.push(...ground,...boxes);
- for(let n=0;n<5+i;n++){
-  const px=1130+n*(760-i*31),floor=ground.find(p=>px>p.x&&px<p.x+p.w);
-  platforms.push({x:px,y:Math.min(300,(floor?.y||470)-153)+(n%2)*18,w:98+(n%3)*12,h:22,baseX:px,moving:i>=2,phase:n,stone:true,ledge:true});
- }
- const hazards=[],decor=[],belts=[],switches=[];
- for(const [n,p]of ground.entries()){
-  if(p.w>290&&n>0&&n!==ground.length-1&&(n+i)%3!==1){
-   const hx=p.x+p.w-92,w=40+(i%2)*8;
-   if(!boxes.some(b=>hx<b.x+b.w+5&&hx+w>b.x-5))hazards.push({x:hx,y:p.y-21,w,h:21,kind:i%3,broken:false});
+ // Each stage is a sequence of authored rooms, not one repeated island template.
+ // [motif, room width, ground top, following gap]. Last room leads to a safe exit/arena.
+ const layouts=[
+ [['intro',800,470,72],['orchard',690,448,82],['steps',800,420,90],['grove',620,470,75],['creek',900,442,95],['terrace',750,400,0]],
+ [['intro',800,470,82],['dock',650,462,110],['tidal',820,432,100],['warehouse',740,400,90],['tidal',920,450,115],['cliff',680,420,0]],
+ [['intro',800,470,85],['columns',720,420,100],['court',640,395,110],['shrine',900,435,90],['columns',700,400,100],['arch',700,450,0]],
+ [['intro',800,470,90],['cavern',920,410,115],['fork',740,445,105],['crystal',820,390,120],['cavern',960,430,110],['fork',850,400,0]],
+ [['intro',800,470,95],['rampart',800,420,120],['gate',740,390,105],['gallery',980,450,115],['rampart',760,400,125],['gate',860,435,0]],
+ [['intro',800,470,100],['lift',720,420,120],['gantry',920,390,130],['depot',800,440,115],['lift',760,400,135],['rail',940,445,0]],
+ [['intro',800,470,100],['belt',900,420,125],['press',760,390,135],['belt',1050,450,120],['gear',900,400,140],['press',880,435,130],['rail',850,395,0]],
+ [['intro',800,470,105],['ruins',800,420,135],['split',940,390,125],['fragile',760,440,140],['ruins',900,400,130],['split',840,450,145],['fragile',980,395,0]],
+ [['intro',800,470,110],['gate',800,420,135],['lift',780,390,140],['fragile',950,440,130],['press',900,400,145],['split',840,450,135],['gear',920,395,140],['rampart',880,435,130],['rail',950,400,0]]
+ ];
+ const plan=layouts[i],platforms=[],ground=[],gaps=[],coins=[],enemies=[],hazards=[],saws=[],decor=[],belts=[],switches=[],rooms=[];
+ let cursor=0;const hasBoss=[2,5,8].includes(i);
+ for(const [motif,width,y,gap]of plan){const room={motif,x:cursor,w:width,y};rooms.push(room);ground.push({x:cursor,y,w:width,h:620-y,ground:true});cursor+=width;if(gap){gaps.push([cursor,cursor+gap]);cursor+=gap;}}
+ const arenaStart=cursor,length=cursor+(hasBoss?1740:420);ground.push({x:cursor,y:470,w:length-cursor,h:150,ground:true});platforms.push(...ground);
+ const ledge=(x,y,w=100,extra={})=>platforms.push({x,y,w,h:18,stone:true,ledge:true,...extra});
+ const column=(x,y,w,h)=>platforms.push({x,y,w,h,stone:true,wall:true});
+ const steps=(x,y,heights)=>heights.forEach((h,n)=>{for(let row=0;row<h;row++)platforms.push({x:x+n*40,y:y-(row+1)*40,w:40,h:40,brick:true,stepBlock:true,broken:false,bump:0})});
+ const box=(x,y,seed)=>platforms.push({x,y,w:40,h:40,box:true,brick:false,used:false,broken:false,bump:0,reward:['giant','fire','pet','shoes','shield'][(i*7+seed)%5]});
+ for(const[r,room]of rooms.entries()){
+  const{x,y,w,motif:m}=room;
+  // Stable, visible item bays are outside the structure/monster lanes.
+  if(r===0||r%2===1)box(x+(r===0?480:115),y-128,r*3+2);
+  switch(m){
+   case'intro':
+    if(i===0)steps(x+280,y,[1,2,3]);
+    else if(i===1){for(let n=0;n<3;n++)column(x+200+n*75,y-45,48,45);ledge(x+280,y-120,125);}
+    else if(i===2){column(x+220,y-80,60,80);column(x+330,y-120,70,120);}
+    else if(i===3){ledge(x+220,y-80,130);ledge(x+350,y-155,145);}
+    else if(i===4)steps(x+230,y,[1,2,3,3,2]);
+    else if(i===5){ledge(x+230,y-90,100,{elevator:true,baseX:x+230,baseY:y-90,phase:0});column(x+370,y-85,60,85);}
+    else if(i===6){belts.push({x:x+180,y:y-6,w:200,speed:85});column(x+380,y-70,60,70);}
+    else if(i===7){ledge(x+210,y-75,120,{crumble:true,collapseTime:0});ledge(x+345,y-140,110,{crumble:true,collapseTime:0});}
+    else{column(x+220,y-85,60,85);ledge(x+330,y-160,100);ledge(x+500,y-95,85,{elevator:true,baseX:x+500,baseY:y-95,phase:0});}
+    break;
+   case'orchard':steps(x+250,y,[1,2]);ledge(x+370,y-120,140);break;
+   case'steps':steps(x+220,y,[1,2,3,2,1]);break;
+   case'grove':column(x+280,y-70,100,70);ledge(x+440,y-135,150);break;
+   case'creek':ledge(x+230,y-75,160);ledge(x+475,y-130,130);break;
+   case'terrace':steps(x+220,y,[1,2,3]);ledge(x+380,y-165,160);break;
+   case'dock':for(let n=0;n<3;n++)column(x+230+n*80,y-55,50,55);break;
+   case'tidal':for(let n=0;n<4;n++)ledge(x+235+n*115,y-100-(n%2)*40,92,{crumble:true,collapseTime:0});break;
+   case'warehouse':steps(x+220,y,[1,2,3]);ledge(x+420,y-180,170);break;
+   case'cliff':steps(x+240,y,[1,2,3,3]);break;
+   case'columns':for(let n=0;n<3;n++)column(x+240+n*100,y-60-n*30,65,60+n*30);break;
+   case'court':steps(x+220,y,[2,3,2]);ledge(x+380,y-175,160);break;
+   case'shrine':steps(x+240,y,[1,2]);ledge(x+360,y-145,120);ledge(x+540,y-210,145);break;
+   case'arch':column(x+240,y-100,75,100);ledge(x+330,y-170,200);column(x+530,y-100,65,100);break;
+   case'cavern':steps(x+230,y,[1,2]);ledge(x+350,y-145,190);ledge(x+590,y-210,180);break;
+   case'fork':ledge(x+240,y-85,140);ledge(x+415,y-165,170);ledge(x+460,y-65,120,{crumble:true,collapseTime:0});break;
+   case'crystal':column(x+250,y-85,65,85);ledge(x+360,y-155,90);ledge(x+510,y-225,115);break;
+   case'rampart':steps(x+230,y,[1,2,3]);ledge(x+370,y-185,145);ledge(x+555,y-115,100);break;
+   case'gate':steps(x+230,y,[1,2]);{const gate={x:x+w-160,y:y-96,w:28,h:96,stone:true,gate:true,broken:false};platforms.push(gate);switches.push({x:x+w-330,y:y-46,w:36,h:46,time:0,gate});}break;
+   case'gallery':ledge(x+240,y-90,180);ledge(x+460,y-170,210);steps(x+740,y,[2,1]);break;
+   case'lift':ledge(x+240,y-90,105,{elevator:true,baseX:x+240,baseY:y-90,phase:r});ledge(x+415,y-175,130);break;
+   case'gantry':steps(x+230,y,[1,2]);ledge(x+370,y-160,115,{moving:true,baseX:x+370,phase:r});ledge(x+620,y-190,150);break;
+   case'depot':column(x+640,y-80,60,80);steps(x+240,y,[1,2,2,1]);ledge(x+460,y-150,140,{elevator:true,baseX:x+460,baseY:y-150,phase:r});break;
+   case'rail':column(x+720,y-80,60,80);ledge(x+240,y-90,110,{moving:true,baseX:x+240,phase:r});ledge(x+480,y-160,100,{moving:true,baseX:x+480,phase:r+2});break;
+   case'belt':belts.push({x:x+250,y:y-6,w:300,speed:r%2?-90:90});ledge(x+600,y-100,130);break;
+   case'press':column(x+620,y-80,60,80);steps(x+230,y,[1,2]);ledge(x+390,y-155,130);saws.push({x:x+540,y:y-75,baseX:x+540,baseY:y-75,r:16,phase:r*1.7,range:48,speed:1.6});break;
+   case'gear':for(let n=0;n<3;n++)ledge(x+240+n*150,y-90-(n%2)*65,90,{elevator:true,baseX:x+240+n*150,baseY:y-90-(n%2)*65,phase:n*2});break;
+   case'ruins':column(x+250,y-95,70,95);ledge(x+370,y-165,100,{crumble:true,collapseTime:0});ledge(x+540,y-100,100,{crumble:true,collapseTime:0});break;
+   case'split':steps(x+230,y,[1,2]);for(let n=0;n<3;n++)ledge(x+350+n*160,y-155-(n%2)*65,85,{crumble:n!==1,collapseTime:0,moving:i>=7&&n===1,baseX:x+350+n*160,phase:r});break;
+   case'fragile':for(let n=0;n<4;n++)ledge(x+230+n*135,y-90-(n%2)*70,72,{crumble:true,collapseTime:0});break;
   }
-  for(let dx=p.x+110;dx<p.x+p.w-90;dx+=230-i*9)decor.push({x:dx,y:p.y,kind:(n+i)%3});
+  // Teaching spring in an open bay; later mixes preserve the known mechanics.
+  if(r===1)ledge(x+w-105,y-14,48,{spring:true,h:14});
+  if(i>=1&&r===2)ledge(x+45,y-115,74,{crumble:true,collapseTime:0});
+  if(i>=2&&r===3)ledge(x+w-160,y-90,84,{elevator:true,baseX:x+w-160,baseY:y-90,phase:1});
+  if(i>=3&&r===2)belts.push({x:x+w-190,y:y-6,w:90,speed:78});
+  if(i>=4&&r===2&&!switches.length){const gate={x:x+w-60,y:y-96,w:28,h:96,gate:true,stone:true,broken:false};platforms.push(gate);switches.push({x:x+w-230,y:y-46,w:36,h:46,time:0,gate});}
+  if(i>=5&&r%2===1&&m!=='press')saws.push({x:x+w-220,y:y-160,baseX:x+w-220,baseY:y-160,r:16,phase:r,range:35,speed:1.5});
+  if(r>0&&(r%2===0||i>=5))hazards.push({x:x+w-250,y:y-20,w:28,h:20,kind:i%3,broken:false});
+  for(let dx=40;dx<w-30;dx+=90)coins.push({x:x+dx,y:y-47,taken:false});
+  for(let dx=180;dx<w-40;dx+=260)decor.push({x:x+dx,y,kind:r%3});
+  const type=r%Math.min(4,i+2);enemies.push({x:x+(r===0?650:55),y:y-(type===2?135:32),w:34,h:32,vx:(r%2?1:-1)*(30+i*4),type,alive:true,phase:r,timer:2,baseY:y-(type===2?135:32),hp:type===1?2:1});
+  if(i>=2&&r===3)enemies.push({x:x+200,y:y-150,w:36,h:30,vx:40,type:4,alive:true,phase:r,timer:2,baseY:y-150,hp:1});
+  if(i>=4&&r===4)enemies.push({x:x+65,y:y-38,w:38,h:38,vx:0,type:5,alive:true,phase:r,timer:2,baseY:y-38,hp:2});
  }
- const saws=[];
- if(i>=5){
-  for(const [n,p] of ground.entries()){
-   if(p.w<255||n===0||n===ground.length-1||n%3===1||boxes.some(b=>b.x>=p.x&&b.x<p.x+p.w))continue;
-   const wx=p.x+Math.min(p.w-76,p.w<330?145:178+(n%3)*12),top=p.y-(p.w<330?95:113);
-   for(let h=hazards.length-1;h>=0;h--)if(hazards[h].x<wx+54&&hazards[h].x+hazards[h].w>wx)hazards.splice(h,1);
-   platforms.push({x:wx,y:top,w:54,h:p.y-top,stone:true,wall:true});
-   platforms.push({x:wx+47,y:top-66,w:110,h:18,stone:true,ledge:true});
-   platforms.push({x:wx+146,y:top-116,w:90,h:18,stone:true,ledge:true});
-   if(n%2===0&&wx>p.x+110)hazards.push({x:wx+8,y:top-20,w:32,h:20,kind:2,broken:false});
-   saws.push({x:wx+155,y:top-33,baseX:wx+155,baseY:top-33,r:17,phase:n*1.8,range:42+7*(i-5),speed:1.7+(i-5)*.18});
-  }
-  if(saws.length<2)for(let n=0;n<2;n++)saws.push({x:900+n*700,y:345,baseX:900+n*700,baseY:345,r:16,phase:n*2,range:55,speed:2});
-  // Alternate ground spikes with the staircase segments. These are jumpable,
-  // never hidden inside the boxes or the tall climbing walls.
-  for(const [n,p] of ground.entries())if(n%2===1&&n!==ground.length-1&&p.w>=250){
-   const hx=p.x+Math.min(p.w-50,Math.max(155,p.w*.66)),w=36;
-   if(!platforms.some(q=>q.wall&&hx<q.x+q.w&&hx+w>q.x))hazards.push({x:hx,y:p.y-21,w,h:21,kind:2,broken:false});
-  }
- }
- // Mechanics appear progressively: spring, crumble, elevator, conveyor, timed gate.
- for(const [n,p] of ground.entries()){
-  if(n===0||n===ground.length-1||p.w<275)continue;
-  if(n%4===1)platforms.push({x:p.x+Math.min(105,p.w*.3),y:p.y-14,w:48,h:14,spring:true,ledge:true,stone:true});
-  if(i>=1&&n%4===2)platforms.push({x:p.x+Math.min(190,p.w*.44),y:p.y-120,w:74,h:16,crumble:true,ledge:true,stone:true,collapseTime:0});
-  if(i>=2&&n%4===0)platforms.push({x:p.x+Math.min(190,p.w*.42),y:p.y-135,w:84,h:18,baseX:p.x+Math.min(190,p.w*.42),baseY:p.y-135,elevator:true,ledge:true,stone:true,phase:n});
-  if(i>=3&&n%3===1)belts.push({x:p.x+Math.min(155,p.w*.37),y:p.y-6,w:Math.min(100,p.w*.23),speed:(n%2?-78:78)});
-  if(i>=4&&n%4===3&&p.w>215){
-   const sx=p.x+35,gx=p.x+Math.min(220,p.w-54);
-   for(let j=hazards.length-1;j>=0;j--)if(hazards[j].x<gx+36&&hazards[j].x+hazards[j].w>sx-30)hazards.splice(j,1);
-   const gate={x:gx,y:p.y-96,w:28,h:96,gate:true,stone:true,broken:false};
-   platforms.push(gate);switches.push({x:sx,y:p.y-46,w:36,h:46,time:0,gate});
-  }
- }
- const routeStart=platforms.length;
- // Alternate routes are deliberate one-way structures, not unsupported solid walls.
- for(const [n,gap] of gaps.entries()){
-  if((n+i)%3!==0)continue;
-  const left=ground.find(p=>p.x+p.w===gap[0]),right=ground.find(p=>p.x===gap[1]);
-  if(!left||!right)continue;
-  const y=Math.min(left.y,right.y)-60;
-  if(i===1)platforms.push({x:gap[0]-28,y,w:gap[1]-gap[0]+56,h:16,ledge:true,crumble:true,collapseTime:0,stone:true});
-  else if(i===3||i===7)for(let k=0;k<3;k++)platforms.push({x:gap[0]-42+k*83,y:y-(k===1?64:0),w:i===7?60:90,h:16,ledge:true,stone:true,crumble:i===7,collapseTime:0});
-  else if(i===5||i===8)platforms.push({x:gap[0]+18,y:y-25,w:i===8?66:92,h:18,ledge:true,stone:true,elevator:true,baseX:gap[0]+18,baseY:y-25,phase:n});
- }
- for(let n=platforms.length-1;n>=routeStart;n--)if(boxes.some(b=>b.box&&platforms[n].x<b.x+180&&platforms[n].x+platforms[n].w>b.x-80))platforms.splice(n,1);
- const coins=[];
- for(let n=0;n<65+i*12;n++){
-  const cx=180+n*(length-350)/(65+i*12),floor=ground.find(p=>cx>=p.x&&cx<=p.x+p.w);
-  if(floor)coins.push({x:cx,y:floor.y-47,taken:false});
- }
- boxes.filter(b=>b.box).forEach(b=>coins.push({x:b.x+20,y:b.y-27,taken:false}));
- const enemies=[];
- ground.forEach((p,n)=>{
-  if(p.w<270||n===ground.length-1) return;
-  let ex=p.x+(n===0?535:Math.min(p.w-115,118+(n%3)*47));
-  if(ex+34>p.x+p.w-30)ex=p.x+p.w-90;
-  if(boxes.some(b=>ex<b.x+b.w+5&&ex+34>b.x-5))ex=p.x+p.w-128;
-  if(hazards.some(h=>ex<h.x+h.w+20&&ex+34>h.x-20))ex=p.x+58;
-  const type=n%Math.min(4,i+2),ey=type===2?p.y-135:p.y-32;
-  enemies.push({x:ex,y:ey,w:34,h:32,vx:(n%2?1:-1)*(32+i*5),min:Math.max(p.x+34,ex-40),max:Math.min(p.x+p.w-70,ex+44),alive:true,type,phase:n,timer:1.5+n%3,baseY:ey,hp:type===1?2:1});
-  if(i>=2&&n%5===3)enemies.push({x:p.x+Math.min(235,p.w-75),y:p.y-150,w:36,h:30,vx:42,min:p.x+95,max:p.x+p.w-55,alive:true,type:4,phase:n,timer:1.6,baseY:p.y-150,hp:1});
-  if(i>=4&&n%5===4)enemies.push({x:p.x+Math.min(245,p.w-70),y:p.y-38,w:38,h:38,vx:0,min:0,max:0,alive:true,type:5,phase:n,timer:1.65,baseY:p.y-38,hp:2});
- });
- // Choose a continuous, obstacle-free patrol interval including the whole body.
- for(let index=enemies.length-1;index>=0;index--){const e=enemies[index],floor=ground.find(p=>e.x>=p.x&&e.x<p.x+p.w);if(!floor){enemies.splice(index,1);continue;}
-  const flight=e.type===2?48:e.type===4?54:0,free=[];let span=null;
-  for(let x=floor.x+20;x<=floor.x+floor.w-e.w-20;x+=4){const body={x,y:e.y-flight,w:e.w,h:e.h+flight*2};const clear=!platforms.some(p=>!p.ground&&overlap(body,p))&&!hazards.some(h=>overlap(body,h));if(clear){if(!span)span={a:x,b:x};span.b=x;}else if(span){free.push(span);span=null;}}if(span)free.push(span);
-  const candidates=free.filter(p=>p.b-p.a>=12).sort((a,b)=>Math.abs((a.a+a.b)/2-e.x)-Math.abs((b.a+b.b)/2-e.x));if(!candidates.length){enemies.splice(index,1);continue;}const area=candidates[0];e.x=clamp(e.x,area.a,area.b);e.min=e.type===5?e.x:Math.max(area.a,e.x-44);e.max=e.type===5?e.x:Math.min(area.b,e.x+44);
- }
- enemies.forEach(e=>Object.assign(e,{spawnX:e.x,spawnY:e.y,spawnVx:e.vx,spawnType:e.type,spawnTimer:e.timer,maxHp:e.hp}));
- // A checkpoint must be a safe standing location on the *current* terrain.
- // Prefer the world midpoint, but avoid bricks, spikes, enemies, and roaming saws.
- const checkpointCandidates=[];
- for(const p of ground)for(let sx=p.x+38;sx+34<=p.x+p.w-38;sx+=12){
-  const body={x:sx,y:p.y-64,w:34,h:64},buffer={x:sx-20,y:p.y-69,w:74,h:69};
-  if(platforms.some(q=>!q.ground&&overlap(body,q)))continue;
-  if(hazards.some(h=>overlap(buffer,h)))continue;
-  if(enemies.some(e=>Math.abs(e.x+e.w/2-sx-17)<85&&Math.abs(e.y+e.h/2-(p.y-32))<95))continue;
-  if(saws.some(s=>Math.abs(s.baseX-sx-17)<s.range+s.r+40&&Math.abs(s.baseY-(p.y-32))<85))continue;
-  checkpointCandidates.push({x:sx,y:p.y-64,groundY:p.y});
- }
- checkpointCandidates.sort((a,b)=>Math.abs(a.x-length*.5)-Math.abs(b.x-length*.5));
- const checkpointSpawn=checkpointCandidates[0]||{x:ground[0].x+55,y:ground[0].y-64,groundY:ground[0].y};
  const kind=i===2?'stone':i===5?'storm':i===8?'shadow':null,hp=kind==='stone'?4:kind==='storm'?6:9;
  const boss=kind?{kind,name:kind==='stone'?'이끼 골렘':kind==='storm'?'폭주 기계병':'공허의 지배자',x:length-425,y:327,w:84,h:143,hp,maxHp:hp,phase:0,attackTimer:1.2,hitTimer:0,defeated:false}:null;
- const bossPickups=kind?[{x:length-950,y:302,used:false,reset:0},{x:length-685,y:267,used:false,reset:0}]:[];
- const bossGround=ground[ground.length-1],bossSpawn=kind?{x:length-1320,y:bossGround.y-64,groundY:bossGround.y}:null;
- // Boss arenas are different obstacle courses. A box here is always reachable
- // from level ground, and the last island is clear for the victory exit.
- if(kind){
-  const low=bossGround.y;
-  if(kind==='stone')for(let j=0;j<4;j++)platforms.push({x:length-1180+j*145,y:low-105-(j%2)*62,w:88,h:18,stone:true,ledge:true});
-  if(kind==='storm')for(let j=0;j<4;j++)platforms.push({x:length-1170+j*145,y:low-135,w:82,h:18,stone:true,ledge:true,elevator:true,baseX:length-1170+j*145,baseY:low-135,phase:j*1.7});
-  if(kind==='shadow')for(let j=0;j<5;j++)platforms.push({x:length-1240+j*128,y:low-105-(j%3)*51,w:75,h:16,stone:true,ledge:true,crumble:j%2===0,collapseTime:0});
-  const rx=length-1120;platforms.push({x:rx,y:low-143,w:40,h:40,brick:false,box:true,reward:kind==='shadow'?'shield':kind==='storm'?'shoes':'fire',used:false,broken:false,bump:0});
+ const bossSpawn=kind?{x:arenaStart+220,y:406,groundY:470}:null,bossPickups=kind?[{x:length-950,y:302,used:false,reset:0},{x:length-685,y:267,used:false,reset:0}]:[];
+ if(kind){for(let j=0;j<5;j++)ledge(length-1240+j*135,365-(j%3)*50,kind==='shadow'?78:100,kind==='storm'?{elevator:true,baseX:length-1240+j*135,baseY:365-(j%3)*50,phase:j*1.7}:kind==='shadow'?{crumble:j%2===0,collapseTime:0}:{});box(length-1450,327,41);}
+ // Validate AFTER all rooms and the boss arena have been assembled.
+ const motion=p=>({x:p.x-(p.moving?58:0),y:(p.baseY??p.y)-(p.elevator?50:0),w:p.w+(p.moving?116:0),h:p.h+(p.elevator?100:0)});
+ for(const h of hazards){if(!platforms.some(p=>!p.ground&&overlap(h,motion(p))))continue;const floor=ground.find(p=>h.x>=p.x&&h.x<p.x+p.w);const candidates=[];for(let x=floor.x+220;x<floor.x+floor.w-h.w-60;x+=8){const r={...h,x};if(!platforms.some(p=>!p.ground&&overlap(r,motion(p))))candidates.push(x);}candidates.sort((a,b)=>Math.abs(a-h.x)-Math.abs(b-h.x));if(!candidates.length)throw Error('No safe hazard bay');h.x=candidates[0];}
+ for(const b of platforms.filter(p=>p.box)){
+  const floor=ground.find(p=>b.x>=p.x&&b.x<p.x+p.w),original=b.x;
+  const clear=x=>{const bay={x:x-12,y:b.y-8,w:64,h:floor.y-b.y+8};return !platforms.some(p=>p!==b&&!p.ground&&overlap(bay,motion(p)))&&!hazards.some(h=>overlap(bay,h));};
+  if(!clear(b.x)){const choices=[];for(let x=floor.x+55;x<floor.x+floor.w-100;x+=8)if(clear(x))choices.push(x);choices.sort((a,b)=>Math.abs(a-original)-Math.abs(b-original));if(!choices.length)throw Error('No safe item bay stage '+(i+1));b.x=choices[0];}
  }
- // Full collection rectangle, including bobbing, must clear every structure.
- for(let n=coins.length-1;n>=0;n--){const c=coins[n];let tries=0;
-  while(platforms.some(p=>overlap({x:c.x-9,y:c.y-14,w:18,h:28},p))&&tries++<28)c.y-=6;
-  const support=platforms.filter(p=>c.x>=p.x-12&&c.x<=p.x+p.w+12&&p.y>=c.y+14).sort((a,b)=>a.y-b.y)[0];
-  if(c.y<45||!support||support.y-c.y>145||platforms.some(p=>overlap({x:c.x-9,y:c.y-14,w:18,h:28},p)))coins.splice(n,1);
- }
- return{profile:profile.theme,length,platforms,gaps,coins,enemies,hazards,saws,decor,belts,switches,items:[],shots:[],flag:checkpointSpawn.x+17,checkpointSpawn,bossSpawn,bossFlag:bossSpawn?.x+17,goal:length-130,boss,bossPickups};
+ for(let n=coins.length-1;n>=0;n--){const c=coins[n];let tries=0;while(platforms.some(p=>overlap({x:c.x-9,y:c.y-14,w:18,h:28},motion(p)))&&tries++<30)c.y-=6;if(c.y<45||platforms.some(p=>overlap({x:c.x-9,y:c.y-14,w:18,h:28},motion(p))))coins.splice(n,1);}
+ for(const e of enemies){const floor=ground.find(p=>e.x>=p.x&&e.x<p.x+p.w),flight=e.type===2?48:e.type===4?54:0;let spans=[],span=null;
+  for(let x=floor.x+24;x<=floor.x+floor.w-e.w-24;x+=4){const body={x,y:e.baseY-flight,w:e.w,h:e.h+2*flight},clear=!platforms.some(p=>!p.ground&&overlap(body,motion(p)))&&!hazards.some(h=>overlap(body,h));if(clear){if(!span)span={a:x,b:x};span.b=x;}else if(span){spans.push(span);span=null;}}if(span)spans.push(span);spans=spans.filter(s=>s.b-s.a>=12).sort((a,b)=>Math.abs((a.a+a.b)/2-e.x)-Math.abs((b.a+b.b)/2-e.x));if(!spans.length)throw Error('No safe patrol stage '+(i+1));const s=spans[0];e.x=clamp(e.x,s.a,s.b);e.min=e.type===5?e.x:Math.max(s.a,e.x-48);e.max=e.type===5?e.x:Math.min(s.b,e.x+48);Object.assign(e,{spawnX:e.x,spawnY:e.y,spawnVx:e.vx,spawnType:e.type,spawnTimer:e.timer,maxHp:e.hp});}
+ const candidates=[];for(const p of ground)for(let x=p.x+40;x<p.x+p.w-74;x+=12){const body={x:x-20,y:p.y-70,w:74,h:70};if(platforms.some(q=>!q.ground&&overlap(body,motion(q)))||hazards.some(h=>overlap(body,h))||enemies.some(e=>x+60>e.min&&x-60<e.max+e.w)||saws.some(s=>Math.abs(s.baseX-x)<s.range+70))continue;candidates.push({x,y:p.y-64,groundY:p.y});}candidates.sort((a,b)=>Math.abs(a.x-length*.5)-Math.abs(b.x-length*.5));const checkpointSpawn=candidates[0]||{x:70,y:406,groundY:470};
+ return{profile:rooms.map(r=>r.motif).join(' / '),rooms,length,platforms,gaps,coins,enemies,hazards,saws,decor,belts,switches,items:[],shots:[],flag:checkpointSpawn.x+17,checkpointSpawn,bossSpawn,bossFlag:bossSpawn?.x+17,goal:length-130,boss,bossPickups};
 }
 function start(i=stage){stage=i;world=level(i);player={x:70,y:390,vx:0,vy:0,w:34,h:64,ground:false,invulnerable:0,power:null,powerTime:0,airJump:1,shieldHits:0,springCooldown:0,pet:false,petGold:false,petX:40,petY:430,petCooldown:0,fireCooldown:0,bossAmmo:0,facing:1};camera=0;time=0;coins=0;checkpoint=false;bossCheckpoint=false;particles=[];running=true;paused=false;completed=false;stageDone=false;releaseKeys();coyote=0;deathPhase=null;deathCause=null;deathTimer=0;$('deathCurtain').hidden=true;noticeTime=0;$('notice').textContent='';$('panel').classList.add('hidden');updateHud();updateStages();canvas.focus({preventScroll:true})}
 function message(title,text,label){$('panelTitle').textContent=title;$('panelText').textContent=text;$('play').textContent=label;$('panel').classList.remove('hidden')}
@@ -291,7 +244,7 @@ function draw(){ctx.clearRect(0,0,W,H);if(background.complete&&background.natura
  for(const s of world.shots){rect(s.x-3,s.y+3,18,6,s.hostile?'#ac7edc':'#ed7548');rect(s.x+2,s.y,8,12,s.hostile?'#eee2ff':'#fff2ac')}
  function flag(x,goal,active){const surface=world.platforms.find(p=>p.ground&&x>=p.x&&x<p.x+p.w),base=surface?.y??470;rect(x,base-160,4,160,'#e3d9aa');rect(x-4,base-164,12,8,'#f7d875');rect(x+4,base-154,44,26,goal?'#de9272':active?'#80d8bc':'#829dc6');rect(x+10,base-149,12,12,'#fff1b9');rect(x-9,base-7,22,7,'#384d51')}flag(world.flag,false,checkpoint);if(world.bossFlag)flag(world.bossFlag,false,bossCheckpoint);flag(world.goal,true,false);
  if(player.pet)PixelArt.draw(ctx,player.petGold?'dogGold':'dog',player.petX,player.petY,34,28,player.facing<0);
- ctx.globalAlpha=player.invulnerable>0&&!deathPhase&&Math.floor(time*12)%2?.5:1;if(!deathPhase&&heroSheet.complete&&heroSheet.naturalWidth){const pose=!player.ground?3:player.land>0?4:Math.abs(player.vx)>20?[1,0,2,0][Math.floor(time*12)%4]:0,index=(player.facing<0?5:0)+pose,scale=player.h/64;ctx.drawImage(heroSheet,index*64,0,64,80,Math.round(player.x+player.w/2-32*scale),Math.round(player.y+player.h-72*scale),64*scale,80*scale);}else PixelArt.draw(ctx,deathPhase?'heroDead':'hero',player.x-5,player.y,player.w+10,player.h,player.facing<0,0);ctx.globalAlpha=1;
+ ctx.globalAlpha=player.invulnerable>0&&!deathPhase&&Math.floor(time*12)%2?.5:1;if(heroSheet.complete&&heroSheet.naturalWidth){const pose=deathPhase?4:!player.ground?3:player.land>0?4:Math.abs(player.vx)>20?[1,0,2,0][Math.floor(time*12)%4]:0,index=(player.facing<0?5:0)+pose,scale=player.h/64;ctx.drawImage(heroSheet,index*64,0,64,80,Math.round(player.x+player.w/2-32*scale),Math.round(player.y+player.h-72*scale),64*scale,80*scale);}else PixelArt.draw(ctx,deathPhase?'heroDead':'hero',player.x-5,player.y,player.w+10,player.h,player.facing<0,0);ctx.globalAlpha=1;
  if(player.power){rect(player.x-4,player.y-8,player.w+8,3,({giant:'#ffcaa0',fire:'#ffaf4b',shoes:'#8bd9f2',shield:'#a6f8dd'})[player.power]);if(Math.floor(time*8)%2)rect(player.x+(Math.floor(time*5)%2?player.w:0),player.y+player.h*.4,4,4,'#fff5b0');if(player.shieldHits){ctx.strokeStyle='#83f7dd';ctx.lineWidth=4;ctx.strokeRect(player.x-7,player.y-10,player.w+14,player.h+16)}}
  for(const p of particles)if(p.x>camera-12&&p.x<camera+W+12){ctx.globalAlpha=p.life/.6;rect(p.x,p.y,4,4,p.color)}ctx.globalAlpha=1;ctx.restore();
 }

@@ -102,3 +102,7 @@ and actual Chromium PC/mobile polish test successfully. Existing AI limits uncha
 - URL https://woojingame.asnt1.chatgpt.site/#adventure ; public audience preserved.
 - Gameplay limitations still130/132 local jump probes and0/9 full AI clears.
   Publication success does not change those results. This last note is docs-only.
+
+## Superseded by distinct room maps
+See WOORIO-V26-HANDOFF.md and feat/woorio-distinct-maps. Old132gap counts and repeated
+room layout are no longer current; new maps have50gaps, local jump probe50/50.
