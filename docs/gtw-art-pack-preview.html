@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WoojinHub · GTW 후보 에셋 미리보기</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: clamp(16px, 3vw, 40px); background: #12161c; color: #f0f1f3; }
+    main { max-width: 1400px; margin: auto; }
+    h1 { font-size: clamp(24px, 3vw, 36px); margin: 0 0 8px; }
+    p { color: #b9c3d0; line-height: 1.6; }
+    .warn { border: 1px solid #966d37; background: #292116; color: #f5d5a1; padding: 12px 16px; border-radius: 10px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 18px; margin-top: 24px; }
+    figure { min-width: 0; margin: 0; border-radius: 14px; border: 1px solid #344152; overflow: hidden; background: #202733; }
+    figcaption { padding: 14px 16px; }
+    figcaption b { display: block; }
+    small { color: #b9c3d0; display: block; margin-top: 4px; }
+    .checker { padding: 12px; display: grid; place-items: center; min-height: 240px;
+      background-color: #afb4bd;
+      background-image: linear-gradient(45deg, #e4e6ea 25%, transparent 25%), linear-gradient(-45deg, #e4e6ea 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e4e6ea 75%), linear-gradient(-45deg, transparent 75%, #e4e6ea 75%);
+      background-size: 28px 28px; background-position: 0 0, 0 14px, 14px -14px, -14px 0;
+    }
+    img { display: block; width: 100%; height: auto; object-fit: contain; image-rendering: pixelated; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>WoojinHub · GTW 신규 에셋 후보</h1>
+    <p class="warn">이 페이지는 투명 PNG 원본을 확인하기 위한 검토 화면이야. 전투·NPC 행동·월드 배치가 게임에 구현됐다는 뜻은 아니야.</p>
+    <div class="grid">
+      <figure><div class="checker"><img src="../assets/gtw-candidates-20261105/woojin-combat-keyposes.png" alt="주먹, 나무봉, 피격 전투 포즈 9종"></div><figcaption><b>전투 포즈 9종</b><small>앞방향 키 포즈만 제작 · 타격 판정과 나머지 방향 미구현</small></figcaption></figure>
+      <figure><div class="checker"><img src="../assets/gtw-candidates-20261105/npc-urban-a.png" alt="도시 NPC 4명의 4방향 정지 포즈"></div><figcaption><b>도시 NPC A · 4명</b><small>노점상, 직장인, 조깅하는 사람, 거리 불량배</small></figcaption></figure>
+      <figure><div class="checker"><img src="../assets/gtw-candidates-20261105/npc-urban-b.png" alt="추가 NPC 4명의 4방향 정지 포즈"></div><figcaption><b>도시 NPC B · 4명</b><small>경비원, 간호사, 공사 인부, 거리 음악가</small></figcaption></figure>
+      <figure><div class="checker"><img src="../assets/gtw-candidates-20261105/buildings-a.png" alt="약국, 식당, 주택, 세탁소 건물"></div><figcaption><b>건물 4종</b><small>약국, 분식·국수집, 저층 아파트, 코인세탁소</small></figcaption></figure>
+      <figure><div class="checker"><img src="../assets/gtw-candidates-20261105/street-props-a.png" alt="도시 거리 소품 16종"></div><figcaption><b>거리 소품 16종</b><small>자판기, 가로등, 음식 카트, 신호등, 벤치, 자전거 등</small></figcaption></figure>
+    </div>
+  </main>
+</body>
+</html>

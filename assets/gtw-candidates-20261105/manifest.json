@@ -1,0 +1,67 @@
+{
+  "packId": "woojinhub-gtw-art-candidates-2026-11-05",
+  "purpose": "Candidate source art for controlled extraction and in-engine review; NOT runtime-ready atlases",
+  "targetBranch": "feat/gtw-graphics",
+  "runtimeNotes": {
+    "existingCharacterCell": [40, 48],
+    "existingFeetAnchor": [20, 44],
+    "existingRenderer": "Canvas2D / nearest-neighbour",
+    "approval": "Every extracted sprite, directional angle, game-world scale, collision footprint and animation must be checked in the running game"
+  },
+  "sources": [
+    "User's Korean pixel-art city intersection reference (01-7697.png)",
+    "User's Woojin directional reference (02-7695.png)",
+    "User's NPC directional references (03-7696.png and 05-7698.png)"
+  ],
+  "files": [
+    {
+      "filename": "npc-urban-a.png",
+      "dimensions": [1086, 1448],
+      "grid": [4, 4],
+      "gridMeaning": "columns = identities, rows = south/north/west/east idle pose",
+      "identities": ["street-food-vendor", "office-worker", "jogger", "street-troublemaker"],
+      "directions": ["down", "up", "left", "right"],
+      "limitations": ["Static directional poses only; no walking frames", "Low-angle character reference needs perspective adjustment to current top-down runtime"],
+      "sha256": "8ec7123e9029b82b04c89cc8890e6f440a8a6762b178e7779210075e0ba2cf6b"
+    },
+    {
+      "filename": "npc-urban-b.png",
+      "dimensions": [1086, 1448],
+      "grid": [4, 4],
+      "gridMeaning": "columns = identities, rows = south/north/west/east idle pose",
+      "identities": ["security-guard", "nurse", "construction-worker", "street-busker"],
+      "directions": ["down", "up", "left", "right"],
+      "limitations": ["Static directional poses only; no walking frames", "Perspective/scale adaptation required"],
+      "sha256": "a82c680baa7698312005df5c7ec42b5e67038eb10f6e4520bb8bb721ac7fef43"
+    },
+    {
+      "filename": "buildings-a.png",
+      "dimensions": [1312, 1199],
+      "grid": [2, 2],
+      "gridMeaning": "distinct buildings ordered row-major",
+      "identities": ["pharmacy", "noodle-restaurant", "low-rise-apartment", "coin-laundromat"],
+      "limitations": ["Illustrative building perspectives/footprints require runtime size calibration", "Doors, collision polygons and entry interaction zones not included"],
+      "sha256": "cd00ddb49def23dcf5e663ef1f7e7428a02e4807f9fd6586192c03151978d916"
+    },
+    {
+      "filename": "street-props-a.png",
+      "dimensions": [1286, 1223],
+      "grid": [4, 4],
+      "gridMeaning": "distinct props ordered row-major",
+      "identities": ["streetlight", "vending-machine", "trash-bin", "tactile-paving-corner", "bicycle-rack", "street-food-cart", "park-bench", "shrub-planter", "traffic-cone", "bollard", "pedestrian-signal", "electrical-cabinet", "manhole", "drain-grate", "flowerbed", "delivery-bike"],
+      "limitations": ["Ground decoration vs collidable prop must be distinguished", "Pole/tall sprite base must use a small collision footprint"],
+      "sha256": "62e1b0a66e10f23f343657081a5d2008630ced6a57be747d36667e4f4f646e1d"
+    },
+    {
+      "filename": "woojin-combat-keyposes.png",
+      "dimensions": [1086, 1448],
+      "grid": [3, 3],
+      "gridMeaning": "front/south-facing KEY POSES, row-major; NOT a complete animation set",
+      "identities": ["fist-guard", "fist-jab", "fist-recover", "club-ready", "club-strike", "club-recover", "hurt", "stagger", "guard-crouch"],
+      "directions": ["down"],
+      "limitations": ["Needs north/west/east poses", "Needs properly foot-aligned keyframe extraction and timing", "No functional hit detection, enemy AI, damage or progression logic exists in this asset alone"],
+      "sha256": "4832d88c773eadbb8963211b4240c5cc821a836424cd0829aa22c01bf74fc14f"
+    }
+  ],
+  "caution": "Do not crop blindly by equal grid divisions. Detect and visually inspect alpha silhouettes and normalize feet anchoring. Keep originals immutable. Do not report gameplay-ready until on-device verification."
+}
