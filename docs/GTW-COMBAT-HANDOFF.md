@@ -69,3 +69,20 @@ Original private deployment remains untouched until verified. No changes deploye
   payload; now seed it before game startup, rather than misreporting a save defect.
 - `docs/gtw-combat/{frames,desktop,mobile}.png` captured/opened. Visual polish and
   broader regression still needed. No deployment yet. Next priority NPC interactions.
+
+## Checkpoint publication requested by owner
+- Combat source checkpoint `58e2a36` was confirmed pushed to GitHub.
+- Re-ran combat unit/browser, city mission/save, graphics, and stability successfully.
+  Stability: actual Chromium two-finger move/run/release; 1000 simulated seconds.
+- Corrected mobile weapon hint length; test now locates run button dynamically after
+  new attack-button layout instead of touching old hard-coded coordinates.
+- NPC WIP is safely stashed (`WIP residents: generated sources, extraction alignment
+  failure, first red test`). Two generated 36/48-frame sources exist. Extraction
+  failed intentionally on guard frame 8 exceeding left margin: foot anchor used only
+  foremost shoe. Must fix centering using both planted foot regions, inspect output.
+  Resident behavior unit test is red because module is not yet implemented.
+- Do not publish NPC WIP as completed. Resume by `git stash apply stash@{0}` after
+  combat private deployment is recorded. No access or old save key changes.
+- Also passed existing browser.cjs (grow), merge.cjs, quality.cjs and
+  adventure-geometry.cjs (five geometries with enemies removed + persistent hub).
+  This is not a claim that the previously failing Woorio full combat bot passed.
