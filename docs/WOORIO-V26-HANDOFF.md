@@ -56,3 +56,11 @@ owner's persistent default. No other game's product code or save keys changed.
 Next priority is stronger input AI for upper routes/waiting/monster timing and actual
 human mobile playthroughs, not another duplicate combat or generic map generator.
 Safe rollback is previous public source c513bd1; keep saves and never force push.
+
+## Confirmed publication
+- Source dd8de1ddd18116ea194db7213fe7eb2579940233 pushed to GitHub and Sites.
+- Sites version27: appgprj_6ae9c47115308191b262fff9998049d6~appgver_4d02ed0bbf208191bdcb1deccd9c5cdd.
+- Deployment appgdep_6aecb39c525c8191a4eacc2fee4130e9 returned succeeded.
+- URL https://woojingame.asnt1.chatgpt.site/#adventure . Public unchanged.
+- Stage1 input bot cleared; other8not yet cleared by the limited bot. Placement and
+  isolated physical checks passed as recorded above; full9clear not claimed.
