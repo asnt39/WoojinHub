@@ -7,3 +7,21 @@ header small{color:#e6dcc7;text-shadow:1px 1px #252831}
 #map{border-color:#cec3ac;box-shadow:0 3px 0 #252a3280}
 
 #pause article{max-height:calc(100dvh - 24px);overflow:auto}
+#combatHud{position:absolute;left:22px;bottom:22px;width:228px;padding:12px 14px;background:#252b34ed;border:1px solid #9f9a8666;box-shadow:0 3px #18202888}
+#combatHud>div{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}
+#combatHud small{font-size:9px;letter-spacing:0;line-height:1.5;color:#c2c5b9;max-width:155px}
+.healthTrack{height:5px;background:#161d25;margin:8px 0 10px;overflow:hidden}
+#healthFill{display:block;height:100%;width:100%;background:#9bb290;transition:width .12s linear}
+#combatToast{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);max-width:min(540px,92vw);background:#252b34ed;border-left:3px solid #dab97b;color:#eee2c6;font-size:12px;line-height:1.6;padding:10px 14px;pointer-events:none}
+#combatToast:empty{display:none}
+@media(pointer:coarse),(max-width:700px){
+ #combatHud{top:155px;bottom:auto;left:12px;width:186px;padding:8px 10px}
+ #combatHud small{font-size:9px;max-width:125px}
+ #combatHint{display:none}
+ #combatToast{bottom:155px;width:90vw;text-align:center;font-size:11px}
+ .actions{grid-template-columns:repeat(3,53px);gap:6px}
+ .actions button{height:47px;font-size:11px}
+ .actions #attack{grid-column:span 2;background:#8f5846;border-color:#c69772;font-weight:700;font-size:15px}
+ .actions #run{grid-column:3}
+ .actions button:last-child{grid-column:auto}
+}

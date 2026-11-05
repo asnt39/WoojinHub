@@ -2,7 +2,7 @@
 // Source artwork is kept outside dist. See assets/city/manifest.json for provenance.
 window.CitySprites = (() => {
   const images = {}, frames = new Map();
-  const names = ['store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','actions','npc-0','npc-1','npc-2'];
+  const names = ['store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','actions','npc-0','npc-1','npc-2','woojin-combat','troublemaker'];
   const ready = Promise.all(names.map(name => new Promise((resolve,reject) => {
     const img = new Image();
     img.onload = () => { images[name] = img; resolve(); };
@@ -35,5 +35,14 @@ window.CitySprites = (() => {
     }
     return frames.get(key);
   }
-  return {ready,images,person,action,shadow};
+  function combat(role,dir,pose){
+    const index=directionRow[dir]*7+pose,key=role+':combat:'+index;
+    if(!frames.has(key)){
+      const frame=document.createElement('canvas');frame.width=64;frame.height=64;
+      frame.getContext('2d').drawImage(images[role],index*64,0,64,64,0,0,64,64);
+      frames.set(key,frame);
+    }
+    return frames.get(key);
+  }
+  return {ready,images,person,action,combat,shadow};
 })();

@@ -1,0 +1,760 @@
+{
+  "cell": [
+    64,
+    64
+  ],
+  "anchor": [
+    32,
+    56
+  ],
+  "directions": [
+    "down",
+    "up",
+    "left",
+    "right"
+  ],
+  "files": {
+    "woojin-combat": {
+      "source": "assets/gtw-combat-generated/woojin-combat.png",
+      "sha256": "30891ffdd80aa2f641709836e2b4bdf515b5137c4785ce104f92c857bf84d24f",
+      "scale": 0.19,
+      "frames": [
+        {
+          "region": [
+            107,
+            16,
+            239,
+            216
+          ],
+          "sourceFeetX": 68.5,
+          "targetOffset": [
+            19,
+            18
+          ]
+        },
+        {
+          "region": [
+            330,
+            17,
+            467,
+            219
+          ],
+          "sourceFeetX": 70.0,
+          "targetOffset": [
+            19,
+            18
+          ]
+        },
+        {
+          "region": [
+            560,
+            18,
+            692,
+            221
+          ],
+          "sourceFeetX": 60.5,
+          "targetOffset": [
+            21,
+            17
+          ]
+        },
+        {
+          "region": [
+            770,
+            17,
+            908,
+            220
+          ],
+          "sourceFeetX": 68.5,
+          "targetOffset": [
+            19,
+            17
+          ]
+        },
+        {
+          "region": [
+            971,
+            6,
+            1125,
+            221
+          ],
+          "sourceFeetX": 83.0,
+          "targetOffset": [
+            16,
+            15
+          ]
+        },
+        {
+          "region": [
+            1198,
+            17,
+            1329,
+            222
+          ],
+          "sourceFeetX": 63.0,
+          "targetOffset": [
+            20,
+            17
+          ]
+        },
+        {
+          "region": [
+            1412,
+            16,
+            1547,
+            217
+          ],
+          "sourceFeetX": 70.0,
+          "targetOffset": [
+            19,
+            18
+          ]
+        },
+        {
+          "region": [
+            109,
+            255,
+            243,
+            460
+          ],
+          "sourceFeetX": 71.0,
+          "targetOffset": [
+            19,
+            17
+          ]
+        },
+        {
+          "region": [
+            334,
+            258,
+            473,
+            460
+          ],
+          "sourceFeetX": 72.0,
+          "targetOffset": [
+            18,
+            18
+          ]
+        },
+        {
+          "region": [
+            555,
+            255,
+            686,
+            460
+          ],
+          "sourceFeetX": 73.5,
+          "targetOffset": [
+            18,
+            17
+          ]
+        },
+        {
+          "region": [
+            768,
+            260,
+            907,
+            460
+          ],
+          "sourceFeetX": 73.0,
+          "targetOffset": [
+            18,
+            18
+          ]
+        },
+        {
+          "region": [
+            978,
+            239,
+            1118,
+            460
+          ],
+          "sourceFeetX": 72.5,
+          "targetOffset": [
+            18,
+            14
+          ]
+        },
+        {
+          "region": [
+            1191,
+            222,
+            1328,
+            460
+          ],
+          "sourceFeetX": 75.0,
+          "targetOffset": [
+            18,
+            11
+          ]
+        },
+        {
+          "region": [
+            1410,
+            256,
+            1558,
+            460
+          ],
+          "sourceFeetX": 75.0,
+          "targetOffset": [
+            18,
+            17
+          ]
+        },
+        {
+          "region": [
+            113,
+            489,
+            231,
+            694
+          ],
+          "sourceFeetX": 34.5,
+          "targetOffset": [
+            25,
+            17
+          ]
+        },
+        {
+          "region": [
+            327,
+            491,
+            459,
+            694
+          ],
+          "sourceFeetX": 61.5,
+          "targetOffset": [
+            20,
+            17
+          ]
+        },
+        {
+          "region": [
+            505,
+            492,
+            688,
+            694
+          ],
+          "sourceFeetX": 112.0,
+          "targetOffset": [
+            11,
+            18
+          ]
+        },
+        {
+          "region": [
+            757,
+            492,
+            896,
+            694
+          ],
+          "sourceFeetX": 72.0,
+          "targetOffset": [
+            18,
+            18
+          ]
+        },
+        {
+          "region": [
+            966,
+            482,
+            1099,
+            694
+          ],
+          "sourceFeetX": 36.5,
+          "targetOffset": [
+            25,
+            16
+          ]
+        },
+        {
+          "region": [
+            1127,
+            492,
+            1342,
+            694
+          ],
+          "sourceFeetX": 140.5,
+          "targetOffset": [
+            5,
+            18
+          ]
+        },
+        {
+          "region": [
+            1423,
+            492,
+            1557,
+            694
+          ],
+          "sourceFeetX": 35.0,
+          "targetOffset": [
+            25,
+            18
+          ]
+        },
+        {
+          "region": [
+            104,
+            724,
+            229,
+            934
+          ],
+          "sourceFeetX": 65.0,
+          "targetOffset": [
+            20,
+            16
+          ]
+        },
+        {
+          "region": [
+            319,
+            726,
+            454,
+            935
+          ],
+          "sourceFeetX": 70.5,
+          "targetOffset": [
+            19,
+            16
+          ]
+        },
+        {
+          "region": [
+            533,
+            726,
+            709,
+            934
+          ],
+          "sourceFeetX": 71.5,
+          "targetOffset": [
+            18,
+            16
+          ]
+        },
+        {
+          "region": [
+            759,
+            726,
+            893,
+            934
+          ],
+          "sourceFeetX": 66.0,
+          "targetOffset": [
+            19,
+            16
+          ]
+        },
+        {
+          "region": [
+            962,
+            729,
+            1117,
+            931
+          ],
+          "sourceFeetX": 86.0,
+          "targetOffset": [
+            16,
+            18
+          ]
+        },
+        {
+          "region": [
+            1179,
+            726,
+            1389,
+            934
+          ],
+          "sourceFeetX": 73.0,
+          "targetOffset": [
+            18,
+            16
+          ]
+        },
+        {
+          "region": [
+            1416,
+            726,
+            1557,
+            934
+          ],
+          "sourceFeetX": 71.5,
+          "targetOffset": [
+            18,
+            16
+          ]
+        }
+      ]
+    },
+    "troublemaker": {
+      "source": "assets/gtw-combat-generated/troublemaker.png",
+      "sha256": "9cd0c22cd2228e0492066738d95088b2869271976c0e03a23406e9275ba63e09",
+      "scale": 0.17674418604651163,
+      "frames": [
+        {
+          "region": [
+            92,
+            12,
+            225,
+            227
+          ],
+          "sourceFeetX": 66.5,
+          "targetOffset": [
+            20,
+            18
+          ]
+        },
+        {
+          "region": [
+            319,
+            12,
+            453,
+            235
+          ],
+          "sourceFeetX": 70.5,
+          "targetOffset": [
+            20,
+            17
+          ]
+        },
+        {
+          "region": [
+            546,
+            13,
+            681,
+            230
+          ],
+          "sourceFeetX": 76.5,
+          "targetOffset": [
+            18,
+            18
+          ]
+        },
+        {
+          "region": [
+            754,
+            13,
+            905,
+            232
+          ],
+          "sourceFeetX": 28.5,
+          "targetOffset": [
+            27,
+            17
+          ]
+        },
+        {
+          "region": [
+            993,
+            14,
+            1117,
+            238
+          ],
+          "sourceFeetX": 19.5,
+          "targetOffset": [
+            29,
+            16
+          ]
+        },
+        {
+          "region": [
+            1210,
+            22,
+            1344,
+            238
+          ],
+          "sourceFeetX": 20.5,
+          "targetOffset": [
+            28,
+            18
+          ]
+        },
+        {
+          "region": [
+            1443,
+            48,
+            1569,
+            223
+          ],
+          "sourceFeetX": 63.0,
+          "targetOffset": [
+            21,
+            25
+          ]
+        },
+        {
+          "region": [
+            91,
+            251,
+            226,
+            465
+          ],
+          "sourceFeetX": 67.0,
+          "targetOffset": [
+            20,
+            18
+          ]
+        },
+        {
+          "region": [
+            312,
+            252,
+            449,
+            478
+          ],
+          "sourceFeetX": 73.0,
+          "targetOffset": [
+            19,
+            16
+          ]
+        },
+        {
+          "region": [
+            539,
+            251,
+            674,
+            480
+          ],
+          "sourceFeetX": 78.5,
+          "targetOffset": [
+            18,
+            16
+          ]
+        },
+        {
+          "region": [
+            749,
+            252,
+            893,
+            481
+          ],
+          "sourceFeetX": 115.5,
+          "targetOffset": [
+            12,
+            16
+          ]
+        },
+        {
+          "region": [
+            979,
+            256,
+            1111,
+            483
+          ],
+          "sourceFeetX": 98.5,
+          "targetOffset": [
+            15,
+            16
+          ]
+        },
+        {
+          "region": [
+            1215,
+            269,
+            1349,
+            477
+          ],
+          "sourceFeetX": 113.0,
+          "targetOffset": [
+            12,
+            19
+          ]
+        },
+        {
+          "region": [
+            1442,
+            286,
+            1570,
+            478
+          ],
+          "sourceFeetX": 64.0,
+          "targetOffset": [
+            21,
+            22
+          ]
+        },
+        {
+          "region": [
+            94,
+            492,
+            194,
+            698
+          ],
+          "sourceFeetX": 61.5,
+          "targetOffset": [
+            21,
+            20
+          ]
+        },
+        {
+          "region": [
+            300,
+            493,
+            436,
+            696
+          ],
+          "sourceFeetX": 59.5,
+          "targetOffset": [
+            21,
+            20
+          ]
+        },
+        {
+          "region": [
+            524,
+            498,
+            674,
+            698
+          ],
+          "sourceFeetX": 92.5,
+          "targetOffset": [
+            16,
+            21
+          ]
+        },
+        {
+          "region": [
+            740,
+            498,
+            882,
+            697
+          ],
+          "sourceFeetX": 45.5,
+          "targetOffset": [
+            24,
+            21
+          ]
+        },
+        {
+          "region": [
+            934,
+            496,
+            1135,
+            702
+          ],
+          "sourceFeetX": 98.5,
+          "targetOffset": [
+            15,
+            20
+          ]
+        },
+        {
+          "region": [
+            1200,
+            510,
+            1358,
+            707
+          ],
+          "sourceFeetX": 133.5,
+          "targetOffset": [
+            8,
+            21
+          ]
+        },
+        {
+          "region": [
+            1430,
+            535,
+            1582,
+            697
+          ],
+          "sourceFeetX": 78.5,
+          "targetOffset": [
+            18,
+            27
+          ]
+        },
+        {
+          "region": [
+            92,
+            716,
+            190,
+            932
+          ],
+          "sourceFeetX": 42.5,
+          "targetOffset": [
+            24,
+            18
+          ]
+        },
+        {
+          "region": [
+            284,
+            717,
+            428,
+            928
+          ],
+          "sourceFeetX": 78.5,
+          "targetOffset": [
+            18,
+            19
+          ]
+        },
+        {
+          "region": [
+            512,
+            718,
+            659,
+            928
+          ],
+          "sourceFeetX": 74.5,
+          "targetOffset": [
+            19,
+            19
+          ]
+        },
+        {
+          "region": [
+            739,
+            718,
+            888,
+            936
+          ],
+          "sourceFeetX": 29.0,
+          "targetOffset": [
+            27,
+            17
+          ]
+        },
+        {
+          "region": [
+            958,
+            723,
+            1158,
+            936
+          ],
+          "sourceFeetX": 23.5,
+          "targetOffset": [
+            28,
+            18
+          ]
+        },
+        {
+          "region": [
+            1188,
+            736,
+            1347,
+            936
+          ],
+          "sourceFeetX": 71.5,
+          "targetOffset": [
+            19,
+            21
+          ]
+        },
+        {
+          "region": [
+            1423,
+            761,
+            1580,
+            932
+          ],
+          "sourceFeetX": 58.0,
+          "targetOffset": [
+            22,
+            26
+          ]
+        }
+      ]
+    }
+  }
+}

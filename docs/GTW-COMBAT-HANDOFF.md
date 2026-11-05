@@ -47,3 +47,25 @@ Combat unit and browser tests will be added before implementation. Re-run existi
 city runtime/graphics/stability and existing game regressions before publishing.
 Known baseline: Woorio full combat bot stage 3 failure; do not attribute to new GTW.
 Original private deployment remains untouched until verified. No changes deployed yet.
+
+## Checkpoint 1 — combat core and playable integration
+- Implemented pure CityCombat simulation and isolated CityCombatView renderer.
+- Fists, acquired club (tool crate E at 280,560), J/Space/hold touch attack and Q swap.
+- Direction locked windup/active/recovery, range/line-of-sight/single-hit protection,
+  three-swing breather, health, interrupted attacks, recoil, i-frames, defeat/respawn.
+- Ta eo/태오 encounter at 300,620 explicitly starts with E; telegraph/approach/attack/
+  retreat/leash/defeat; one-time 100-won reward, replayable without repeated rewards.
+- Safe old v1 payload defaults via OPTIONAL combat object. Original money/mission,
+  primary and backup keys preserved; no advanced abilities.
+- Generated 28 four-direction Woojin combat poses and 28 troublemaker walk/combat
+  poses from pack + existing overhead hero, kept sources separately. Derived 64x64
+  margin with (32,56) foot anchor preserves original world-size bodies; 40x48 walkers
+  remain unchanged. `scripts/prepare-combat-art.py` reproduces sprites and metadata.
+- Actual tests passed: city-combat-unit (first failed absent component),
+  city-combat-browser (first failed absent integration), city.cjs and city-runtime.cjs.
+- Browser checks include old save restore, weapon pickup, fight completion and reward,
+  exploration return, save/reload, mode restrictions and REAL two-finger move+attack.
+- Corrected browser fixture: pagehide auto-save overwrote a manually injected legacy
+  payload; now seed it before game startup, rather than misreporting a save defect.
+- `docs/gtw-combat/{frames,desktop,mobile}.png` captured/opened. Visual polish and
+  broader regression still needed. No deployment yet. Next priority NPC interactions.
