@@ -52,3 +52,11 @@ node tests/adventure-sweeps.cjs
 Next: human/stronger AI timing playtest of ground-return transitions and longer boss
 fights; tune only on observed failures. Preserve warning/recovery, not random damage.
 Safe rollback531aeac, previous site29. No save schema or other game logic changed.
+
+## Confirmed publication
+- Sourcefa254088b5dcdc1a841f9c8b7ad158b55a2893d3 pushed to GitHub/Sites.
+- Site version30: appgprj_6ae9c47115308191b262fff9998049d6~appgver_adc4b0a2b3cc8191bbbd0b193ade3da9.
+- Deployment appgdep_6aecc205eb908191bda8aec80604c160 returned succeeded.
+- https://woojingame.asnt1.chatgpt.site/#adventure . Public audience retained.
+- Final logs local50/50, full input bot1/9clear. This docs-only note does not change
+  gameplay archive. Resume from feat/woorio-boss-rush rather than older game branches.
