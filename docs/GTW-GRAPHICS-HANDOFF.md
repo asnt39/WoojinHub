@@ -186,3 +186,9 @@ quality item and commit/test each unit.”
 - To inspect the last tested state safely: `git worktree add /tmp/gtw-tested d1e13be`.
   To inspect the pre-graphics state use `0e1805e` in a separate worktree. Do not reset
   current work or deploy an older version without checking the user's intent.
+
+## Latest activities integration
+Newer user Sites source795251f integrated on feat/gtw-activities. See
+[GTW-ACTIVITIES-HANDOFF.md](GTW-ACTIVITIES-HANDOFF.md) for current source, tests,
+NPC sprites and job state. Older combat branch is a retained checkpoint, not the
+latest whole application. User explicitly requested keeping current public audience.

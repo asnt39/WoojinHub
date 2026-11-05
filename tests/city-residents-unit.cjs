@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict'),R=require('../dist/city-residents.js');
+const residents=R.make();assert.equal(residents.length,7);assert.equal(new Set(residents.map(n=>n.id)).size,7);
+assert.deepEqual(residents.map(n=>n.kind).sort(),['busker','guard','jogger','nurse','office','vendor','worker']);
+const player={x:1100,y:1100,fight:{hp:40}},state={money:80,mission:0};let engaged=false;
+const combat={get engaged(){return engaged},heal(v){if(engaged||player.fight.hp===100)return false;player.fight.hp=Math.min(100,player.fight.hp+v);return true},wins:[]};
+const vendor=residents.find(n=>n.kind==='vendor'),nurse=residents.find(n=>n.kind==='nurse');
+assert.equal(R.service(vendor,{player,state,combat}).ok,true);assert.equal(state.money,50);assert.equal(player.fight.hp,75);
+assert.equal(R.service(nurse,{player,state,combat}).ok,true);assert.equal(player.fight.hp,100);assert.equal(state.money,50);
+assert.equal(R.service(vendor,{player,state,combat}).ok,false);assert.equal(state.money,50,'full health never charges');
+player.fight.hp=40;state.money=0;assert.equal(R.service(vendor,{player,state,combat}).ok,false);assert.equal(player.fight.hp,40);
+engaged=true;assert.equal(R.service(nurse,{player,state,combat}).ok,false);engaged=false;
+assert.ok(R.describe(vendor,{state,combat}).text.includes('30'));assert.equal(R.describe(nurse,{state,combat}).action,'무료 응급 처치');
+const mover=residents.find(n=>n.kind==='office'),start={x:mover.x,y:mover.y};
+const move=(o,x,y)=>{o.x+=x;o.y+=y;return false};for(let i=0;i<300;i++)R.step(mover,1/60,{player,combat,move});
+assert.ok(Math.hypot(mover.x-start.x,mover.y-start.y)>10);assert.ok(mover.walk>0&&mover.moving,'distance drives walking animation');
+player.x=mover.x+20;player.y=mover.y;const stopped=mover.x;R.step(mover,1/60,{player,combat,move});assert.equal(mover.x,stopped);assert.equal(mover.moving,false);
+player.x=mover.x+60;engaged=true;const old=mover.x;R.step(mover,.1,{player,combat,move});assert.ok(mover.x<old,'nearby civilians back away from an active fight');
+console.log('PASS: seven distinct roles, service prices/health guards, movement and civilian fight response');
