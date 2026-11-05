@@ -1,0 +1,10 @@
+{"stage":1,"total":5,"reachable":5,"unreached":[]}
+{"stage":2,"total":5,"reachable":5,"unreached":[]}
+{"stage":3,"total":5,"reachable":5,"unreached":[]}
+{"stage":4,"total":5,"reachable":5,"unreached":[]}
+{"stage":5,"total":5,"reachable":5,"unreached":[]}
+{"stage":6,"total":5,"reachable":5,"unreached":[]}
+{"stage":7,"total":6,"reachable":6,"unreached":[]}
+{"stage":8,"total":6,"reachable":6,"unreached":[]}
+{"stage":9,"total":8,"reachable":8,"unreached":[]}
+LOCAL_JUMP_REACHABILITY 50/50
