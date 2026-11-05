@@ -25,3 +25,5 @@ header small{color:#e6dcc7;text-shadow:1px 1px #252831}
  .actions #run{grid-column:3}
  .actions button:last-child{grid-column:auto}
 }
+
+#dialog #service{float:none;display:block;width:100%;margin:8px 0 12px;background:#536858;border-color:#a7b997}#dialog #service[hidden]{display:none}

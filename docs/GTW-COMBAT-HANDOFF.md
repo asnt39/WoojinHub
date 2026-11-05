@@ -86,3 +86,19 @@ Original private deployment remains untouched until verified. No changes deploye
 - Also passed existing browser.cjs (grow), merge.cjs, quality.cjs and
   adventure-geometry.cjs (five geometries with enemies removed + persistent hub).
   This is not a claim that the previously failing Woorio full combat bot passed.
+
+## Resume checkpoint — NPCs tested, newer user source discovered
+- Combat deployment succeeded: source 9b9e907, version appgver_d8491e71b274819182d7016b574dd91c,
+  deployment appgdep_6aec3572c7708191ab33e703b77578d9. Audience retained owner-only.
+- Added seven residents / 84 derived aligned 40x48 frames. Original 8th role is Ta eo.
+  Roles have separate routes/speeds/dialogue; vendor 30-won food heals35, nurse free
+  full heal; explicit choice and full-health/no-funds guards; civilians retreat.
+- Passed city-residents-unit/browser (120-second routes, transactions, dialog freeze,
+  four-direction distinct contacts), city-runtime (60000 ticks), combat-browser,
+  city.cjs and city-stability (1000 seconds, two-finger run).
+- Sources assets/gtw-combat-generated/residents-{a,b}.png, extraction
+  scripts/prepare-resident-art.py; QA docs/gtw-combat/resident-frames.png.
+- NPC code is NOT deployed. User reported improvements: fetched Sites source HEAD
+  795251f084c824fba7b275b10c26af69a4b21988 into checkpoint/site-user-795251f.
+  GitHub origin still9b9e907. New source changes hub, GTW combat/UI, Woorio v23.
+  Resume on new source, do not overwrite it by publishing this older branch.
