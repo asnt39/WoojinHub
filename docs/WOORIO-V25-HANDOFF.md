@@ -94,3 +94,11 @@ above. See DEPLOYMENT-PREFERENCES.md. Fetched Sites HEAD ecdbbae and confirmed i
 an ancestor, so no newer user code is being overwritten. Current public audience
 revision4 retained. Before packaging, re-ran placement, boss-phases, power-duration
 and actual Chromium PC/mobile polish test successfully. Existing AI limits unchanged.
+
+## Confirmed deployed checkpoint
+- Published source c513bd123f0e861cf476d436fa33d175bc0cbfd2, Sites version26:
+  appgprj_6ae9c47115308191b262fff9998049d6~appgver_f3852dc6db848191a28422ae1f7177b7.
+- Deployment appgdep_6aecb064de0081918376e42c4f01e5d7 returned succeeded.
+- URL https://woojingame.asnt1.chatgpt.site/#adventure ; public audience preserved.
+- Gameplay limitations still130/132 local jump probes and0/9 full AI clears.
+  Publication success does not change those results. This last note is docs-only.
