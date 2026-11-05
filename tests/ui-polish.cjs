@@ -44,7 +44,7 @@ assert.equal(frames[0]._src,'city.html');
 
 // Repainting unchanged health 60 times per second must not trigger 60 DOM writes.
 const nodes = new Map();let writes = 0;
-function node(id){if(!nodes.has(id))nodes.set(id,{_text:'',_width:'',get textContent(){return this._text},set textContent(value){writes++;this._text=value},style:{set width(value){writes++;this._width=value},get width(){return this._width}}});return nodes.get(id)}
+function node(id){if(!nodes.has(id))nodes.set(id,{_text:'',_width:'',_html:'',get textContent(){return this._text},set textContent(value){writes++;this._text=value},get innerHTML(){return this._html},set innerHTML(value){writes++;this._html=value},style:{set width(value){writes++;this._width=value},get width(){return this._width}}});return nodes.get(id)}
 const player = {fight:{hp:100,mode:'idle'}};
 const combat = {weapon:'fist',clubUnlocked:false,engaged:false};
 const env = {window:{},CitySprites:{}};
@@ -56,7 +56,8 @@ for(let i=0;i<60;i++)view.hud();
 assert.equal(writes,afterFirst,'unchanged combat HUD must not write into DOM each frame');
 player.fight.hp=79;view.hud();
 assert.equal(node('healthText').textContent,'79 / 100');
-assert.equal(node('healthFill').style.width,'79%');
+assert.equal((node('healthHearts').innerHTML.match(/heart full/g)||[]).length,8,'79 HP renders eight red hearts');
+assert.equal((node('healthHearts').innerHTML.match(/heart empty/g)||[]).length,2,'missing HP is represented by outlined hearts');
 
 const city = read('city.js');
 assert.match(city, /function closeDialog\(/, 'dialog keyboard and click need one close path');

@@ -8,13 +8,15 @@
   club:{windup:.18,active:.12,recovery:.42,range:42,width:19,damage:30,push:85},
   enemy:{windup:.58,active:.10,recovery:.64,range:27,width:13,damage:12,push:55}
  };
- function create({player,enemies,move,blocked,onEvent=()=>{},respawn=()=>{}}){
+ function create({player,enemies,civilians=[],move,blocked,onEvent=()=>{},respawn=()=>{}}){
   let time=0,weapon='fist',clubUnlocked=false,wins=new Set(),serial=0;
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   const face=(a,b)=>Math.abs(b.x-a.x)>Math.abs(b.y-a.y)?b.x>a.x?1:3:b.y>a.y?2:0;
   function attach(a,maxHp){a.fight={hp:maxHp,maxHp,mode:'idle',age:0,invulnerable:0,attack:null,vx:0,vy:0,chain:0,lastAttack:-10};}
   attach(player,100);
   enemies.forEach(e=>{attach(e,80);e.home??={x:e.x,y:e.y};e.brain='idle';e.engaged=false;e.wait=0;e.walk??=0;});
+  civilians.forEach(c=>{attach(c,60);c.civilian=true;c.home??={x:c.x,y:c.y};c.brain='idle';c.wait=0;c.walk??=0;});
+  const playerTargets=[...enemies,...civilians];
   function sight(a,b){const d=distance(a,b),steps=Math.max(1,Math.ceil(d/3));for(let i=1;i<steps;i++)if(blocked(a.x+(b.x-a.x)*i/steps,a.y+(b.y-a.y)*i/steps,1))return false;return true;}
   function inRange(a,b,attack){const [dx,dy]=directions[attack.dir],x=b.x-a.x,y=b.y-a.y,forward=x*dx+y*dy,lateral=Math.abs(x*dy-y*dx);return forward>0&&distance(a,b)<=attack.spec.range+7&&lateral<=attack.spec.width&&sight(a,b);}
   function begin(a,dir,type){const f=a.fight;if(f.mode!=='idle'||f.hp<=0)return false;
@@ -28,18 +30,19 @@
    hit.hits.add(b);f.hp=Math.max(0,f.hp-hit.spec.damage);f.attack=null;f.mode=f.hp?'hurt':'down';f.age=0;f.invulnerable=b===player?.62:.18;
    const [dx,dy]=directions[hit.dir];f.vx=dx*hit.spec.push;f.vy=dy*hit.spec.push;b.moving=false;
    onEvent({kind:'hit',actor:a,target:b,damage:hit.spec.damage,weapon:hit.type});
-   if(!f.hp&&b!==player){b.engaged=false;b.brain='defeated';const first=!wins.has(b.id);wins.add(b.id);onEvent({kind:'victory',actor:b,first});}
+   if(b.civilian){b.brain='flee';b.wait=1.5;onEvent({kind:'civilian-hit',actor:b});}
+   else if(!f.hp&&b!==player){b.engaged=false;b.brain='defeated';const first=!wins.has(b.id);wins.add(b.id);onEvent({kind:'victory',actor:b,first});}
    if(!f.hp&&b===player)onEvent({kind:'down',actor:b});
   }
   function actorStep(a,dt,targets){const f=a.fight;f.age+=dt;f.invulnerable=Math.max(0,f.invulnerable-dt);
    if(Math.abs(f.vx)+Math.abs(f.vy)>.1){move(a,f.vx*dt,f.vy*dt,8);const drag=Math.exp(-13*dt);f.vx*=drag;f.vy*=drag;}
-   if(f.mode==='down'){if(a===player&&f.age>1.25){attach(player,100);enemies.forEach(e=>{e.engaged=false;e.brain='return';e.fight.attack=null;e.fight.mode='idle';});respawn();onEvent({kind:'respawn',actor:player});}return;}
-   if(f.mode==='hurt'){if(f.age>(a===player?.32:.24)){f.mode='idle';f.age=0;if(a!==player){a.brain='retreat';a.wait=.42;}}return;}
+   if(f.mode==='down'){if(a.civilian&&f.age>1.8){attach(a,60);a.brain='return';a.wait=0;}if(a===player&&f.age>1.25){attach(player,100);enemies.forEach(e=>{e.engaged=false;e.brain='return';e.fight.attack=null;e.fight.mode='idle';});respawn();onEvent({kind:'respawn',actor:player});}return;}
+   if(f.mode==='hurt'){if(f.age>(a===player?.32:.24)){f.mode='idle';f.age=0;if(a!==player&&!a.civilian){a.brain='retreat';a.wait=.42;}}return;}
    const hit=f.attack;if(!hit)return;
    const spec=hit.spec;
    if(f.age>=spec.windup+spec.active+spec.recovery+hit.rest){f.mode='idle';f.attack=null;f.age=0;if(a!==player){a.brain='retreat';a.wait=.32;}return;}
    f.mode=f.age<spec.windup?'windup':f.age<spec.windup+spec.active?'active':'recovery';
-   if(f.mode==='active')for(const target of targets){if(target!==player&&!target.engaged)continue;if(!hit.hits.has(target)&&inRange(a,target,hit))damage(a,target,hit);}
+   if(f.mode==='active')for(const target of targets){if(target!==player&&!target.engaged&&!target.civilian)continue;if(!hit.hits.has(target)&&inRange(a,target,hit))damage(a,target,hit);}
   }
   function walk(a,dx,dy,speed,dt){const d=Math.hypot(dx,dy);if(d<.1)return;const x=a.x,y=a.y;
    move(a,dx/d*speed*dt,dy/d*speed*dt,8);
@@ -57,12 +60,16 @@
    if(e.brain==='retreat'){e.wait-=dt;if(e.wait<=0)e.brain='approach';else{walk(e,e.x-player.x,e.y-player.y,30,dt);e.dir=face(e,player);}return;}
    if(e.brain==='approach'){if(d<33&&sight(e,player)){begin(e,face(e,player),'enemy');}else walk(e,player.x-e.x,player.y-e.y,38,dt);}
   }
+  function civilianStep(c,dt){if(c.fight.mode!=='idle')return;
+   if(c.brain==='flee'){c.wait-=dt;walk(c,c.x-player.x,c.y-player.y,63,dt);if(c.wait<=0||distance(c,player)>170)c.brain='return';}
+   if(c.brain==='return'){if(distance(c,c.home)<4){c.brain='idle';c.fight.hp=c.fight.maxHp;}else walk(c,c.home.x-c.x,c.home.y-c.y,25,dt);}
+  }
   function separate(){const living=enemies.filter(e=>e.engaged&&e.fight.hp>0);const list=[player,...living];
    for(let i=0;i<list.length;i++)for(let j=i+1;j<list.length;j++){const a=list[i],b=list[j],d=distance(a,b);if(d>=18)continue;const dx=d?(b.x-a.x)/d:1,dy=d?(b.y-a.y)/d:0,push=(18-d)/2;move(a,-dx*push,-dy*push,8);move(b,dx*push,dy*push,8);}
   }
-  function step(dt){time+=dt;actorStep(player,dt,enemies);for(const e of enemies){actorStep(e,dt,[player]);ai(e,dt);}if(player.fight.hp>0)separate();}
+  function step(dt){time+=dt;actorStep(player,dt,playerTargets);for(const e of enemies){actorStep(e,dt,[player]);ai(e,dt);}for(const c of civilians){actorStep(c,dt,[player]);civilianStep(c,dt);}if(player.fight.hp>0)separate();}
   function start(e){if(!enemies.includes(e)||e.engaged||enemies.some(n=>n.engaged)||player.fight.mode!=='idle'||!sight(player,e))return false;attach(e,80);e.engaged=true;e.brain='alert';e.wait=.42;onEvent({kind:'start',actor:e});return true;}
-  function suspend(){for(const a of [player,...enemies])if(a.fight.attack){a.fight.attack=null;a.fight.mode='idle';if(a!==player){a.brain='retreat';a.wait=.4;}}}
+  function suspend(){for(const a of [player,...enemies,...civilians])if(a.fight.attack){a.fight.attack=null;a.fight.mode='idle';if(a!==player&&!a.civilian){a.brain='retreat';a.wait=.4;}}}
   function setWeapon(next){if(player.fight.mode!=='idle'||!['fist','club'].includes(next)||next==='club'&&!clubUnlocked)return false;weapon=next;return true;}
   function save(){return{hp:player.fight.hp,weapon,clubUnlocked,wins:[...wins]};}
   function load(value){const v=value||{};player.fight.hp=Number.isFinite(v.hp)?Math.max(1,Math.min(100,v.hp)):100;clubUnlocked=v.clubUnlocked===true;weapon=clubUnlocked&&v.weapon==='club'?'club':'fist';wins=new Set(Array.isArray(v.wins)?v.wins.filter(id=>enemies.some(e=>e.id===id)):[]);}

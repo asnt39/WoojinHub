@@ -43,6 +43,12 @@ await env.CitySprites.ready;
 await vm.runInContext(readFileSync(path.join(root,'dist/city.js'),'utf8'),env,{filename:'city.js'});
 const t=env.cityTest;
 assert.ok(t,'testing API exposed on localhost');
+const pressKey=(key)=>windowEvents.get('keydown')[0]({key,target:{tagName:'CANVAS'},preventDefault(){},repeat:false});
+pressKey('Shift');assert.equal(t.sprintEnabled,true,'Shift toggles sprint on');
+windowEvents.get('keyup')[0]({key:'Shift'});assert.equal(t.sprintEnabled,true,'letting go of Shift keeps sprint active');
+pressKey('Shift');assert.equal(t.sprintEnabled,false,'next Shift press turns sprint off');
+element('zoom').value='1.5';element('zoom').onchange();assert.equal(t.zoom,1.5,'extra zoom-out level is selectable');
+t.save();t.restore();assert.equal(t.zoom,1.5,'zoom-out level survives save restoration');
 assert.ok(!t.blocked(250,355,8),'starting position is walkable');
 t.p.x=90;t.p.y=200;t.move(t.p,500,0,8);
 assert.ok(t.p.x<=102,'building swept collision retained');
@@ -53,14 +59,14 @@ for(const [x,y] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]]) {
 }
 t.joy.x=t.joy.y=0;
 t.p.x=t.car.x+40;t.p.y=t.car.y;
-t.vehicle();assert.ok(t.state.driving,'vehicle entry');
+t.interact();assert.ok(t.state.driving,'single interact button enters vehicle');
 const oldY=t.car.y;t.keys.w=true;
 for(let i=0;i<60;i++)t.tick(1/60);
 t.keys.w=false;assert.ok(t.car.y<oldY-10,'vehicle forward movement');
 const oldA=t.car.a;t.keys.d=true;
 for(let i=0;i<30;i++)t.tick(1/60);
 t.keys.d=false;assert.notEqual(t.car.a,oldA,'vehicle steering');
-t.car.speed=0;t.vehicle();
+t.car.speed=0;t.interact();
 assert.ok(!t.state.driving&&!t.blocked(t.p.x,t.p.y),'safe exit');
 t.p.x=t.npcs[0].x;t.p.y=t.npcs[0].y+15;t.interact();
 assert.equal(t.state.mission,1,'mission start');element('dialog').hidden=true;
@@ -89,6 +95,10 @@ assert.equal(t.state.money,500,'primary save restoration');
 local.set('gtw-city-v1','broken');t.state.money=0;t.restore();
 assert.equal(t.state.money,500,'backup save restoration');
 t.save();
+const civilian=t.npcs[0];t.p.x=civilian.x-27;t.p.y=civilian.y;t.p.dir=1;t.p.vx=t.p.vy=0;
+const civilianHp=civilian.fight.hp;assert.equal(t.attack(),true,'player can attack outside a scheduled duel');
+for(let i=0;i<22;i++)t.tick(1/120);
+assert.ok(civilian.fight.hp<civilianHp,'ordinary named NPC receives player combat damage');
 // Simulated stability, not a 1,000-second browser performance measurement.
 for(let i=0;i<60000;i++){
   const d=Math.floor(i/500)%4;

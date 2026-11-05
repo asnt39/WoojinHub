@@ -1,11 +1,13 @@
 'use strict';
 window.CityCombatView={create({player,combat,enemies,sound=()=>{}}){
  const $=id=>document.getElementById(id),S=CitySprites;let toastTime=0,impact=0;const effects=[];
+ const heartMarkup=Array.from({length:11},(_,n)=>'<span class="heart full">♥</span>'.repeat(n)+'<span class="heart empty">♡</span>'.repeat(10-n));
  function show(text){$('combatToast').textContent=text;toastTime=3.4;}
  function event(e){
   if(e.kind==='swing')sound('swing');
   if(e.kind==='start')show('대련 시작 · 노란 전조를 보고 옆으로 피한 뒤 공격해!');
   if(e.kind==='hit'){effects.push({x:e.target.x,y:e.target.y-23,t:.17});impact=.09;sound(e.weapon==='club'?'wood':'hit');}
+  if(e.kind==='civilian-hit')show('시민이 놀라 도망갔어. 잠시 후 다시 돌아올 거야.');
   if(e.kind==='victory')show(e.first?'대련 승리! 첫 승리 보상 100원 · 다시 말을 걸면 재도전할 수 있어.':'대련 승리! 이제 자유롭게 동네를 둘러봐.');
   if(e.kind==='down')show('잠깐 쉬었다 가자. 소지금과 미션은 그대로 유지돼.');
   if(e.kind==='respawn')show('편의점 앞에서 회복했어. 체력 100 · 다시 도전해봐.');
@@ -14,9 +16,11 @@ window.CityCombatView={create({player,combat,enemies,sound=()=>{}}){
  function update(dt){toastTime=Math.max(0,toastTime-dt);impact=Math.max(0,impact-dt);if(!toastTime&&$('combatToast').textContent)$('combatToast').textContent='';for(let i=effects.length-1;i>=0;i--){effects[i].t-=dt;if(effects[i].t<=0)effects.splice(i,1);}}
  function setText(id,text){const node=typeof id==='string'?$(id):id;if(node&&node.textContent!==text)node.textContent=text;}
  function hud(){
-  const hp=Math.ceil(player.fight.hp),hpWidth=hp+'%';
+  const hp=Math.ceil(player.fight.hp),heartCount=Math.ceil(hp/10),hearts=$('healthHearts');
   setText('healthText',hp+' / 100');
-  if($('healthFill').style.width!==hpWidth)$('healthFill').style.width=hpWidth;
+  const marks=heartMarkup[heartCount];
+  if(hearts.innerHTML!==marks)hearts.innerHTML=marks;
+  if(hearts.getAttribute?.('aria-valuenow')!==String(hp))hearts.setAttribute?.('aria-valuenow',String(hp));
   setText('weaponName',combat.weapon==='club'?'나무봉':'주먹');
   // Keep button icons, keyboard hints, and accessible labels during weapon swaps.
   const button=$('weapon'),label=button.querySelector?.('.action-label')||button;

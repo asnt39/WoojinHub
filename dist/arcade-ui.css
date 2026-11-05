@@ -292,3 +292,18 @@
   :where(.game-city,.game-adventure,.game-merge,.game-grow) button{transition:none!important}
   .game-city #healthFill{transition:none}
 }
+
+/* GTW combat/readability updates: ten red hearts and a four-button contextual pad. */
+.game-city .healthHearts{display:flex;justify-content:space-between;gap:2px;min-height:30px;margin:8px 0 9px;white-space:nowrap}
+.game-city .healthHearts .heart{font-size:24px;line-height:1.1;font-weight:900;font-style:normal;filter:drop-shadow(0 2px 1px #08070b)}
+.game-city .healthHearts .full{color:#ef5257;text-shadow:0 1px #ffadb1,0 0 5px #e7374770}
+.game-city .healthHearts .empty{color:#584147;opacity:.8}
+.game-city #weapon[hidden]{display:none!important}
+.game-city #run[aria-pressed=true]:not(.driving){border-color:#ffe4ab;background:linear-gradient(150deg,#bd7b44,#84492b);color:#fff8da}
+@media(pointer:coarse),(max-width:700px){
+  .game-city .actions #interact{grid-column:1 / 3;grid-row:2}
+  .game-city .actions #weapon{grid-column:3;grid-row:2}
+  .game-city .actions.driving #interact{grid-column:1 / 4}
+  .game-city .healthHearts{min-height:24px;margin:4px 0 6px}
+  .game-city .healthHearts .heart{font-size:18px}
+}

@@ -10,7 +10,7 @@
 </head>
 <body class="game-city">
   <div id="artLoading" role="status">남빛동으로 가는 중…</div>
-  <canvas id="city" aria-label="GTW 도시. WASD 이동, Shift 달리기, E 대화, F 차량, Esc 메뉴" tabindex="0"></canvas>
+  <canvas id="city" aria-label="GTW 도시. WASD 이동, Shift 달리기 전환, E 상호작용, Esc 메뉴" tabindex="0"></canvas>
   <header>
     <div class="city-title"><small>GRAND THEFT WOOJIN <span class="chapter">CH.01</span></small><strong>남빛동 <span>01</span></strong></div>
     <button id="menu" type="button" aria-label="게임 메뉴 열기"><span class="menu-mark">☰</span><span>게임 메뉴</span></button>
@@ -21,7 +21,7 @@
   </section>
   <aside id="combatHud" aria-label="전투 상태">
     <div class="health-label"><b>HP <span>체력</span></b><span id="healthText">100 / 100</span></div>
-    <div class="healthTrack" role="presentation"><i id="healthFill"></i></div>
+    <div class="healthHearts" id="healthHearts" role="meter" aria-label="체력" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"></div>
     <div class="weapon-label"><strong id="weaponName">주먹</strong><small id="combatHint">J 공격 / Q 무기</small></div>
   </aside>
   <div id="combatToast" role="status" aria-live="polite"></div>
@@ -35,8 +35,8 @@
   <div id="pause" hidden>
     <article role="dialog" aria-modal="true" aria-label="게임 일시정지">
       <small>WOOJINHUB · GRAND THEFT WOOJIN</small><h1>잠깐 쉬어가기</h1>
-      <p>WASD / 방향키 이동 · Shift 달리기<br>E 대화 · F 탑승/하차<br>J / Space 공격 · Q 무기 변경<br>운전: ↑ 가속 · ↓ 브레이크/후진 · ← → 조향</p>
-      <label>화면 확대 <select id="zoom"><option value="2">넓게</option><option value="3">가까이</option></select></label>
+      <p>WASD / 방향키 이동 · Shift 달리기 ON/OFF<br>E 상호작용(대화·줍기·차량 탑승/하차)<br>J / Space 공격 · Q 무기 변경<br>운전: ↑ 또는 공격 버튼 가속 · ↓ 또는 브레이크 감속 · ← → 조향</p>
+      <label>화면 확대 <select id="zoom"><option value="1.5">아주 넓게</option><option value="2">넓게</option><option value="3">가까이</option></select></label>
       <label><input id="sound" type="checkbox" checked> 효과음</label>
       <button id="resume" type="button">▶ 게임 계속하기</button>
       <button id="restartMission" type="button">미션 다시 시작</button>
@@ -47,10 +47,9 @@
     <div class="movement"><div id="stick" role="group" aria-label="이동 조이스틱"><i></i></div><span class="movement-label">MOVE · 이동</span></div>
     <div class="actions">
       <button id="attack" class="action-primary" type="button" aria-label="공격"><span class="action-symbol">✦</span><span class="action-label">공격</span><kbd>J</kbd></button>
-      <button id="run" class="action-run" type="button"><span class="action-symbol">»</span><span class="action-label">달리기</span></button>
-      <button id="interact" class="action-interact" type="button"><span class="action-symbol">◎</span><span class="action-label">대화</span><kbd>E</kbd></button>
+      <button id="run" class="action-run" type="button" aria-pressed="false"><span class="action-symbol">»</span><span class="action-label">달리기 OFF</span></button>
+      <button id="interact" class="action-interact" type="button"><span class="action-symbol">◎</span><span class="action-label">상호작용</span><kbd>E</kbd></button>
       <button id="weapon" class="action-weapon" type="button"><span class="action-symbol">◇</span><span class="action-label">무기</span><kbd>Q</kbd></button>
-      <button id="vehicle" class="action-vehicle" type="button"><span class="action-symbol">▣</span><span class="action-label">차량</span><kbd>F</kbd></button>
     </div>
   </div>
   <script src="city-art.js"></script><script src="city-scene.js"></script><script src="city-sprites.js"></script>

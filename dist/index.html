@@ -2,35 +2,35 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0e1827"><title>WoojinHub · 네 개의 게임, 하나의 공간</title>
+  <meta name="theme-color" content="#0b0b0b"><title>WoojinHub · 네 개의 게임, 하나의 공간</title>
+  <link rel="icon" type="image/png" href="woojinhub-logo.png"><link rel="apple-touch-icon" href="woojinhub-logo.png">
   <style>
-    :root{font-family:system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;color-scheme:dark;color:#e7eff8;background:#0e1827}
+    :root{font-family:system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif;color-scheme:dark;color:#fafafa;background:#0b0b0b}
     *{box-sizing:border-box}
     body{margin:0;overflow:hidden}
-    header{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:8px max(20px,3vw);background:linear-gradient(105deg,#142434,#101b2b 62%,#17253a);border-bottom:1px solid #3e5266;box-shadow:0 5px 25px #03081155;position:relative;z-index:4}
-    .hub-brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
-    .hub-mark{height:38px;width:38px;display:grid;place-items:center;color:#e8fff8;background:#23665e;border:1px solid #80cfb4;border-radius:11px;box-shadow:inset 0 1px #ffffff55;font-size:23px;font-weight:900}
-    .hub-brand small{color:#81c7ba;display:block;font-size:9px;letter-spacing:.21em;font-weight:700}
-    .hub-brand strong{display:block;font-size:21px;letter-spacing:-.04em;line-height:1.15}
-    nav{display:flex;align-items:center;gap:6px;border-radius:14px;background:#0c1725;border:1px solid #2d4054;padding:4px;min-width:0}
-    .hub-tab{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:10px;background:transparent;color:#aabbd0;font-size:12px;white-space:nowrap;font-weight:680;padding:10px 12px;min-height:40px;cursor:pointer;transition:background .14s,border-color .14s,color .14s,transform .14s}
-    .hub-tab .tab-index{color:#738da7;font-size:10px;letter-spacing:.02em}
-    .hub-tab:hover{background:#263e50;color:#e2f5ee}
+    header{height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:8px max(20px,3vw);background:#121212;border-bottom:1px solid #363636;box-shadow:0 4px 20px #0009;position:relative;z-index:4}
+    .hub-brand{display:flex;align-items:center;gap:10px;white-space:nowrap}
+    .hub-logo{display:block;width:160px;height:54px;object-fit:contain;object-position:left center}
+    .hub-brand small{color:#bdbdbd;display:block;font-size:9px;letter-spacing:.21em;font-weight:700}
+    nav{display:flex;align-items:center;gap:6px;border-radius:10px;background:#080808;border:1px solid #383838;padding:4px;min-width:0}
+    .hub-tab{display:flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:7px;background:transparent;color:#bfbfbf;font-size:12px;white-space:nowrap;font-weight:680;padding:10px 12px;min-height:40px;cursor:pointer;transition:background .14s,border-color .14s,color .14s,transform .14s}
+    .hub-tab .tab-index{color:#858585;font-size:10px;letter-spacing:.02em}
+    .hub-tab:hover{background:#303030;color:#fff}
     .hub-tab:active{transform:scale(.97)}
-    .hub-tab[aria-selected=true]{background:linear-gradient(135deg,#3a776d,#305064);color:#f8fffa;border-color:#75ab9d;box-shadow:inset 0 1px #ffffff30,0 2px 8px #01090e70}
-    .hub-tab[aria-selected=true] .tab-index{color:#b4f1d4}
-    .hub-tab:focus-visible{outline:2px solid #b2e8d8;outline-offset:3px}
-    iframe{position:absolute;top:72px;left:0;width:100%;height:calc(100dvh - 72px);border:0;background:#101e2d}
+    .hub-tab[aria-selected=true]{background:#ff9900;color:#111;border-color:#ffb447;box-shadow:inset 0 1px #fff6,0 2px 8px #0008}
+    .hub-tab[aria-selected=true] .tab-index{color:#603b00}
+    .hub-tab:focus-visible{outline:2px solid #ffbd63;outline-offset:3px}
+    iframe{position:absolute;top:72px;left:0;width:100%;height:calc(100dvh - 72px);border:0;background:#101010}
     iframe[hidden]{display:none}
-    #loading{position:absolute;inset:72px 0 0;display:grid;place-items:center;background:#0e1827;color:#a9d5cc;font-size:13px;letter-spacing:.08em}
+    #loading{position:absolute;inset:72px 0 0;display:grid;place-items:center;background:#0b0b0b;color:#ffae36;font-size:13px;letter-spacing:.08em}
     #loading[hidden]{display:none}
-    @media(max-width:680px){header{height:66px;padding:6px 8px;gap:8px}.hub-brand{gap:6px}.hub-mark{width:30px;height:30px;font-size:17px}.hub-brand small{font-size:7px}.hub-brand strong{font-size:14px}nav{flex:1;justify-content:space-between;gap:1px}.hub-tab{padding:9px 5px;min-width:0;flex:1;font-size:10px}.hub-tab .tab-index{display:none}iframe{top:66px;height:calc(100dvh - 66px)}#loading{inset:66px 0 0}}
-    @media(max-width:380px){.hub-brand small{display:none}.hub-brand strong{font-size:12px}.hub-tab{font-size:9px;padding:8px 2px}}
+    @media(max-width:680px){header{height:66px;padding:6px 8px;gap:8px}.hub-brand{gap:3px}.hub-logo{width:97px;height:43px}.hub-brand small{display:none}nav{flex:1;justify-content:space-between;gap:1px}.hub-tab{padding:9px 5px;min-width:0;flex:1;font-size:10px}.hub-tab .tab-index{display:none}iframe{top:66px;height:calc(100dvh - 66px)}#loading{inset:66px 0 0}}
+    @media(max-width:380px){.hub-logo{width:83px}.hub-tab{font-size:9px;padding:8px 2px}}
     @media(prefers-reduced-motion:reduce){.hub-tab{transition:none}}
   </style>
 </head>
 <body>
-  <header><div class="hub-brand"><div class="hub-mark" aria-hidden="true">W</div><div><small>THE WOOJIN ARCADE</small><strong>WoojinHub</strong></div></div>
+  <header><div class="hub-brand"><img class="hub-logo" src="woojinhub-logo.png" alt="WoojinHub 로고" width="160" height="54"><small>THE WOOJIN ARCADE</small></div>
     <nav role="tablist" aria-label="게임 선택">
       <button class="hub-tab" data-game="grow" role="tab" aria-selected="false"><span class="tab-index">01</span> 키우기</button>
       <button class="hub-tab" data-game="merge" role="tab" aria-selected="false"><span class="tab-index">02</span> 합치기</button>
