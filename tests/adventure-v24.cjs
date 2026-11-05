@@ -20,7 +20,7 @@ for(let i=0;i<9;i++){
  assert.equal(w.platforms.some(p=>p.crumble),i>=1,'crumble introduced in stage 2');
  assert.equal(w.platforms.some(p=>p.elevator),i>=2,'elevator introduced in stage 3');
  assert.equal(w.belts.length>0,i>=3,'conveyor introduced in stage 4');
- assert.equal(w.switches.length>0,i>=4,'timed gates introduced in stage 5');
+ assert.equal(w.switches.filter(s=>!s.routeSeal).length>0,i>=4,'timed gates introduced in stage 5');
  if(i>=3)assert.ok(w.enemies.some(e=>e.type===4),'shadow bat present');
  if(i>=5)assert.ok(w.enemies.some(e=>e.type===5),'turret present');
  const box=w.platforms.find(p=>p.box);assert.ok(box?.reward,'lucky box has deterministic award');
