@@ -1,14 +1,14 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d'),W=innerWidth<600?640:960,H=540,DT=1/120;
+const $=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d'),H=540,DT=1/120;let W=innerWidth<600?640:960;
 canvas.width=W/2;canvas.height=H/2;ctx.setTransform(.5,0,0,.5,0,0);ctx.imageSmoothingEnabled=false;
-const music=window.WoorioAudio?.create();let musicEnabled=true;
+const music=window.WoorioAudio?.create();let options={music:true,sound:true};try{const v=JSON.parse(localStorage.getItem('woorio-options-v1'));if(typeof v?.music==='boolean')options.music=v.music;if(typeof v?.sound==='boolean')options.sound=v.sound}catch{}let musicEnabled=options.music;music?.setEnabled(musicEnabled);const effectCounts={death:0,shot:0,pickup:0},effectVoices=new Set();
 const heroSheet=new Image();heroSheet.src='art/woorio/hero.png';
 const background=new Image();background.src='art/pixel-worlds.png';
 const names=['햇살 숲길','바람의 해안','이끼 낀 유적','수정 동굴','달빛의 성','폭풍의 고가','쇠톱 공장','공허의 성벽','절망의 끝'];
 const colors=[['#7cac58','#74583e','#b18655'],['#dfca85','#927651','#c5a778'],['#84a16a','#586b63','#899785'],['#9a92d0','#51496d','#78689f'],['#91a7b9','#4e586e','#737b94'],['#8babb2','#324f63','#719ba7'],['#b98c6b','#5c4242','#d5a374'],['#957bbc','#302e53','#7064a2'],['#886b9e','#21172f','#ba80cf']];
 let unlocked=0,total=0;try{const s=JSON.parse(localStorage.getItem('woojin-adventure-v1'));unlocked=Math.min(names.length-1,Math.max(0,Math.floor(s?.unlocked||0)));total=Math.max(0,s?.total||0)}catch{}
-let stage=0,world,player,camera=0,coins=0,deaths=0,checkpoint=false,bossCheckpoint=false,running=false,paused=false,completed=false,stageDone=false,shellPaused=false,keys={},jumpBuffer=0,coyote=0,last=0,acc=0,time=0,particles=[],audio,sound=true,noticeTime=0,deathPhase=null,deathTimer=0,deathStartY=0,deathCause=null;
+let stage=0,world,player,camera=0,coins=0,deaths=0,checkpoint=false,bossCheckpoint=false,running=false,paused=false,completed=false,stageDone=false,shellPaused=false,keys={},jumpBuffer=0,coyote=0,last=0,acc=0,time=0,particles=[],audio,sound=options.sound,noticeTime=0,deathPhase=null,deathTimer=0,deathStartY=0,deathCause=null;
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 function save(){try{localStorage.setItem('woojin-adventure-v1',JSON.stringify({unlocked,total}))}catch{}}
 function level(i){
@@ -86,11 +86,13 @@ function level(i){
   if(i>=3&&r===2)belts.push({x:x+w-190,y:y-6,w:90,speed:78});
   if(i>=4&&r===2&&!switches.length){const gate={x:x+w-60,y:y-96,w:28,h:96,gate:true,stone:true,broken:false};platforms.push(gate);switches.push({x:x+w-230,y:y-46,w:36,h:46,time:0,gate});}
   if(i>=5&&r%2===1&&m!=='press')saws.push({x:x+w-220,y:y-160,baseX:x+w-220,baseY:y-160,r:16,phase:r,range:35,speed:1.5});
+  if(i>=4&&r>0&&r%2===1){for(const q of[{x:x+w-330,y:y-76,w:44,h:76,stone:true,wall:true,challenge:true},{x:x+w-430,y:y-48,w:62,h:18,ledge:true,stone:true,challenge:true}])if(!platforms.some(p=>!p.ground&&overlap(q,{x:p.x-(p.moving?58:0),y:(p.baseY??p.y)-(p.elevator?50:0),w:p.w+(p.moving?116:0),h:p.h+(p.elevator?100:0)})))platforms.push(q);}
   if(r>0&&(r%2===0||i>=5))hazards.push({x:x+w-250,y:y-20,w:28,h:20,kind:i%3,broken:false});
   for(let dx=40;dx<w-30;dx+=90)coins.push({x:x+dx,y:y-47,taken:false});
   for(let dx=180;dx<w-40;dx+=260)decor.push({x:x+dx,y,kind:r%3});
   const type=r%Math.min(4,i+2);enemies.push({x:x+(r===0?650:55),y:y-(type===2?135:32),w:34,h:32,vx:(r%2?1:-1)*(30+i*4),type,alive:true,phase:r,timer:2,baseY:y-(type===2?135:32),hp:type===1?2:1});
   if(r>0&&(i>=6||i>=3&&r%2===0))enemies.push({x:x+w-100,y:y-32,w:34,h:32,vx:-38-i*3,type:i>=6&&r%3===0?1:0,alive:true,phase:r+1,timer:2.5,baseY:y-32,hp:i>=6&&r%3===0?2:1});
+  if(i>=4&&r>0&&r%2===1)enemies.push({x:x+w*.62,y:y-135,w:34,h:32,vx:-40-i*2,type:2,alive:true,phase:r+.7,timer:2.6,baseY:y-135,hp:1});
   if(i===8&&r>0)enemies.push({x:x+w-140,y:y-135,w:34,h:32,vx:42,type:2,alive:true,phase:r+2,timer:2.5,baseY:y-135,hp:1});
   if(i>=2&&r===3)enemies.push({x:x+200,y:y-150,w:36,h:30,vx:40,type:4,alive:true,phase:r,timer:2,baseY:y-150,hp:1});
   if(i>=4&&r===4)enemies.push({x:x+65,y:y-38,w:38,h:38,vx:0,type:5,alive:true,phase:r,timer:2,baseY:y-38,hp:2});
@@ -112,7 +114,7 @@ function level(i){
  for(const e of enemies){const floor=ground.find(p=>e.x>=p.x&&e.x<p.x+p.w),flight=e.type===2?48:e.type===4?54:0;let spans=[],span=null;
   for(let x=floor.x+24;x<=floor.x+floor.w-e.w-24;x+=4){const body={x,y:e.baseY-flight,w:e.w,h:e.h+2*flight},clear=!platforms.some(p=>!p.ground&&overlap(body,motion(p)))&&!hazards.some(h=>overlap(body,h));if(clear){if(!span)span={a:x,b:x};span.b=x;}else if(span){spans.push(span);span=null;}}if(span)spans.push(span);spans=spans.filter(s=>s.b-s.a>=12).sort((a,b)=>Math.abs((a.a+a.b)/2-e.x)-Math.abs((b.a+b.b)/2-e.x));if(!spans.length)throw Error('No safe patrol stage '+(i+1));const s=spans[0];e.x=clamp(e.x,s.a,s.b);e.min=e.type===5?e.x:Math.max(s.a,e.x-48);e.max=e.type===5?e.x:Math.min(s.b,e.x+48);Object.assign(e,{spawnX:e.x,spawnY:e.y,spawnVx:e.vx,spawnType:e.type,spawnTimer:e.timer,maxHp:e.hp});}
  const candidates=[];for(const p of ground)for(let x=p.x+40;x<p.x+p.w-74;x+=12){const body={x:x-20,y:p.y-70,w:74,h:70};if(platforms.some(q=>!q.ground&&overlap(body,motion(q)))||hazards.some(h=>overlap(body,h))||enemies.some(e=>x+60>e.min&&x-60<e.max+e.w)||saws.some(s=>Math.abs(s.baseX-x)<s.range+70))continue;candidates.push({x,y:p.y-64,groundY:p.y});}candidates.sort((a,b)=>Math.abs(a.x-length*.5)-Math.abs(b.x-length*.5));const checkpointSpawn=candidates[0]||{x:70,y:406,groundY:470};
- return{profile:rooms.map(r=>r.motif).join(' / '),rooms,length,platforms,gaps,coins,enemies,hazards,saws,decor,belts,switches,items:[],shots:[],flag:checkpointSpawn.x+17,checkpointSpawn,bossSpawn,bossFlag:bossSpawn?.x+17,goal:length-130,boss,bossPickups,petDrops:0};
+ return{profile:rooms.map(r=>r.motif).join(' / '),rooms,length,platforms,gaps,coins,enemies,hazards,saws,decor,belts,switches,items:[],shots:[],flag:checkpointSpawn.x+17,checkpointSpawn,bossSpawn,bossFlag:bossSpawn?.x+17,goal:length-130,boss,bossPickups};
 }
 function start(i=stage){music?.unlock();stage=i;world=level(i);player={x:70,y:390,vx:0,vy:0,w:34,h:64,ground:false,invulnerable:0,power:null,powerTime:0,airJump:1,shieldHits:0,springCooldown:0,pet:false,petGold:false,petX:40,petY:430,petCooldown:0,fireCooldown:0,bossAmmo:0,facing:1};camera=0;time=0;coins=0;checkpoint=false;bossCheckpoint=false;particles=[];running=true;paused=false;completed=false;stageDone=false;releaseKeys();coyote=0;deathPhase=null;deathCause=null;deathTimer=0;$('deathCurtain').hidden=true;noticeTime=0;$('notice').textContent='';$('panel').classList.add('hidden');updateHud();updateStages();canvas.focus({preventScroll:true})}
 function message(title,text,label){$('panelTitle').textContent=title;$('panelText').textContent=text;$('play').textContent=label;$('panel').classList.remove('hidden')}
@@ -127,13 +129,14 @@ function updateHud(){syncFireControl();const ability=({giant:'⬆ 거대화',fir
  const powerGauge=$('powerGauge'),powerFill=$('powerFill');if(powerGauge&&powerFill){powerGauge.hidden=!player?.power;if(powerFill.style)powerFill.style.width=player?.power?(Math.max(0,player.powerTime)/(player.power==='shield'?8:5)*100)+'%':'0%';powerFill.setAttribute?.('data-type',player?.power||'')}
  const boss=world?.boss,bar=$('bossHealth');if(bar){bar.hidden=!boss||boss.hp<=0||player.x<world.length-1450;if(!bar.hidden){const hp=$('bossHp');hp.style.width=(boss.hp/boss.maxHp*100)+'%';$('bossHpText').textContent=boss.name+' · '+boss.hp+'/'+boss.maxHp}}}
 function updateStages(){$('stages').innerHTML=names.map((n,i)=>`<button data-stage="${i}" ${i>unlocked?'disabled':''} class="${i===stage?'selected':''}">${i>unlocked?'🔒 ':''}${i+1}. ${n}</button>`).join('')}
+function effect(kind){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const sequence=kind==='death'?[690,520,350,175]:kind==='pickup'?[660,880,1100]:[720,340],beat=kind==='death'?.065:kind==='pickup'?.04:.022;effectCounts[kind]++;sequence.forEach((f,i)=>{const o=audio.createOscillator(),g=audio.createGain(),at=audio.currentTime+i*beat;o.type=kind==='pickup'?'triangle':'square';o.frequency.setValueAtTime(f,at);o.frequency.exponentialRampToValueAtTime(f*.65,at+beat);g.gain.setValueAtTime(kind==='death'?.021:.012,at);g.gain.exponentialRampToValueAtTime(.001,at+beat);o.connect(g);g.connect(audio.destination);effectVoices.add(o);o.onended=()=>{effectVoices.delete(o);o.disconnect();g.disconnect()};o.start(at);o.stop(at+beat+.006);});}catch{}}
 function sfx(f=440){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.4,audio.currentTime+.10);g.gain.setValueAtTime(.018,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.12);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.13)}catch{}}
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function burst(x,y,color,count=14){if(reduceMotion)return;for(let n=0;n<count;n++)particles.push({x,y,vx:(Math.random()-.5)*190,vy:-Math.random()*170,color,life:.6});if(particles.length>120)particles.splice(0,particles.length-120)}
 function resizePlayer(giant){const h=giant?112:64,w=giant?62:34;player.y+=player.h-h;player.x+=(player.w-w)/2;player.w=w;player.h=h}
-function grant(type){if(type==='pet'){if(player.pet){player.petGold=true;notice('황금 두부! 더 넓은 곳까지 도와줘.')}else{player.pet=true;player.petX=player.x-40;player.petY=player.y+player.h-30;notice('두부가 함께해!')} }else{resizePlayer(type==='giant');player.power=type;player.powerTime=type==='shield'?8:5;player.airJump=1;player.shieldHits=type==='shield'?1:0;notice(({giant:'거대화! 가시와 벽돌을 부숴!',fire:'불꽃탄! X 또는 불꽃 버튼으로 발사!',shoes:'날개신발! 공중에서 한 번 더 점프해!',shield:'수호방패! 피해를 한 번 막아줘!'})[type])}sfx(900);updateHud()}
-function bump(b){if(b.broken)return;b.bump=.18;if(b.box&&!b.used){b.used=true;world.items.push({x:b.x+8,y:b.y-4,w:24,h:24,vy:-210,type:b.reward==='pet'?(world.petDrops<2?(world.petDrops++,'pet'):'shield'):b.reward,age:0});sfx(650)}else if(!b.ground&&player.power==='giant'){b.broken=true;burst(b.x+20,b.y+20,'#dba76b')}else sfx(190)}
-function die(cause='hit'){if(deathPhase||!running)return;deaths++;deathPhase='fall';deathCause=cause;deathTimer=0;deathStartY=cause==='pit'?H+45:player.y;burst(player.x+17,Math.min(H-20,player.y+28),'#fff1ad');sfx(cause==='pit'?560:140);player.vx=player.vy=0;releaseKeys();coyote=0;$('deathReturn').textContent=bossCheckpoint?'BOSS CHECKPOINT':checkpoint?'CHECKPOINT':'START';world.shots=world.shots.filter(s=>!s.hostile)}
+function grant(type){if(type==='pet'){if(player.pet){player.petGold=true;notice('황금 두부! 더 넓은 곳까지 도와줘.')}else{player.pet=true;player.petX=player.x-40;player.petY=player.y+player.h-30;notice('두부가 함께해!')} }else{resizePlayer(type==='giant');player.power=type;player.powerTime=type==='shield'?8:5;player.airJump=1;player.shieldHits=type==='shield'?1:0;notice(({giant:'거대화! 가시와 벽돌을 부숴!',fire:'불꽃탄! X 또는 불꽃 버튼으로 발사!',shoes:'날개신발! 공중에서 한 번 더 점프해!',shield:'수호방패! 피해를 한 번 막아줘!'})[type])}effect('pickup');updateHud()}
+function bump(b){if(b.broken)return;b.bump=.18;if(b.box&&!b.used){b.used=true;world.items.push({x:b.x+8,y:b.y-4,w:24,h:24,vy:-210,type:b.reward,age:0});sfx(650)}else if(!b.ground&&player.power==='giant'){b.broken=true;burst(b.x+20,b.y+20,'#dba76b')}else sfx(190)}
+function die(cause='hit'){if(deathPhase||!running)return;deaths++;deathPhase='fall';deathCause=cause;deathTimer=0;deathStartY=cause==='pit'?H+45:player.y;burst(player.x+17,Math.min(H-20,player.y+28),'#fff1ad');effect('death');player.vx=player.vy=0;releaseKeys();coyote=0;$('deathReturn').textContent=bossCheckpoint?'BOSS CHECKPOINT':checkpoint?'CHECKPOINT':'START';world.shots=world.shots.filter(s=>!s.hostile)}
 function advanceDeath(dt){deathTimer+=dt;
  if(deathPhase==='fall'){player.y=deathCause==='pit'?deathStartY-670*deathTimer+600*deathTimer*deathTimer:deathStartY-440*deathTimer+460*deathTimer*deathTimer;if(deathTimer>=1.05){deathPhase='wipe';deathTimer=0;$('deathCurtain').hidden=false}}
  else if(deathPhase==='wipe'&&deathTimer>=.68){
@@ -155,7 +158,7 @@ function fire(){const special=world.boss&&world.boss.hp>0&&player.bossAmmo>0;if(
  player.fireCooldown=special?.27:.38;
  if(special)player.bossAmmo--;
  world.shots.push({x:player.x+player.w/2,y:player.y+player.h*.45,w:special?22:12,h:special?20:12,vx:player.facing*(special?550:345),vy:special?-45:-70,life:special?1.4:.97,hostile:false,bossAttack:!!special});
- sfx(special?720:270);updateHud()}
+ effect('shot');updateHud()}
 function tick(dt){if(!running||paused)return;time+=dt;if(deathPhase){advanceDeath(dt);return}const old={...player};player.land=Math.max(0,(player.land||0)-dt);noticeTime=Math.max(0,noticeTime-dt);if(!noticeTime&&$('notice').textContent)$('notice').textContent='';
  for(const p of world.platforms){p.oldX=p.x;p.oldY=p.y;p.bump=Math.max(0,(p.bump||0)-dt);if(p.moving)p.x=p.baseX+Math.sin(time*1.1+p.phase)*58;if(p.elevator)p.y=p.baseY+Math.sin(time*1.2+p.phase)*50;if(p.crumble&&p.collapseTime>0){p.collapseTime-=dt;if(p.collapseTime<=0)p.broken=true}}
  for(const sw of world.switches){if(sw.time>0){sw.time=Math.max(0,sw.time-dt);sw.gate.broken=sw.gate.destroyed||sw.time>0||overlap(player,sw.gate)}}
@@ -170,7 +173,7 @@ function tick(dt){if(!running||paused)return;time+=dt;if(deathPhase){advanceDeat
     if(b.kind==='stone'){if(b.pattern%2===0)shot(-240,0,32,14,456);else{shot(Math.cos(angle)*215,Math.sin(angle)*215,24,24);if(enraged)shot(-180,80,18,18);}}
     else if(b.kind==='storm'){if(b.pattern%2===0){b.mode='dash';b.attackTimer=.85;}else{shot(-285,0,30,12,435);if(enraged)shot(-245,-85,24,12,390);}}
     else{for(const offset of(enraged?[-.34,0,.34]:[-.25,.25]))shot(Math.cos(angle+offset)*270,Math.sin(angle+offset)*270);if(enraged){const ledge=world.platforms.filter(p=>p.crumble&&p.x>world.length-1300)[b.pattern%3];if(ledge&&!ledge.broken)ledge.collapseTime=1;}}
-    b.pattern++;if(b.mode!=='dash'){b.mode='rest';b.attackTimer=enraged?1.05:1.3;}
+    if(Math.abs(b.x-player.x)<W)effect('shot');b.pattern++;if(b.mode!=='dash'){b.mode='rest';b.attackTimer=enraged?1.05:1.3;}
    }
    if(b.mode==='rest'&&b.x<b.homeX)b.x=Math.min(b.homeX,b.x+120*dt);
   }
@@ -198,7 +201,7 @@ function tick(dt){if(!running||paused)return;time+=dt;if(deathPhase){advanceDeat
  for(const token of world.bossPickups){if(token.used){token.reset-=dt;if(token.reset<=0)token.used=false;continue}
   if(overlap(player,{x:token.x,y:token.y,w:28,h:28})){token.used=true;token.reset=3.8;player.bossAmmo=Math.min(4,player.bossAmmo+2);burst(token.x+12,token.y+12,'#fbd17b',11);sfx(850);updateHud()}}
  for(const c of world.coins)if(!c.taken&&Math.hypot(player.x+player.w/2-c.x,player.y+player.h*.5-c.y)<(player.petGold?155:player.pet?105:player.w/2+20)){c.taken=true;coins++;burst(c.x,c.y,'#ffe59b',5);sfx(700);updateHud()}
- for(const e of world.enemies){if(!e.alive)continue;e.timer-=dt;let speed=1;if(e.type===0&&Math.abs(player.x-e.x)<160)speed=1.8;e.x+=e.vx*dt*speed;if(e.x<e.min||e.x>e.max){e.x=clamp(e.x,e.min,e.max);e.vx*=-1}if(e.type===2)e.y=e.baseY+Math.sin(time*2.6+e.phase)*48;if(e.type===4)e.y=e.baseY+Math.sin(time*3+e.phase)*22+(Math.abs(player.x-e.x)<200&&Math.sin(time*2+e.phase)>0?32:0);if((e.type===3||e.type===5)&&e.timer<=0&&Math.abs(player.x-e.x)<(e.type===5?570:650)){e.timer=e.type===5?Math.max(1.3,2.15-stage*.07):Math.max(1.4,2.8-stage*.12);const dx=player.x-e.x,dy=player.y+25-e.y,d=Math.hypot(dx,dy)||1;world.shots.push({x:e.x,y:e.y,w:e.type===5?16:12,h:e.type===5?16:12,vx:dx/d*(e.type===5?215:150),vy:dy/d*(e.type===5?215:150),life:4,hostile:true})}
+ for(const e of world.enemies){if(!e.alive)continue;e.timer-=dt;let speed=1;if(e.type===0&&Math.abs(player.x-e.x)<160)speed=1.8;e.x+=e.vx*dt*speed;if(e.x<e.min||e.x>e.max){e.x=clamp(e.x,e.min,e.max);e.vx*=-1}if(e.type===2)e.y=e.baseY+Math.sin(time*2.6+e.phase)*48;if(e.type===4)e.y=e.baseY+Math.sin(time*3+e.phase)*22+(Math.abs(player.x-e.x)<200&&Math.sin(time*2+e.phase)>0?32:0);if((e.type===3||e.type===5)&&e.timer<=0&&Math.abs(player.x-e.x)<(e.type===5?570:650)){effect('shot');e.timer=e.type===5?Math.max(1.3,2.15-stage*.07):Math.max(1.4,2.8-stage*.12);const dx=player.x-e.x,dy=player.y+25-e.y,d=Math.hypot(dx,dy)||1;world.shots.push({x:e.x,y:e.y,w:e.type===5?16:12,h:e.type===5?16:12,vx:dx/d*(e.type===5?215:150),vy:dy/d*(e.type===5?215:150),life:4,hostile:true})}
  if(player.pet&&player.petCooldown<=0&&Math.hypot(e.x-player.petX,e.y-player.petY)<(player.petGold?65:55)){kill(e);player.petCooldown=3;continue}
  if(overlap(player,e)){if(player.power==='giant'){kill(e)}else if(old.y+old.h<=e.y+14&&player.vy>0){e.hp--;if(e.hp<=0)kill(e);else{e.type=0;e.invulnerable=.25;burst(e.x,e.y,'#edd795')}player.vy=-390;sfx(550)}else if(!e.invulnerable)hurt()}e.invulnerable=Math.max(0,(e.invulnerable||0)-dt)}
  for(const s of world.shots){s.life-=dt;const oy=s.y;s.x+=s.vx*dt;s.y+=s.vy*dt;
@@ -265,7 +268,7 @@ function frame(now){
 }
 function key(k,down){if(deathPhase||!running||paused)return;if(k==='jump'&&down&&!keys.jump)jumpBuffer=.16;keys[k]=down}
 const mapping={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',' ':'jump',ArrowUp:'jump',w:'jump',W:'jump',x:'fire',X:'fire'};
-addEventListener('keydown',e=>{if(mapping[e.key]){e.preventDefault();key(mapping[e.key],true)}if(e.key==='Escape'&&!e.repeat)togglePause()});addEventListener('keyup',e=>{if(mapping[e.key]){e.preventDefault();key(mapping[e.key],false)}});
+addEventListener('keydown',e=>{if(!$('settingsPanel').hidden){if(e.key==='Escape')$('closeSettings').onclick();return}if(mapping[e.key]){e.preventDefault();key(mapping[e.key],true)}if(e.key==='Escape'&&!e.repeat)togglePause()});addEventListener('keyup',e=>{if(mapping[e.key]){e.preventDefault();key(mapping[e.key],false)}});
 const activePointers=new Map();
 document.querySelectorAll('[data-key]').forEach(b=>{
  b.setAttribute('aria-pressed','false');
@@ -274,9 +277,17 @@ document.querySelectorAll('[data-key]').forEach(b=>{
 });
 function releaseKeys(){keys={};for(const b of activePointers.keys())b.setAttribute('aria-pressed','false');activePointers.clear();jumpBuffer=0}
 function togglePause(){if(!running||deathPhase)return;paused=!paused;releaseKeys();if(paused)message('잠깐 쉬어가기','준비되면 모험을 이어가자.','계속하기');else $('panel').classList.add('hidden');syncFireControl()}
-$('fullscreen').onclick=()=>{try{const result=document.fullscreenElement?document.exitFullscreen?.():document.querySelector('main').requestFullscreen?.();result?.catch?.(()=>{})}catch{}};
-$('music').onclick=()=>{musicEnabled=!musicEnabled;music?.unlock();music?.setEnabled(musicEnabled);$('music').setAttribute('aria-pressed',String(musicEnabled));$('music').textContent=musicEnabled?'BGM ON':'BGM OFF'};
-$('pause').onclick=togglePause;$('retry').onclick=()=>{if(confirm('이 스테이지를 다시 시작할까?'))start(stage)};$('sound').onclick=()=>{sound=!sound;$('sound').textContent=sound?'♪':'♩'};$('play').onclick=()=>{if(paused){togglePause();return}if(completed){start(0);return}start(stageDone?stage+1:stage)};$('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b&&!b.disabled&&(!running||confirm('진행 중인 스테이지를 나가고 다른 맵으로 이동할까?')))start(+b.dataset.stage)};
+function resizeGame(){const view=canvas.parentElement;if(!view?.getBoundingClientRect)return;const r=view.getBoundingClientRect(),wide=innerWidth>innerHeight;const width=wide?Math.max(640,Math.min(2200,Math.round(H*r.width/Math.max(1,r.height)/2)*2)):innerWidth<600?640:960;if(W!==width||canvas.width!==width/2){W=width;canvas.width=W/2;canvas.height=H/2;ctx.setTransform(.5,0,0,.5,0,0);ctx.imageSmoothingEnabled=false;camera=clamp(player.x-W*.36,0,Math.max(0,world.length-W));draw()}}
+addEventListener('resize',()=>requestAnimationFrame(resizeGame));document.addEventListener('fullscreenchange',()=>{releaseKeys();requestAnimationFrame(resizeGame)});
+$('fullscreen').onclick=async()=>{releaseKeys();const main=document.querySelector('main');try{if(document.fullscreenElement){await document.exitFullscreen();return}if(main.classList.contains('play-fullscreen')){main.classList.remove('play-fullscreen');requestAnimationFrame(resizeGame);return}if(main.requestFullscreen){await main.requestFullscreen();return}}catch{}main.classList.toggle('play-fullscreen');requestAnimationFrame(resizeGame)};
+let settingsWasPaused=false;
+function syncOptions(){options={music:musicEnabled,sound};music?.setEnabled(musicEnabled);$('music').setAttribute('aria-pressed',String(musicEnabled));$('music').textContent=musicEnabled?'BGM ON':'BGM OFF';$('sound').textContent=sound?'♪':'♩';$('settingMusic').checked=musicEnabled;$('settingSound').checked=sound;try{localStorage.setItem('woorio-options-v1',JSON.stringify(options))}catch{}if(!sound){for(const o of effectVoices)try{o.stop()}catch{}effectVoices.clear()}}
+$('settings').onclick=()=>{settingsWasPaused=paused;paused=true;releaseKeys();$('settingsPanel').hidden=false;syncOptions();syncFireControl()};
+$('closeSettings').onclick=()=>{$('settingsPanel').hidden=true;paused=settingsWasPaused;releaseKeys();syncFireControl()};
+$('settingMusic').onchange=()=>{musicEnabled=$('settingMusic').checked;music?.unlock();syncOptions()};$('settingSound').onchange=()=>{sound=$('settingSound').checked;syncOptions()};
+syncOptions();requestAnimationFrame(resizeGame);
+$('music').onclick=()=>{musicEnabled=!musicEnabled;music?.unlock();syncOptions()};
+$('pause').onclick=togglePause;$('retry').onclick=()=>{if(confirm('이 스테이지를 다시 시작할까?'))start(stage)};$('sound').onclick=()=>{sound=!sound;syncOptions()};$('play').onclick=()=>{if(paused){togglePause();return}if(completed){start(0);return}start(stageDone?stage+1:stage)};$('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b&&!b.disabled&&(!running||confirm('진행 중인 스테이지를 나가고 다른 맵으로 이동할까?')))start(+b.dataset.stage)};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused){shellPaused=true;togglePause()}if(!document.hidden){last=0;acc=0}});
 addEventListener('message',e=>{
  if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;
@@ -285,5 +296,5 @@ addEventListener('message',e=>{
  else if(sceneVisible&&shellPaused){shellPaused=false;if(paused)togglePause()}
 });
 addEventListener('blur',releaseKeys);world=level(0);player={x:70,y:390,w:34,h:64,vx:0,vy:0};updateStages();updateHud();requestAnimationFrame(frame);
-if(['localhost','127.0.0.1'].includes(location.hostname))window.adventureTest={start,tick,level,key,die,grant,bump,fire,burst,draw,levelCount:names.length,get music(){return music?.state},get state(){return{stage,world,player,checkpoint,bossCheckpoint,unlocked,total,running,paused,stageDone,deaths,deathPhase,deathCause,keys,particlesCount:particles.length}},warpGoal(){player.x=world.goal;tick(DT)}};
+if(['localhost','127.0.0.1'].includes(location.hostname))window.adventureTest={start,tick,level,key,die,grant,bump,fire,burst,draw,levelCount:names.length,get music(){return music?.state},get effects(){return{...effectCounts}},get viewWidth(){return W},get state(){return{stage,world,player,checkpoint,bossCheckpoint,unlocked,total,running,paused,stageDone,deaths,deathPhase,deathCause,keys,particlesCount:particles.length}},warpGoal(){player.x=world.goal;tick(DT)}};
 })();

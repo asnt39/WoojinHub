@@ -60,3 +60,7 @@ Avoid reintroducing live external font/music dependencies or resetting existing 
 - URL https://woojingame.asnt1.chatgpt.site/#adventure , public audience preserved.
 - Final docs-only record commit is not required in runtime archive. All gameplay
   validation limits, including1/9full AI clears, remain as above.
+
+## Corrected by user
+See WOORIO-V28-HANDOFF.md: maximum2pet-assigned boxes, not lifetime drop budget.
+Mobile landscape and fullscreen behavior supersede this version.

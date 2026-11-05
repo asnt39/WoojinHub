@@ -15,6 +15,7 @@
     iframe.src = paths[id];
     iframe.title = titles[id];
     iframe.id = 'game-' + id;
+    iframe.allowFullscreen = true;
     iframe.hidden = id !== selected;
     iframe.onload = () => {
       ready.add(id);

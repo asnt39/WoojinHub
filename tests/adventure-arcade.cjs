@@ -1,7 +1,5 @@
 const assert=require('node:assert/strict'),{t,tick}=require('./woorio-harness.cjs');
 for(let i=0;i<9;i++){const w=t.level(i);assert.ok(w.platforms.filter(p=>p.box&&p.reward==='pet').length<=2,'max2pet boxes');}
-t.start(0);let w=t.state.world;for(let n=0;n<5;n++){const b={x:300+n*40,y:300,w:40,h:40,box:true,reward:'pet',used:false};t.bump(b);}assert.equal(w.items.filter(i=>i.type==='pet').length,2,'runtime pet cap');
-assert.equal(w.petDrops,2);t.die();tick(240);assert.equal(w.petDrops,2,'cap survives checkpoint respawn');t.bump({x:400,y:300,w:40,h:40,box:true,reward:'pet'});assert.equal(w.items[0].type,'shield');
 t.start(6);w=t.state.world;t.grant('giant');const p=t.state.player,s=w.saws[0];p.x=s.x-p.w/2;p.y=s.y-p.h/2;p.invulnerable=0;t.tick(1/120);assert.ok(s.broken,'giant destroys urchin saw');assert.equal(t.state.deathPhase,null);
 t.die();tick(240);assert.equal(s.broken,false,'saws restore after death');
 t.start(4);t.grant('giant');const gate=t.state.world.switches[0].gate;t.state.player.x=gate.x;t.state.player.y=gate.y;t.tick(1/120);assert.ok(gate.broken);tick(3);assert.ok(gate.broken,'destroyed gate never reappears during attempt');
