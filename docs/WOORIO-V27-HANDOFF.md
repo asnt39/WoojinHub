@@ -52,3 +52,11 @@ node tests/adventure-arcade-browser.cjs; node tests/adventure-arcade.cjs;
 node tests/adventure-room-physics.cjs; node tests/adventure-sweeps.cjs.
 Next: human playtest later enemy density and long boss fights, richer upper-route AI.
 Avoid reintroducing live external font/music dependencies or resetting existing saves.
+
+## Confirmed deployment
+- Source bf5de2338e8f0b512759afd94a39cd15a78ebe96 pushed to GitHub and Sites.
+- Sites version28: appgprj_6ae9c47115308191b262fff9998049d6~appgver_a253ef9a05f08191aed7436d8f37bc13.
+- Deployment appgdep_6aecb8beb4348191aafea18f7a7db700 returned succeeded.
+- URL https://woojingame.asnt1.chatgpt.site/#adventure , public audience preserved.
+- Final docs-only record commit is not required in runtime archive. All gameplay
+  validation limits, including1/9full AI clears, remain as above.
