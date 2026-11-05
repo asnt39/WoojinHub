@@ -9,14 +9,14 @@
     <div class="tools"><button id="sound" aria-label="효과음" title="효과음">♪</button><button id="pause">Ⅱ 일시정지</button><button id="retry">↻ 다시 도전</button></div>
   </header>
   <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span></div>
-  <div class="ability-bar" id="abilityBar" hidden><span id="power"></span></div>
+  <div class="ability-bar" id="abilityBar" hidden><span id="power"></span><div id="powerGauge" class="power-gauge" hidden aria-label="능력 지속 시간"><div id="powerFill" class="power-fill"></div></div></div>
   <div id="bossHealth" class="boss-health" hidden aria-live="polite"><span id="bossHpText">성벽의 수호자</span><div class="boss-track"><div id="bossHp" class="boss-fill"></div></div></div>
   <div class="viewport">
     <div id="notice" role="status"></div>
     <canvas id="world" width="960" height="540" tabindex="0" aria-label="우리오. 방향키 또는 A D 이동, 스페이스 또는 위쪽 키 점프"></canvas>
     <div id="deathCurtain" class="death-curtain" hidden aria-live="polite"><strong>다시 도전!</strong><small id="deathReturn">CHECKPOINT</small></div>
     <div id="panel" class="panel"><small>NEW ADVENTURE</small><h2 id="panelTitle">우리오</h2>
-      <p id="panelText">우진이와 두부의 여덟 세계 모험! 마지막 세 세계는 초고난도야.<br>방향키 / A·D 이동 · SPACE / ↑ 점프<br>상자를 아래에서 두드려 거대화 · 불꽃탄 · 두부를 만나!</p>
+      <p id="panelText">우진이와 두부의 아홉 세계 모험! 3·6·9 스테이지에는 서로 다른 보스가 기다려.<br>방향키 / A·D 이동 · SPACE / ↑ 점프 (날개신발은 공중 한 번 더)<br>상자를 아래에서 두드려 거대화 · 불꽃 · 두부 · 날개신발 · 방패를 만나!</p>
       <button id="play">▶ 모험 시작</button>
     </div>
   </div>

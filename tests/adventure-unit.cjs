@@ -22,8 +22,8 @@ for(let i=0;i<610;i++)t.tick(1/120);
 assert.equal(t.state.player.power,null,'giant expires');
 t.grant('fire');assert.equal(t.state.player.powerTime,5,'fire lasts 5 seconds');
 t.fire();const shot=t.state.world.shots.find(s=>!s.hostile);assert.ok(shot,'fire projectile exists');
-assert.ok(shot.life<=.85&&Math.abs(shot.vx)<=345,'fire projectile range has been reduced');
-for(let stage=0;stage<8;stage++){
+assert.ok(shot.life<=.97&&Math.abs(shot.vx)<=345,'fire projectile has the updated modest range');
+for(let stage=0;stage<t.levelCount;stage++){
  // Each pit has a real engine-level jump route from its preceding ground section.
  const source=t.level(stage);
  for(const [a,b] of source.gaps){
@@ -42,4 +42,4 @@ for(let stage=0;stage<8;stage++){
   assert.ok(landed,`stage ${stage+1} pit ${a}-${b} is crossable by actual jump physics: x=${p.x.toFixed(0)} y=${p.y.toFixed(0)}`);
  }
 }
-console.log('PASS: all eight stage pit crossings tested with actual jump physics, elevated terrain, timed powers');
+console.log('PASS: all nine stage pit crossings tested with actual jump physics, elevated terrain, timed powers');

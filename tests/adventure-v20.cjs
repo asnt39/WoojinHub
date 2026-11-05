@@ -25,8 +25,8 @@ for(const file of ['pixel-art.js','adventure.js'])vm.runInContext(fs.readFileSyn
 const t=env.adventureTest;
 assert.ok(t,'localhost test control available');
 
-assert.equal(t.levelCount,8,'three new endgame worlds follow the original five');
-for(let i=5;i<8;i++){
+assert.equal(t.levelCount,9,'nine total worlds including the final boss stage');
+for(let i=5;i<9;i++){
  const w=t.level(i);
  assert.ok(w.hazards.length>=3,`world ${i+1} has more spikes (got ${w.hazards.length})`);
  assert.ok(w.platforms.some(p=>p.wall),`world ${i+1} has mandatory climbing obstacles`);
@@ -75,4 +75,4 @@ const html=fs.readFileSync(path.join(root,'adventure.html'),'utf8');
 assert.match(html,/deathCurtain/,'short between-deaths transition visual');
 const css=fs.readFileSync(path.join(root,'arcade-ui.css'),'utf8');
 assert.match(css,/game-adventure[^\n]*\.touch button[^\n]*pixel|pixel[^\n]*game-adventure/s,'touch controls use explicit pixel styling');
-console.log('PASS: lethal standard spikes, death/transition respawn, 8 worlds, hard-stage hazards, items and Doobu');
+console.log('PASS: lethal standard spikes, death/transition respawn, 9 worlds, hard-stage hazards, items and Doobu');

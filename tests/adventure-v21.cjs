@@ -25,7 +25,7 @@ for(let i=0;i<5;i++){
  assert.ok(w.platforms.filter(p=>p.brick||p.box).length>=10,`stage ${i+1}: actual climbable block sequences`);
  assert.ok(w.hazards.every(h=>ground.some(p=>h.x>=p.x&&h.x+h.w<=p.x+p.w&&h.y+h.h<=p.y+1)),`stage ${i+1}: spikes placed on traversable terrain`);
 }
-for(let i=5;i<8;i++){
+for(let i=5;i<9;i++){
  const w=t.level(i),ground=w.platforms.filter(p=>p.ground);
  assert.ok(new Set(ground.map(p=>p.y)).size>=3,`hard stage ${i+1}: varied ground`);
  assert.ok(w.platforms.some(p=>p.wall)&&w.platforms.some(p=>p.ledge),`hard stage ${i+1}: wall climbs and ledges`);
@@ -61,7 +61,7 @@ advance(240);assert.equal(box.used,false,'used lucky box resets on death');asser
 t.start(0);t.grant('pet');assert.equal(t.state.player.petGold,false,'first Doobu is white');t.grant('pet');assert.equal(t.state.player.petGold,true,'second Doobu turns gold');assert.ok(env.PixelArt.sprite('dogGold').width>0,'gold Doobu is actually drawable');
 
 // The final flag is locked until aerial special ammunition defeats the boss.
-t.start(7);let w=t.state.world;
+t.start(8);let w=t.state.world;
 assert.ok(w.boss?.hp>=3,'final map has a real boss with hit points');
 assert.ok(w.bossPickups?.length>=1,'final stage has special airborne items');
 assert.ok(w.bossPickups.some(q=>q.y<400),'special items require climbing or jumping');
@@ -83,4 +83,4 @@ const html=fs.readFileSync(path.join(root,'adventure.html'),'utf8');
 const css=fs.readFileSync(path.join(root,'arcade-ui.css'),'utf8');
 assert.match(html,/bossHealth/,'boss UI has a readable health indicator');
 assert.match(css,/game-adventure.*touch.*button/s,'touch game controls styled');
-console.log('PASS: eight vertically layered stages, spike smashing, pit rebound, boxes reset, golden Doobu, boss victory and pixel controls');
+console.log('PASS: nine vertically layered stages, spike smashing, pit rebound, boxes reset, golden Doobu, boss victory and pixel controls');
