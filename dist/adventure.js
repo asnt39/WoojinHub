@@ -28,7 +28,12 @@ function level(i){
 function start(i=stage){stage=i;world=level(i);player={x:70,y:390,vx:0,vy:0,w:34,h:64,ground:false,invulnerable:0,power:null,powerTime:0,pet:false,petX:40,petY:430,petCooldown:0,fireCooldown:0,facing:1};camera=0;time=0;coins=0;checkpoint=false;particles=[];running=true;paused=false;completed=false;stageDone=false;keys={};jumpBuffer=0;coyote=0;noticeTime=0;$('notice').textContent='';$('panel').classList.add('hidden');updateHud();updateStages();canvas.focus({preventScroll:true})}
 function message(title,text,label){$('panelTitle').textContent=title;$('panelText').textContent=text;$('play').textContent=label;$('panel').classList.remove('hidden')}
 function notice(text){$('notice').textContent=text;noticeTime=3}
-function updateHud(){$('stageLabel').textContent='STAGE '+(stage+1)+' · '+names[stage];$('coins').textContent='◆ '+coins+' · 전체 '+total;$('checkpoint').textContent=checkpoint?'⚑ 체크포인트':'⚐ 중간 깃발 찾기';$('power').textContent=(player?.power==='giant'?'거대화 ':player?.power==='fire'?'불꽃탄 ':'기본 능력')+(player?.power?Math.ceil(player.powerTime)+'초':'')+(player?.pet?' · 말티즈 동행':'')}
+function updateHud(){const values={
+  stageLabel:'STAGE '+(stage+1)+' · '+names[stage],
+  coins:'◆ '+coins+' · 전체 '+total,
+  checkpoint:checkpoint?'⚑ 체크포인트':'⚐ 중간 깃발 찾기',
+  power:(player?.power==='giant'?'거대화 ':player?.power==='fire'?'불꽃탄 ':'기본 능력')+(player?.power?Math.ceil(player.powerTime)+'초':'')+(player?.pet?' · 말티즈 동행':'')
+ };for(const [id,value] of Object.entries(values))if($(id).textContent!==value)$(id).textContent=value}
 function updateStages(){$('stages').innerHTML=names.map((n,i)=>`<button data-stage="${i}" ${i>unlocked?'disabled':''} class="${i===stage?'selected':''}">${i>unlocked?'🔒 ':''}${i+1}. ${n}</button>`).join('')}
 function sfx(f=440){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.setValueAtTime(f,audio.currentTime);o.frequency.exponentialRampToValueAtTime(f*1.4,audio.currentTime+.10);g.gain.setValueAtTime(.018,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.12);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+.13)}catch{}}
 function burst(x,y,color){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;for(let n=0;n<14;n++)particles.push({x,y,vx:(Math.random()-.5)*190,vy:-Math.random()*170,color,life:.6})}
@@ -41,7 +46,7 @@ function hurt(){if(player.invulnerable>0||player.power==='giant')return;if(playe
 function kill(e){e.alive=false;burst(e.x+17,e.y+10,['#ed9971','#d1d98c','#c8a0e6','#a4b5eb'][e.type]);sfx(550)}
 function finish(){if(stageDone)return;stageDone=true;running=false;total+=coins;unlocked=Math.max(unlocked,Math.min(4,stage+1));save();updateStages();sfx(800);if(stage===4){completed=true;message('다섯 세계를 완주했어!','빛 조각 '+total+'개 · 우진이와 말티즈의 모험은 계속돼!','처음부터 다시')}else message('STAGE CLEAR','빛 조각 '+coins+'개 · 다음 세계는 더 험난해!','다음 스테이지')}
 function fire(){if(player.power!=='fire'||player.fireCooldown>0||!running||paused)return;player.fireCooldown=.32;world.shots.push({x:player.x+player.w/2,y:player.y+player.h*.45,w:12,h:12,vx:player.facing*460,vy:-80,life:2.2,hostile:false});sfx(270)}
-function tick(dt){if(!running||paused)return;time+=dt;const old={...player};noticeTime=Math.max(0,noticeTime-dt);if(!noticeTime)$('notice').textContent='';
+function tick(dt){if(!running||paused)return;time+=dt;const old={...player};noticeTime=Math.max(0,noticeTime-dt);if(!noticeTime&&$('notice').textContent)$('notice').textContent='';
  for(const p of world.platforms){p.oldX=p.x;p.bump=Math.max(0,(p.bump||0)-dt);if(p.moving)p.x=p.baseX+Math.sin(time*1.1+p.phase)*58}
  player.fireCooldown=Math.max(0,player.fireCooldown-dt);player.petCooldown=Math.max(0,player.petCooldown-dt);if(keys.fire)fire();
  if(player.power){player.powerTime-=dt;if(player.powerTime<=0){resizePlayer(false);player.power=null;player.powerTime=0;notice('능력 시간이 끝났어. 다음 상자를 찾아봐!')}updateHud()}
@@ -78,13 +83,27 @@ function draw(){ctx.clearRect(0,0,W,H);if(background.complete&&background.natura
  if(player.power){rect(player.x-4,player.y-8,player.w+8,3,player.power==='giant'?'#ffcaa0':'#ffaf4b');if(Math.floor(time*8)%2)rect(player.x+(Math.floor(time*5)%2?player.w:0),player.y+player.h*.4,4,4,'#fff5b0')}
  for(const p of particles){ctx.globalAlpha=p.life/.6;rect(p.x,p.y,4,4,p.color)}ctx.globalAlpha=1;ctx.restore();
 }
-function frame(now){if(!last)last=now;acc+=Math.min(.08,(now-last)/1000);last=now;while(acc>=DT){tick(DT);acc-=DT}draw();requestAnimationFrame(frame)}
+let sceneVisible=true;
+function frame(now){
+ if(!sceneVisible||document.hidden){last=now;acc=0;requestAnimationFrame(frame);return}
+ if(!last)last=now;
+ acc+=Math.min(.08,(now-last)/1000);last=now;
+ while(acc>=DT){tick(DT);acc-=DT}
+ draw();requestAnimationFrame(frame);
+}
 function key(k,down){if(k==='jump'&&down&&!keys.jump)jumpBuffer=.12;keys[k]=down}
 const mapping={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',' ':'jump',ArrowUp:'jump',w:'jump',W:'jump',x:'fire',X:'fire'};
 addEventListener('keydown',e=>{if(mapping[e.key]){e.preventDefault();key(mapping[e.key],true)}if(e.key==='Escape'&&!e.repeat)togglePause()});addEventListener('keyup',e=>{if(mapping[e.key]){e.preventDefault();key(mapping[e.key],false)}});
 document.querySelectorAll('[data-key]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();key(b.dataset.key,true);b.setPointerCapture(e.pointerId)};for(const ev of['pointerup','pointercancel','lostpointercapture'])b.addEventListener(ev,()=>key(b.dataset.key,false))});
 function togglePause(){if(!running)return;paused=!paused;keys={};if(paused)message('잠깐 쉬어가기','준비되면 모험을 이어가자.','계속하기');else $('panel').classList.add('hidden')}
 $('pause').onclick=togglePause;$('retry').onclick=()=>{if(confirm('이 스테이지를 다시 시작할까?'))start(stage)};$('sound').onclick=()=>{sound=!sound;$('sound').textContent=sound?'♪':'♩'};$('play').onclick=()=>{if(paused){togglePause();return}if(completed){start(0);return}start(stageDone?stage+1:stage)};$('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b&&!b.disabled)start(+b.dataset.stage)};
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused){shellPaused=true;togglePause()}});addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;if(!e.data.active&&running&&!paused){shellPaused=true;togglePause()}else if(e.data.active&&shellPaused){shellPaused=false;if(paused)togglePause()}});addEventListener('blur',()=>keys={});world=level(0);player={x:70,y:390,w:34,h:64,vx:0,vy:0};updateStages();updateHud();requestAnimationFrame(frame);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused){shellPaused=true;togglePause()}if(!document.hidden){last=0;acc=0}});
+addEventListener('message',e=>{
+ if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;
+ sceneVisible=!!e.data.active;last=0;acc=0;keys={};
+ if(!sceneVisible&&running&&!paused){shellPaused=true;togglePause()}
+ else if(sceneVisible&&shellPaused){shellPaused=false;if(paused)togglePause()}
+});
+addEventListener('blur',()=>keys={});world=level(0);player={x:70,y:390,w:34,h:64,vx:0,vy:0};updateStages();updateHud();requestAnimationFrame(frame);
 if(['localhost','127.0.0.1'].includes(location.hostname))window.adventureTest={start,tick,level,key,die,grant,bump,fire,draw,get state(){return{stage,world,player,checkpoint,unlocked,total,running,paused,stageDone,deaths}},warpGoal(){player.x=world.goal;tick(DT)}};
 })();

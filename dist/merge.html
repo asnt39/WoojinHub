@@ -1,1 +1,43 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c1422"><title>우진 합치기 · 우진이 키우기</title><link rel="stylesheet" href="merge.css"></head><body><main class="app"><header><a class="brand" href="/">WOOJIN GAME <span>우진이 키우기</span></a><nav><a href="/">키우기</a><a class="active" href="merge.html" aria-current="page">우진 합치기</a></nav></header><div class="layout"><section class="play"><div class="game-heading"><div><span class="eyebrow">WOOJIN MARBLE CLUB</span><h1>우진 합치기</h1></div><div class="control"><button id="sound" aria-label="소리 켜기와 끄기" aria-pressed="true">♪</button><button id="pause" aria-label="일시정지">Ⅱ</button><button id="restart" aria-label="다시 시작">↻</button></div></div><div class="hud"><div><small>이번 점수</small><strong id="score">0</strong></div><div><small>최고 기록</small><strong id="best">0</strong></div><div class="next"><small>다음 우진</small><canvas id="next" width="80" height="80" aria-label="다음 우진 미리보기"></canvas></div></div><div class="board" id="board"><canvas id="game" width="440" height="680" tabindex="0" aria-label="우진 합치기 게임. 좌우 화살표로 위치를 정하고 스페이스 또는 엔터로 떨어뜨리기"></canvas><div id="overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="게임 상태"><h2 id="overlayTitle"></h2><p id="overlayText"></p><button id="resume">계속하기</button></div><div class="combo" id="combo" aria-live="polite"></div></div><button id="drop" class="drop">우진 떨어뜨리기 <span>SPACE</span></button><p class="help">드래그해서 조준하고 손을 떼면 툭! · 탭도 가능해</p></section><aside><section class="card intro"><span class="eyebrow">ONE MORE MERGE</span><h2>한 번의 낙하,<br>짜릿한 연쇄 합체.</h2><p>같은 얼굴 두 개가 만나면<br>한 단계 큰 우진으로 성장해!</p><div class="goal"><canvas id="goal" width="160" height="160"></canvas><span>최종 목표<br><strong>11단계 전설의 우진</strong></span></div></section><section class="card"><div class="section-label"><h2>우진 진화도</h2><span id="discovered">1 / 11 발견</span></div><div id="evolution" class="evolution"></div><p>테두리 색 · 얼굴 · 단계 숫자로 구분해.<br>첫 구슬은 항상 1단계 · 이후에는 1~4단계만 나와.</p></section><section class="card rules"><h2>플레이 팁</h2><ol><li>다음 구슬을 보고 빈 공간을 남겨둬.</li><li>구슬은 굴러가고, 합체 파동은 주변을 살짝 밀어내.</li><li>빨간 선 위에 구슬이 계속 쌓이면 게임 종료!</li></ol><p>최고 점수는 이 브라우저에 저장돼.<br>자동으로 앱을 벗어나면 일시정지해.</p></section></aside></div><footer>우진 얼굴로 즐기는 낙하 합체 퍼즐 · <a href="https://suikagame.jp/about/" target="_blank" rel="noopener">수박 게임 규칙 참고</a></footer></main><script src="vendor/planck.min.js"></script><script src="box2d-bridge.js"></script><script src="merge.js"></script><script src="child-nav.js"></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1422"><title>머지 우진 · WoojinHub</title>
+<link rel="stylesheet" href="merge.css"><link rel="stylesheet" href="arcade-ui.css"></head>
+<body class="game-merge">
+<main class="app">
+  <header><a class="brand" href="/">WOOJINHUB <span>머지 아케이드</span></a>
+    <nav><a href="/">키우기</a><a class="active" href="merge.html" aria-current="page">우진 합치기</a></nav></header>
+  <div class="layout">
+    <section class="play">
+      <div class="game-heading"><div><span class="eyebrow">WOOJIN MARBLE CLUB</span><h1>우진 합치기</h1></div>
+        <div class="control"><button id="sound" aria-label="소리 켜기와 끄기" aria-pressed="true">♪</button>
+          <button id="pause" aria-label="일시정지">Ⅱ</button><button id="restart" aria-label="다시 시작">↻</button></div></div>
+      <div class="hud"><div><small>이번 점수</small><strong id="score">0</strong></div>
+        <div><small>최고 기록</small><strong id="best">0</strong></div>
+        <div class="next"><small>다음 우진</small><canvas id="next" width="80" height="80" aria-label="다음 우진 미리보기"></canvas></div></div>
+      <div class="board" id="board">
+        <canvas id="game" width="440" height="680" tabindex="0" aria-label="우진 합치기 게임. 좌우 화살표로 위치를 정하고 스페이스 또는 엔터로 떨어뜨리기"></canvas>
+        <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="게임 상태">
+          <h2 id="overlayTitle"></h2><p id="overlayText"></p><button id="resume">계속하기</button></div>
+        <div class="combo" id="combo" aria-live="polite"></div>
+      </div>
+      <button id="drop" class="drop"><span class="drop-symbol">↓</span> 우진 떨어뜨리기 <span>SPACE</span></button>
+      <p class="help">드래그해서 조준하고 손을 떼면 툭! · 탭도 가능해</p>
+    </section>
+    <aside>
+      <section class="card intro"><span class="eyebrow">ONE MORE MERGE</span><h2>한 번의 낙하,<br>짜릿한 연쇄 합체.</h2>
+        <p>같은 얼굴 두 개가 만나면<br>한 단계 큰 우진으로 성장해!</p>
+        <div class="goal"><canvas id="goal" width="160" height="160"></canvas><span>최종 목표<br><strong>11단계 전설의 우진</strong></span></div></section>
+      <section class="card"><div class="section-label"><h2>우진 진화도</h2><span id="discovered">1 / 11 발견</span></div>
+        <div id="evolution" class="evolution"></div><p>테두리 색 · 얼굴 · 단계 숫자로 구분해.<br>첫 구슬은 항상 1단계 · 이후에는 1~4단계만 나와.</p></section>
+      <section class="card rules"><h2>플레이 팁</h2><ol>
+        <li>다음 구슬을 보고 빈 공간을 남겨둬.</li><li>구슬은 굴러가고, 합체 파동은 주변을 살짝 밀어내.</li>
+        <li>빨간 선 위에 구슬이 계속 쌓이면 게임 종료!</li></ol>
+        <p>최고 점수는 이 브라우저에 저장돼.<br>게임을 벗어나면 자동으로 일시정지해.</p>
+      </section>
+    </aside>
+  </div>
+  <footer>우진 얼굴로 즐기는 낙하 합체 퍼즐 · <a href="https://suikagame.jp/about/" target="_blank" rel="noopener">수박 게임 규칙 참고</a></footer>
+</main>
+<script src="vendor/planck.min.js"></script><script src="box2d-bridge.js"></script><script src="merge.js"></script><script src="child-nav.js"></script>
+</body></html>

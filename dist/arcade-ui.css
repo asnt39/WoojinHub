@@ -1,0 +1,294 @@
+/* WoojinHub arcade interface. Presentation only; engines and save keys stay intact. */
+:where(.game-city,.game-adventure,.game-merge,.game-grow){
+  --ui-ink:#edf6f6;--ui-muted:#9fb8c3;--ui-edge:#64869a;
+  --ui-glass:linear-gradient(145deg,#182736f2,#10202deb);
+  --ui-accent:#83e7c6;--ui-gold:#f1d28c;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-font-smoothing:antialiased;
+}
+:where(.game-city,.game-adventure,.game-merge,.game-grow) button{
+  -webkit-user-select:none;user-select:none;
+  transition:background-color .13s ease,border-color .13s ease,filter .13s ease,box-shadow .13s ease,transform .13s ease;
+}
+:where(.game-city,.game-adventure,.game-merge,.game-grow) button:not(:disabled):active{
+  filter:brightness(1.14);transform:translateY(2px) scale(.98);
+}
+:where(.game-city,.game-adventure,.game-merge,.game-grow) button:focus-visible{
+  outline:3px solid #b5ffdf;outline-offset:3px;
+}
+:where(.game-city,.game-adventure,.game-merge,.game-grow) button:disabled{
+  cursor:not-allowed;
+}
+:where(.game-city,.game-adventure,.game-merge,.game-grow) kbd{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:10px;letter-spacing:0;
+  padding:2px 5px;border-radius:5px;border:1px solid #c1d2cb55;
+  background:#0414225c;color:#e1f3e9;white-space:nowrap;
+}
+
+/* GTA-inspired in-world HUD: quiet, readable, and separated from the art. */
+.game-city{color:var(--ui-ink);background:#111923;font-family:system-ui,-apple-system,'Apple SD Gothic Neo',sans-serif}
+.game-city button,.game-city select{
+  color:#e7f2ee;background:#203646;border:1px solid #628495;
+  border-radius:11px;box-shadow:inset 0 1px #ffffff25,0 3px 0 #0a1722;
+  font-size:13px;font-weight:720;
+}
+.game-city button:hover:not(:disabled){border-color:#b4e7d6;background:#2b5060}
+.game-city header{z-index:3;top:20px;left:24px;right:22px;align-items:start}
+.game-city header strong{font-size:27px;line-height:1.1;letter-spacing:-.045em;text-shadow:0 3px 8px #06131b}
+.game-city header small{font-size:10px;letter-spacing:.15em;color:#e9e3cf;text-shadow:0 2px 4px #041922}
+.game-city header .chapter{color:#a0e9d3;font-size:9px;margin-left:7px}
+.game-city header strong>span{display:inline-block;border-radius:6px;background:#244454;padding:2px 6px;border:1px solid #628e87;vertical-align:middle;color:#ffd99a}
+.game-city #menu{pointer-events:auto;display:flex;align-items:center;gap:9px;background:#172b39ea;border:1px solid #99b1b3;padding:10px 14px;backdrop-filter:blur(7px)}
+.game-city #menu .menu-mark{color:#a6edcf;font-size:15px}
+.game-city #mission{
+  z-index:2;top:105px;left:24px;max-width:290px;min-width:220px;
+  padding:15px 17px 13px;background:var(--ui-glass);border:1px solid #718d92;
+  border-left:3px solid #a3d6a8;border-radius:0 13px 13px 0;
+  box-shadow:0 9px 22px #09131a6b,inset 0 1px #e7ffe912;
+}
+.game-city #mission small{display:flex;align-items:center;gap:8px;color:#c6ded5;font-size:9px;letter-spacing:.16em}
+.game-city .mission-dot{display:inline-block;width:7px;height:7px;background:#a1e9bd;border-radius:50%;box-shadow:0 0 9px #82e9b9}
+.game-city #objective{font-size:13px;line-height:1.55;color:#fcf6df;font-weight:730;margin:9px 0 10px}
+.game-city #money{display:inline-block;border-top:1px solid #ffffff21;padding-top:7px;width:100%;color:#bcdbcb;font-size:11px;letter-spacing:.01em}
+.game-city .map-wrap{position:absolute;z-index:2;right:23px;top:92px;padding:8px;background:#122432e8;border:1px solid #93a49e;border-radius:14px;box-shadow:0 7px 19px #06131b7a}
+.game-city .map-wrap>span{display:block;text-align:center;color:#b9dccd;font-size:9px;font-weight:800;letter-spacing:.18em;padding:0 0 6px}
+.game-city #map{position:static;display:block;width:138px;height:138px;border:2px solid #576d70;border-radius:8px;box-shadow:inset 0 0 0 2px #182635}
+.game-city #combatHud{
+  z-index:2;left:23px;bottom:23px;width:235px;padding:13px 15px;
+  color:#f2f2e3;background:var(--ui-glass);
+  border:1px solid #77928e;border-radius:13px;
+  box-shadow:0 8px 22px #07121e80,inset 0 1px #ffffff12;
+}
+.game-city #combatHud>div{font-size:11px}
+.game-city #combatHud .health-label b{font-size:11px;color:#d4f1e6;letter-spacing:.06em}
+.game-city #combatHud .health-label b span{font-weight:550;color:#b9d3ce;letter-spacing:0;margin-left:4px}
+.game-city #healthText{color:#effff9;font-variant-numeric:tabular-nums;font-size:12px;font-weight:800}
+.game-city .healthTrack{height:8px;margin:10px 0 12px;border:1px solid #54715c;border-radius:5px;background:#0c1b29;overflow:hidden}
+.game-city #healthFill{background:linear-gradient(90deg,#65c69e,#a9efc4);box-shadow:0 0 12px #7cf6b344;transition:width .16s linear}
+.game-city .weapon-label{padding-top:8px;border-top:1px solid #ffffff20}
+.game-city #weaponName{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#ffda9b}
+.game-city #weaponName:before{content:'◇';font-size:14px;color:#e1ae65}
+.game-city #combatHint{max-width:145px;color:#b5c9d1;font-size:9px}
+.game-city #prompt{
+  z-index:4;bottom:27px;padding:11px 17px;border-radius:12px;max-width:90vw;
+  color:#f3ffe6;font-size:12px;font-weight:700;letter-spacing:.01em;
+  border:1px solid #a5d7bc;background:#123e43ee;
+  box-shadow:0 7px 22px #04111c99,inset 0 1px #c9ffdb35;
+}
+.game-city #prompt:not(:empty):before{
+  content:'●';color:#bbf2b7;margin-right:9px;font-size:8px;vertical-align:middle;
+}
+.game-city #combatToast{
+  z-index:5;bottom:87px;border-radius:10px;border:1px solid #c3a87d;
+  border-left:4px solid #f4d696;background:#182d37f2;
+  box-shadow:0 7px 23px #06121a88;color:#fff0d3;font-size:12px;
+}
+.game-city #dialog{
+  z-index:9;bottom:85px;width:min(560px,calc(100vw - 26px));max-height:calc(100dvh - 120px);
+  overflow:auto;padding:0;background:linear-gradient(140deg,#1b2f40f7,#10232ff7);
+  border:1px solid #b6d6ca;border-radius:16px;
+  box-shadow:0 15px 0 #07131a55,0 26px 55px #000a,inset 0 1px #ffffff25;
+  color:#f5f3df;
+}
+.game-city .dialog-heading{
+  display:flex;align-items:center;gap:9px;padding:12px 17px;
+  font-weight:760;font-size:13px;letter-spacing:.02em;color:#f2f4df;
+  border-bottom:1px solid #57727a;background:linear-gradient(90deg,#274656,#1a3040);
+}
+.game-city .dialog-heading small{margin-left:auto;font-size:9px;color:#b5d8d4;letter-spacing:.12em}
+.game-city .dialog-indicator{color:#eacb8d;font-size:12px}
+.game-city #dialogText{margin:0;padding:19px 20px 20px;font-size:15px;line-height:1.7;min-height:74px}
+.game-city .dialog-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 16px;border-top:1px solid #59737b77;color:#a9c4ca;font-size:11px}
+.game-city #dialog button{float:none;padding:9px 16px;background:linear-gradient(#33715e,#2d5b5d);border-color:#92cead;box-shadow:0 3px 0 #11352f;color:white}
+.game-city #dialog button kbd{margin-left:7px}
+.game-city:has(#dialog:not([hidden])) #prompt{display:none}
+.game-city #pause{z-index:15;background:#06111dcc;backdrop-filter:blur(3px)}
+.game-city #pause article{background:linear-gradient(145deg,#24394b,#132535);border:1px solid #8fb5ac;border-radius:19px;box-shadow:0 30px 75px #03070eca}
+.game-city #pause h1{font-size:25px;color:#fff2d9;margin:9px 0 16px}
+.game-city #pause article p{color:#bbd1d4}
+.game-city #pause #resume{background:linear-gradient(120deg,#377e6d,#3c6d81);border-color:#97d6b7;color:#f6fffb;padding:13px}
+.game-city #pause #restartMission{background:#1c303f;border-color:#5c7681;color:#a8c4cb}
+.game-city #touch{z-index:6;user-select:none;-webkit-user-select:none}
+.game-city #touch button{touch-action:none}
+.game-city .movement{pointer-events:none;display:flex;align-items:center;flex-direction:column;gap:6px}
+.game-city #stick{pointer-events:auto}
+.game-city .movement-label{font-size:9px;letter-spacing:.13em;font-weight:800;color:#d2e7dc;text-shadow:0 2px 5px #000}
+.game-city .actions{pointer-events:auto}
+.game-city .action-label{font-size:11px;white-space:nowrap;font-weight:800;line-height:1.2}
+.game-city .action-symbol{display:block;font-size:20px;line-height:1;font-weight:800}
+.game-city #touch button kbd{display:block;padding:0 4px;font-size:9px;background:#06212a3b}
+
+@media(pointer:coarse),(max-width:700px){
+  .game-city header{left:12px;right:12px;top:12px}
+  .game-city header strong{font-size:22px}
+  .game-city #menu{font-size:11px;padding:9px 10px;gap:5px}
+  .game-city #mission{top:76px;left:12px;min-width:0;width:197px;max-width:calc(100% - 145px);padding:10px 11px}
+  .game-city #mission small{display:flex;font-size:7px;letter-spacing:.08em}
+  .game-city #objective{font-size:11px;margin:6px 0}
+  .game-city #money{font-size:10px;padding-top:5px}
+  .game-city .map-wrap{top:78px;right:11px;padding:5px;border-radius:10px}
+  .game-city .map-wrap>span{font-size:8px;padding-bottom:4px}
+  .game-city #map{width:96px;height:96px;border-radius:6px}
+  .game-city #combatHud{top:180px;bottom:auto;left:12px;width:196px;padding:10px 12px;border-radius:10px}
+  .game-city #combatHint{display:none}
+  .game-city .healthTrack{margin:8px 0}
+  .game-city #combatHud .weapon-label{padding-top:6px}
+  .game-city #combatToast{bottom:182px;max-width:86vw;padding:8px 10px;font-size:11px}
+  .game-city #prompt{bottom:178px;max-width:88vw;font-size:11px;padding:9px 12px;white-space:normal;text-align:center}
+  .game-city #touch{bottom:max(11px,env(safe-area-inset-bottom));left:12px;right:12px;align-items:end;gap:7px}
+  .game-city #stick{
+    width:118px;height:118px;border:2px solid #96cebbac;border-radius:50%;
+    background:radial-gradient(circle,#264d58af 0 49%,#102735dc 50% 100%);
+    box-shadow:0 7px 24px #0008,inset 0 0 0 8px #ffffff0b,inset 0 0 0 20px #ffffff04;
+    position:relative;touch-action:none
+  }
+  .game-city #stick:before,.game-city #stick:after{content:'';position:absolute;left:50%;top:50%;background:#cce9da35;transform:translate(-50%,-50%);pointer-events:none}
+  .game-city #stick:before{height:1px;width:73%}
+  .game-city #stick:after{width:1px;height:73%}
+  .game-city #stick i{width:52px;height:52px;z-index:1;background:linear-gradient(135deg,#a3d9c8,#447f86);border:3px solid #d6efe1aa;box-shadow:0 5px 10px #08191d96,inset 0 2px 6px #ffffff65}
+  .game-city .actions{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:76px 61px;gap:6px;align-items:stretch}
+  .game-city .actions button{
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;
+    padding:3px 0;min-height:0;height:auto;font-size:11px;line-height:1.1;
+    border-radius:13px;border:1px solid #7a9fa9;background:linear-gradient(150deg,#33586a,#193343e8);
+    box-shadow:0 4px 0 #071720,0 7px 11px #071421b0;color:#eaf7f1
+  }
+  .game-city .actions #attack{
+    grid-column:span 2;display:flex;flex-direction:row;gap:8px;
+    background:linear-gradient(135deg,#d48458,#a6534d);border:2px solid #f6ca8e;
+    color:#fffbea;border-radius:23px;box-shadow:0 5px 0 #5b2e2a,0 9px 18px #0b0b178a
+  }
+  .game-city .actions #attack .action-symbol{font-size:31px}
+  .game-city .actions #attack .action-label{font-size:16px}
+  .game-city .actions #attack kbd{font-size:10px;margin-left:3px}
+  .game-city .actions #run{grid-column:3;grid-row:1;background:linear-gradient(150deg,#38616c,#235065)}
+  .game-city .actions #run .action-symbol{font-size:24px}
+  .game-city .actions #interact{grid-column:1;grid-row:2;border-color:#abdfbe;background:linear-gradient(140deg,#386e60,#234f58)}
+  .game-city .actions #weapon{grid-column:2;grid-row:2}
+  .game-city .actions #vehicle{grid-column:3;grid-row:2}
+  .game-city .actions .action-symbol{font-size:17px}
+  .game-city .actions .action-label{font-size:10px}
+  .game-city #dialog{bottom:178px;max-height:calc(100dvh - 280px);border-radius:13px}
+  .game-city #dialogText{font-size:13px;padding:14px 16px;min-height:60px}
+  .game-city .dialog-heading{padding:10px 13px;font-size:12px}
+  .game-city .dialog-heading small{font-size:8px}
+  .game-city .dialog-footer{padding:8px 12px;font-size:10px}
+}
+@media(pointer:coarse) and (max-width:355px),(max-width:355px){
+  .game-city #stick{height:96px;width:96px}
+  .game-city #stick i{width:46px;height:46px}
+  .game-city .actions{grid-template-columns:repeat(3,48px);grid-template-rows:70px 57px;gap:5px}
+  .game-city .actions #attack .action-label{font-size:14px}
+}
+@media (pointer:coarse) and (max-height:540px){
+  .game-city header{top:7px}
+  .game-city header strong{font-size:18px}
+  .game-city #mission{top:53px;max-width:165px;padding:7px 9px}
+  .game-city #objective{font-size:10px;margin:4px 0}
+  .game-city .map-wrap{top:53px;padding:4px}
+  .game-city #map{width:76px;height:76px}
+  .game-city #combatHud{top:145px;bottom:auto;width:170px;padding:6px 9px}
+  .game-city #combatHint{display:none}
+  .game-city #touch{bottom:6px}
+  .game-city #stick{height:86px;width:86px}
+  .game-city #stick i{width:42px;height:42px}
+  .game-city .movement-label{display:none}
+  .game-city .actions{grid-template-columns:repeat(3,47px);grid-template-rows:50px 45px;gap:5px}
+  .game-city .actions #attack .action-label{font-size:13px}
+  .game-city .actions #attack .action-symbol{font-size:24px}
+  .game-city .actions .action-symbol{font-size:13px}
+  .game-city .actions .action-label{font-size:9px}
+  .game-city .actions button kbd{display:none}
+  .game-city #dialog{bottom:113px;max-height:calc(100dvh - 124px)}
+  .game-city #dialogText{padding:10px 12px;font-size:12px;min-height:0}
+  .game-city #combatToast,.game-city #prompt{bottom:110px}
+}
+
+/* Platformer: coherent tactile gamepad, lightweight notices, readable checkpoint bar. */
+.game-adventure{--ui-accent:#c6e4aa}
+.game-adventure header{border-bottom:1px solid #59707555;margin-bottom:12px;padding-bottom:17px}
+.game-adventure h1{color:#fff1d2;font-size:29px}
+.game-adventure .title-accent{font-size:10px;letter-spacing:.18em;color:#9bcab7;vertical-align:middle;margin-left:8px;font-weight:750}
+.game-adventure .tools button{background:linear-gradient(#365469,#243749);border:1px solid #71929a;border-radius:10px;box-shadow:0 3px #0d1d29;color:#e4f6ef;font-weight:700}
+.game-adventure .hud{border:1px solid #779795;border-bottom:0;border-radius:12px 12px 0 0;background:linear-gradient(95deg,#2c4851,#1a3342);box-shadow:inset 0 1px #ffffff22}
+.game-adventure .ability-bar{border:1px solid #6a8b8f;border-top:1px solid #526b75;border-bottom:0;background:#1a3040;color:#e4d49e;letter-spacing:.01em}
+.game-adventure .viewport{border:2px solid #779694;border-radius:0 0 14px 14px;box-shadow:0 9px 0 #0a1722,0 22px 35px #030d18ad}
+.game-adventure #notice:not(:empty){border-radius:9px;border:1px solid #dbcc95;background:#132f3fe8;box-shadow:0 3px 14px #061723aa}
+.game-adventure .panel{background:#102336ec}
+.game-adventure .panel h2{font-size:clamp(29px,5vw,43px);color:#fff0b8;text-shadow:0 3px #172b30}
+.game-adventure .panel button{border:2px solid #e6deaa;border-radius:12px;background:linear-gradient(#548d72,#336e66);box-shadow:0 5px #1a4240;color:#fffde9}
+.game-adventure .touch{display:flex;align-items:stretch;gap:9px;margin:17px 0 13px}
+.game-adventure .touch>div{display:flex;gap:8px}
+.game-adventure .touch button{
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;
+  width:69px;height:62px;min-width:0;border:1px solid #92b6b1;border-radius:14px;
+  background:linear-gradient(#355d68,#1c3547);box-shadow:0 4px #0b1d2b,0 7px 13px #050f1955;
+  color:#e9faf7;touch-action:none;font-size:14px;font-weight:800
+}
+.game-adventure .touch button small{font-size:8px;color:#b6d0d0;letter-spacing:.08em}
+.game-adventure .touch .control-glyph{font-size:22px;line-height:1}
+.game-adventure .touch .fire{margin-left:auto;margin-right:3px;width:100px;border-color:#d8a78f;background:linear-gradient(#ac6c58,#794950)}
+.game-adventure .touch .jump{width:118px;border-color:#cbd59a;background:linear-gradient(#839964,#526b58);color:#fffbd9}
+.game-adventure .touch kbd{font-size:9px}
+.game-adventure nav button{background:#213d4c;border:1px solid #68878f;border-radius:9px;color:#dae8e3;box-shadow:inset 0 1px #ffffff18}
+.game-adventure nav button.selected{border-color:#e6cf91;background:#416756;color:#fff2c7}
+.game-adventure nav button:disabled{opacity:.52}
+@media(max-width:600px){
+  .game-adventure h1{font-size:23px}
+  .game-adventure .title-accent{display:none}
+  .game-adventure .tools button{font-size:10px;padding:8px}
+  .game-adventure .touch{gap:5px;margin:12px 0}
+  .game-adventure .touch>div{gap:5px}
+  .game-adventure .touch button{height:59px;width:53px;border-radius:11px}
+  .game-adventure .touch .fire{width:76px;margin-left:auto}
+  .game-adventure .touch .jump{width:88px}
+  .game-adventure .touch .control-glyph{font-size:17px}
+  .game-adventure .touch kbd{font-size:7px}
+}
+
+/* Marble cabinet: fast visual scanning and large primary input. */
+.game-merge header{border-color:#53667a}
+.game-merge .play{border:1px solid #7990a8;border-radius:22px;background:linear-gradient(145deg,#2a3d53,#1b2a3e)}
+.game-merge .game-heading h1{color:#effbf4}
+.game-merge .control button{height:39px;width:40px;border-radius:12px;border:1px solid #92abb4;background:#29495d;box-shadow:0 3px #112437;color:#e5f4f0}
+.game-merge .hud{background:#162a3e;border:1px solid #607c92;border-radius:13px;box-shadow:inset 0 1px #e9fff118}
+.game-merge .hud>div:first-child strong{color:#aaf1d0}
+.game-merge .board{border:2px solid #819cb0;border-radius:17px;box-shadow:0 0 0 4px #152c40,0 14px 25px #06102366}
+.game-merge .drop{min-height:57px;border:2px solid #c3efdd;border-radius:14px;background:linear-gradient(120deg,#6ec5a3,#72a9b7);color:#132e3c;font-size:16px;font-weight:850;box-shadow:0 5px #295f6b,0 10px 18px #03121c66}
+.game-merge .drop .drop-symbol{display:inline-flex;align-items:center;justify-content:center;background:#1d6566;color:#e4fff2;border-radius:9px;width:27px;height:27px;margin-right:5px;font-size:20px}
+.game-merge .drop>span:last-child{color:#c9fff4;background:#123b4d;padding:4px 7px;border:1px solid #78bdb7}
+.game-merge .card{border:1px solid #526f80;border-radius:19px;background:linear-gradient(#2a4053,#1a2c40)}
+.game-merge .evo{border:1px solid #a0c9bf22;border-radius:10px;background:#ffffff08}
+.game-merge .overlay{backdrop-filter:none;background:#0a1c2ce9}
+.game-merge .overlay h2{color:#e3ffe4;text-shadow:0 2px #173b3d}
+.game-merge .overlay button{background:linear-gradient(#548e7d,#3f6f7b);border:1px solid #a1dcbe;border-radius:12px;box-shadow:0 4px #14353b;color:#fafff5;font-weight:750}
+@media(max-width:760px){.game-merge .drop{min-height:52px;font-size:14px}.game-merge .play{border-radius:16px}.game-merge .control button{width:35px;height:36px}}
+
+/* Growth game keeps its snack-shop identity, with the same arcade control quality. */
+.game-grow{--ui-ink:#4a3b29;--ui-muted:#776653;--ui-edge:#baa27b;--ui-accent:#377a63;--ui-gold:#9b672c;color-scheme:light}
+.game-grow .panel{border-radius:18px;border:1px solid #d7c7a6;box-shadow:0 6px 0 #b9a58224,0 14px 28px #493d2314}
+.game-grow .logo{background:#446d60;border:1px solid #6e9a88;color:#fff7e1;border-radius:12px;box-shadow:0 3px #285344}
+.game-grow .iconbtn,.game-grow .photo-tabs button,.game-grow .ach button,.game-grow .title-select{
+  border-radius:11px;border:1px solid #c6b397;background:linear-gradient(#fffdf5,#efe5cf);
+  box-shadow:0 3px 0 #c7b89e;color:#644d35;
+}
+.game-grow .photo-tabs button.selected{background:#3e7b68;border-color:#3b6c60;color:#fffdf5;box-shadow:0 3px #29564c}
+.game-grow .score{border-color:#dfc9a6}
+.game-grow .score h2{color:#4a3c28}
+.game-grow .speech-zone{background:#f9eddb}
+.game-grow .speech-zone .speech{background:#fffdf4;color:#4b4636;border:1px solid #cab68e;border-radius:13px;box-shadow:0 3px 9px #4f3b1c20}
+.game-grow .upgrade{border:1px solid #d9caad;border-radius:13px;box-shadow:0 3px 0 #d3c3a951;background:#fffef7}
+.game-grow .upgrade:not(:disabled):hover{background:#eef7e8;border-color:#8bac8b;box-shadow:0 3px 0 #8dac8b55}
+.game-grow .upgrade:not(:disabled):active{box-shadow:0 1px 0 #8dac8b55}
+.game-grow .upgrade:disabled{background:#f3eee4;box-shadow:none}
+.game-grow .open-shop,.game-grow .share-btn{border:1px solid #2d5e4b;background:linear-gradient(#4e947b,#33705b);color:#fffce9;box-shadow:0 4px #214b3d;border-radius:12px;font-weight:800}
+.game-grow .close-shop{border-radius:10px}
+.game-grow .toast{border:1px solid #8faf93;box-shadow:0 10px 24px #25180755}
+.game-grow .fever-button{will-change:auto}
+@media(max-width:760px){.game-grow .open-shop{min-height:45px}.game-grow .upgrade{min-height:74px}}
+
+@media(prefers-reduced-motion:reduce){
+  :where(.game-city,.game-adventure,.game-merge,.game-grow) button{transition:none!important}
+  .game-city #healthFill{transition:none}
+}

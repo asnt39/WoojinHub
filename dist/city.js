@@ -19,7 +19,8 @@ function save(){try{const value=JSON.stringify(serial());localStorage.setItem(KE
 function restore(){for(const key of[KEY,KEY+'-backup'])try{const s=JSON.parse(localStorage.getItem(key));if(s?.version!==1||!Number.isFinite(s.p?.x)||!Number.isFinite(s.p?.y))continue;if(!blocked(s.p.x,s.p.y)){p.x=s.p.x;p.y=s.p.y}if(s.car&&Number.isFinite(s.car.a)&&Number.isFinite(s.car.x)&&Number.isFinite(s.car.y)&&!blocked(s.car.x,s.car.y,30)){Object.assign(car,s.car);car.speed=0}state.mission=[0,1,2,3].includes(s.mission)?s.mission:0;state.money=Number.isFinite(s.money)?clamp(s.money,0,1e9):0;zoom=s.zoom===3?3:2;$('zoom').value=zoom;$('sound').checked=s.sound!==false;combat.load(s.combat);return}catch{}}
 function resize(){canvas.width=Math.max(160,Math.floor(innerWidth/zoom));canvas.height=Math.max(180,Math.floor(innerHeight/zoom));ctx.imageSmoothingEnabled=false;camera.x=clamp(camera.x,0,Math.max(0,SIZE-canvas.width));camera.y=clamp(camera.y,0,Math.max(0,SIZE-canvas.height))}
 function beep(){if(!$('sound').checked)return;try{audio??=new AudioContext();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=510;g.gain.value=.018;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.12);o.stop(audio.currentTime+.13)}catch{}}
-function say(t){if(!state.driving)p.gesture=.55;$('dialogText').textContent=t;$('dialog').hidden=false;clearInput();beep()}
+function say(t){if(!state.driving)p.gesture=.55;$('dialogText').textContent=t;$('dialog').hidden=false;clearInput();$('ok').focus?.({preventScroll:true});beep()}
+function closeDialog(){if($('dialog').hidden)return;$('dialog').hidden=true;hud();canvas.focus?.({preventScroll:true})}
 function interact(){if(paused||!active||state.driving||!$('dialog').hidden||p.fight.mode!=='idle')return;
 if(combat.engaged){combatView.show('대련 중이야. 구역 밖으로 물러나면 대련을 멈출 수 있어.');return}
 if(!combat.clubUnlocked&&distance(p,{x:280,y:560})<42){combat.unlockClub();combatView.show('짧은 나무봉을 얻었어! Q / 무기 버튼으로 바꿀 수 있어.');save();hud();return}
@@ -35,7 +36,23 @@ function tick(dt){if(!active||paused||!$('dialog').hidden)return;clock+=dt;saveC
  combat.step(dt);
  for(const n of npcs){n.moving=false;if(distance(p,n)<45){n.dir=Math.abs(p.x-n.x)>Math.abs(p.y-n.y)?p.x>n.x?1:3:p.y>n.y?2:0;continue}n.wait-=dt;if(n.wait>0)continue;const target=n.route[n.i],dx=target[0]-n.x,dy=target[1]-n.y,d=Math.hypot(dx,dy);if(d<2){n.i=(n.i+1)%n.route.length;n.wait=2;continue}n.dir=Math.abs(dx)>Math.abs(dy)?dx>0?1:3:dy>0?2:0;const oldX=n.x,oldY=n.y;const hit=move(n,dx/d*20*dt,dy/d*20*dt,8);const moved=Math.hypot(n.x-oldX,n.y-oldY);n.moving=moved>.01;n.walk+=moved*.15;if(hit){n.i=(n.i+1)%n.route.length;n.wait=.5}}
  const target=state.driving?car:p,look=state.driving?car.speed*.3:0;const tx=clamp(target.x+Math.sin(car.a)*look-canvas.width/2,0,Math.max(0,SIZE-canvas.width)),ty=clamp(target.y-Math.cos(car.a)*look-canvas.height/2,0,Math.max(0,SIZE-canvas.height));camera.x+=(tx-camera.x)*(1-Math.exp(-6*dt));camera.y+=(ty-camera.y)*(1-Math.exp(-6*dt));if(saveClock>5){saveClock=0;save()}hud()}
-function hud(){combatView.hud();$('objective').textContent=['편의점 앞 민수에게 말을 걸어봐.','공원 벤치 옆 레코드 가방 찾기','가방을 민수에게 전달하기','배달 완료 · 남빛동 자유 탐험'][state.mission];$('money').textContent=state.money.toLocaleString('ko-KR')+'원 · '+(state.driving?'운전 중':'우진');$('prompt').textContent=state.driving?'↑ 가속 · ↓ 감속/후진 · ← → 조향 · F 하차':npcs.some(n=>distance(p,n)<52)?'E · 대화하기':distance(p,car)<65?'F · 차량 타기':state.mission===1&&distance(p,{x:860,y:600})<45?'E · 레코드 가방 줍기':enemies.some(e=>distance(p,e)<48)?'E · 대련 시작 / 재도전':!combat.clubUnlocked&&distance(p,{x:280,y:560})<42?'E · 나무봉 가져가기':''}
+const objectives=['편의점 앞 민수에게 말을 걸어봐.','공원 벤치 옆 레코드 가방 찾기','가방을 민수에게 전달하기','배달 완료 · 남빛동 자유 탐험'];
+function hud(){
+ combatView.hud();
+ const objective=objectives[state.mission],money=state.money.toLocaleString('ko-KR')+'원 · '+(state.driving?'운전 중':'우진');
+ const hint=state.driving?'↑ 가속 · ↓ 감속/후진 · ← → 조향 · F 하차':
+   npcs.some(n=>distance(p,n)<52)?'E · 대화하기':
+   distance(p,car)<65?'F · 차량 타기':
+   state.mission===1&&distance(p,{x:860,y:600})<45?'E · 레코드 가방 줍기':
+   enemies.some(e=>distance(p,e)<48)?'E · 대련 시작 / 재도전':
+   !combat.clubUnlocked&&distance(p,{x:280,y:560})<42?'E · 나무봉 가져가기':'';
+ // The simulation calls hud() at 60Hz; write to DOM only when state changes.
+ if($('objective').textContent!==objective)$('objective').textContent=objective;
+ if($('money').textContent!==money)$('money').textContent=money;
+ if($('prompt').textContent!==hint)$('prompt').textContent=hint;
+ const interactLabel=$('interact').querySelector?.('.action-label');
+ if(interactLabel){const label=hint.includes('줍기')?'줍기':hint.includes('대련')?'대련':hint.includes('나무봉')?'획득':hint.includes('차량')?'대화':'대화';if(interactLabel.textContent!==label)interactLabel.textContent=label;}
+}
 const ground=CityGround(A,SIZE);
 const streetProps=[
  {name:'bench',x:780,y:560,w:60,h:38,foot:598},
@@ -49,10 +66,33 @@ obstacles.push({x:308,y:363,w:36,h:6},{x:325,y:332,w:12,h:10},{x:660,y:542,w:12,
 function drawPerson(n,hero=false){if(hero&&combatView.playerPose(ctx))return;const trans=hero&&p.transition?.time>0?p.transition:null;let x=n.x,y=n.y;if(trans){const a=1-trans.time/.35;x=trans.x+(n.x-trans.x)*a;y=trans.y+(n.y-trans.y)*a;ctx.globalAlpha=trans.enter?1-a:1;}S.shadow(ctx,x,y,hero?11:9);const pose=trans?S.action(n.dir,trans.enter?2:3):hero&&p.gesture>0?S.action(n.dir,p.gesture>.28?0:1):hero&&p.emotion>0?S.action(n.dir,4):S.person(n.dir,n.walk,n.moving,hero&&keys.Shift,hero?'woojin':n.role);ctx.drawImage(pose,Math.round(x)-20,Math.round(y)-44);ctx.globalAlpha=1;if(hero&&p.emotion>0){R(ctx,x-1,y-52,2,5,'#ffe4a1');R(ctx,x-1,y-45,2,1,'#ffe4a1')}}
 function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(-Math.round(camera.x)+(combatView.impact>0?Math.round(Math.sin(clock*90)):0),-Math.round(camera.y));ctx.drawImage(ground,0,0);combatView.ground(ctx);for(const b of buildings){ctx.fillStyle='#20233338';ctx.beginPath();ctx.moveTo(b.x+3,b.y+b.h+8);ctx.lineTo(b.x+b.w,b.y+b.h+8);ctx.lineTo(b.x+b.w+14,b.y+b.h+20);ctx.lineTo(b.x+17,b.y+b.h+20);ctx.fill()}const render=streetProps.map(o=>({y:o.foot,draw(){ctx.fillStyle='#20273530';ctx.beginPath();ctx.ellipse(o.x+o.w/2+5,o.foot-1,o.w/2,3,0,0,Math.PI*2);ctx.fill();ctx.drawImage(S.images[o.name],o.x,o.y,o.w,o.h)}}));buildings.forEach(b=>render.push({y:b.y+b.h,draw(){const behind=p.x>b.x-10&&p.x<b.x+b.w+10&&p.y>b.y-30&&p.y<b.y+20;ctx.globalAlpha=behind?.42:1;ctx.drawImage(b.art,b.x,b.y);ctx.globalAlpha=1}}));trees.forEach((t,i)=>render.push({y:t.y+52,draw(){ctx.globalAlpha=Math.abs(p.x-(t.x+24))<27&&p.y>t.y-33&&p.y<t.y+45?.4:1;S.shadow(ctx,t.x+24,t.y+52,28);const im=S.images[i%2?'tree-b':'tree-a'];ctx.drawImage(im,Math.round(t.x+24-im.width/2),t.y+52-im.height);ctx.globalAlpha=1}}));npcs.forEach(n=>render.push({y:n.y,draw(){drawPerson(n);if(n===npcs[0]&&state.mission!==3){R(ctx,n.x-2,n.y-57,3,7,'#f0cc7d');R(ctx,n.x-2,n.y-48,3,2,'#f0cc7d')}}}));render.push({y:car.y+20,draw(){ctx.save();ctx.translate(Math.round(car.x),Math.round(car.y));ctx.rotate(car.a);ctx.fillStyle='#1b243445';ctx.fillRect(-15,-25,34,58);ctx.drawImage(S.images.sedan,-17,-29);ctx.restore()}});enemies.forEach(e=>render.push({y:e.y,draw(){combatView.enemy(ctx,e)}}));if(!state.driving||p.transition?.time>0)render.push({y:p.y+1,draw(){drawPerson(p,true)}});if(state.mission===1)render.push({y:601,draw(){S.shadow(ctx,861,601,8);R(ctx,854,590,14,11,'#b98d53');R(ctx,855,591,12,8,'#d8b577');R(ctx,857,587,8,4,'#624d3e');R(ctx,859,589,4,2,'#b7a582');R(ctx,860,593,2,6,'#735a43');R(ctx,860,594,2,2,'#e4d4a2')}});render.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());combatView.overlay(ctx);ctx.restore();const m=$('map').getContext('2d'),s=144/SIZE;m.fillStyle='#8a9885';m.fillRect(0,0,144,144);R(m,390*s,0,210*s,144,'#35484e');R(m,0,395*s,144,100*s,'#35484e');buildings.forEach(b=>R(m,b.x*s,b.y*s,b.w*s,b.h*s,'#c0b395'));R(m,p.x*s-2,p.y*s-2,4,4,'#fff6ca');const goal=state.mission===1?{x:860,y:600}:npcs[0];if(state.mission!==3)R(m,goal.x*s-2,goal.y*s-2,4,4,'#e19b64')}
 function frame(now){const elapsed=last?Math.min(.1,(now-last)/1000):0;last=now;if(active&&!paused&&!document.hidden){p.gesture=Math.max(0,(p.gesture||0)-elapsed);p.emotion=Math.max(0,p.emotion-elapsed);acc+=elapsed;while(acc>=1/60){tick(1/60);acc-=1/60}draw()}else acc=0;requestAnimationFrame(frame)}
-addEventListener('keydown',e=>{if(['INPUT','SELECT'].includes(e.target.tagName))return;const k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k))e.preventDefault();keys[k]=true;if(e.repeat)return;if(k==='j'||k===' '){keys.attack=true;attack()}if(k==='q')changeWeapon();if(k==='e')interact();if(k==='f')vehicle();if(k==='Escape')pause(!paused)});addEventListener('keyup',e=>{keys[e.key.length===1?e.key.toLowerCase():e.key]=false;if(e.key.toLowerCase()==='j'||e.key===' ')keys.attack=false});addEventListener('blur',clearInput);addEventListener('resize',resize);addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{clearInput();if(document.hidden)save()});addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;active=!!e.data.active;clearInput();if(!active)save()});
-$('menu').onclick=()=>pause(true);$('resume').onclick=()=>pause(false);$('ok').onclick=()=>{$('dialog').hidden=true;hud()};$('interact').onclick=interact;$('weapon').onclick=changeWeapon;$('vehicle').onclick=vehicle;$('restartMission').onclick=()=>{state.mission=0;save();pause(false);hud()};$('zoom').onchange=()=>{zoom=+$('zoom').value;resize();save()};$('sound').onchange=save;
+addEventListener('keydown',e=>{
+ const k=e.key.length===1?e.key.toLowerCase():e.key;
+ if(!$('dialog').hidden){
+  if(['e','Enter',' ','Escape'].includes(k)){e.preventDefault();if(!e.repeat)closeDialog();}
+  return;
+ }
+ if(['INPUT','SELECT'].includes(e.target.tagName))return;
+ if(paused){if(k==='Escape'&&!e.repeat){e.preventDefault();pause(false)}return;}
+ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(k))e.preventDefault();
+ keys[k]=true;if(e.repeat)return;
+ if(k==='j'||k===' '){keys.attack=true;attack()}
+ if(k==='q')changeWeapon();
+ if(k==='e')interact();
+ if(k==='f')vehicle();
+ if(k==='Escape')pause(true);
+});
+addEventListener('keyup',e=>{keys[e.key.length===1?e.key.toLowerCase():e.key]=false;if(e.key.toLowerCase()==='j'||e.key===' ')keys.attack=false});
+addEventListener('blur',clearInput);addEventListener('resize',resize);addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',()=>{clearInput();if(document.hidden)save()});
+addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;active=!!e.data.active;clearInput();if(!active)save()});
+$('menu').onclick=()=>pause(true);$('resume').onclick=()=>pause(false);$('ok').onclick=closeDialog;
+$('interact').onclick=()=>{if(!$('dialog').hidden)closeDialog();else interact()};
+$('weapon').onclick=changeWeapon;$('vehicle').onclick=vehicle;
+$('restartMission').onclick=()=>{state.mission=0;save();pause(false);hud()};
+$('zoom').onchange=()=>{zoom=+$('zoom').value;resize();save()};$('sound').onchange=save;
 let stickPointer=null;function stick(e){const r=$('stick').getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,d=Math.max(35,Math.hypot(dx,dy));joy.x=dx/d;joy.y=dy/d;$('stick').firstElementChild.style.transform=`translate(${joy.x*28}px,${joy.y*28}px)`}
-$('stick').onpointerdown=e=>{e.preventDefault();if(stickPointer!==null)return;stickPointer=e.pointerId;try{$('stick').setPointerCapture(e.pointerId)}catch{};stick(e)};$('stick').onpointermove=e=>{if(e.pointerId===stickPointer)stick(e)};for(const ev of['pointerup','pointercancel','lostpointercapture'])$('stick').addEventListener(ev,e=>{if(e.pointerId===stickPointer){stickPointer=null;joy.x=joy.y=0;combat.suspend();$('stick').firstElementChild.style.transform=''}});$('run').onpointerdown=e=>{e.preventDefault();keys.Shift=true;try{$('run').setPointerCapture(e.pointerId)}catch{}};for(const ev of['pointerup','pointercancel','lostpointercapture'])$('run').addEventListener(ev,()=>keys.Shift=false);
+$('stick').onpointerdown=e=>{e.preventDefault();if(stickPointer!==null)return;stickPointer=e.pointerId;try{$('stick').setPointerCapture(e.pointerId)}catch{};stick(e)};$('stick').onpointermove=e=>{if(e.pointerId===stickPointer)stick(e)};for(const ev of['pointerup','pointercancel','lostpointercapture'])$('stick').addEventListener(ev,e=>{if(e.pointerId===stickPointer){stickPointer=null;joy.x=joy.y=0;$('stick').firstElementChild.style.transform=''}});$('run').onpointerdown=e=>{e.preventDefault();keys.Shift=true;try{$('run').setPointerCapture(e.pointerId)}catch{}};for(const ev of['pointerup','pointercancel','lostpointercapture'])$('run').addEventListener(ev,()=>keys.Shift=false);
 let attackPointer=null;
 $('attack').onpointerdown=e=>{e.preventDefault();if(attackPointer!==null)return;attackPointer=e.pointerId;keys.attack=true;attack();try{$('attack').setPointerCapture(e.pointerId)}catch{}};
 for(const ev of ['pointerup','pointercancel','lostpointercapture'])$('attack').addEventListener(ev,e=>{if(e.pointerId===attackPointer){attackPointer=null;keys.attack=false}});

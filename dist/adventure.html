@@ -1,1 +1,33 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111c2b"><title>우진의 모험</title><link rel="stylesheet" href="adventure.css"></head><body><main><header><div><small>WOOJIN ADVENTURE</small><h1>우진의 모험</h1></div><div class="tools"><button id="sound" aria-label="효과음">♪</button><button id="pause">일시정지</button><button id="retry">다시 도전</button></div></header><div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span></div><div class="ability-bar"><span id="power">기본 능력</span><span>상자 ↑ · 불꽃탄 X</span></div><div class="viewport"><div id="notice" role="status"></div><canvas id="world" width="960" height="540" tabindex="0" aria-label="우진의 모험. 방향키 또는 A D 이동, 스페이스 또는 위쪽 키 점프"></canvas><div id="panel" class="panel"><small>새로운 여행을 시작하자</small><h2 id="panelTitle">우진의 모험</h2><p id="panelText">우진이와 함께 다섯 개의 픽셀 세계를 탐험해봐.<br>방향키 / A·D 이동 · SPACE / ↑ 점프<br>상자를 아래에서 두드려 거대화 · 불꽃탄 · 말티즈를 만나!</p><button id="play">모험 시작</button></div></div><div class="touch"><div><button data-key="left" aria-label="왼쪽">◀</button><button data-key="right" aria-label="오른쪽">▶</button></div><button data-key="fire" class="fire">불꽃 X</button><button class="jump" data-key="jump">점프 ↗</button></div><nav id="stages" aria-label="스테이지 선택"></nav><p class="tip">게는 돌진하고, 딱정벌레는 두 번 밟아야 해. 박쥐와 마법사의 탄환도 조심해! · 깃발에서 재시작</p></main><script src="pixel-art.js"></script><script src="adventure.js"></script><script src="child-nav.js"></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111c2b"><title>우리오 · WoojinHub</title>
+<link rel="stylesheet" href="adventure.css"><link rel="stylesheet" href="arcade-ui.css"></head>
+<body class="game-adventure">
+<main>
+  <header><div><small>WOOJIN ADVENTURE · ARCADE MODE</small><h1>우리오 <span class="title-accent">PIXEL QUEST</span></h1></div>
+    <div class="tools"><button id="sound" aria-label="효과음" title="효과음">♪</button><button id="pause">Ⅱ 일시정지</button><button id="retry">↻ 다시 도전</button></div>
+  </header>
+  <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span></div>
+  <div class="ability-bar"><span id="power">기본 능력</span><span>상자 ↑ · 불꽃탄 X</span></div>
+  <div class="viewport">
+    <div id="notice" role="status"></div>
+    <canvas id="world" width="960" height="540" tabindex="0" aria-label="우리오. 방향키 또는 A D 이동, 스페이스 또는 위쪽 키 점프"></canvas>
+    <div id="panel" class="panel"><small>NEW ADVENTURE</small><h2 id="panelTitle">우리오</h2>
+      <p id="panelText">우진이와 함께 다섯 개의 픽셀 세계를 탐험해봐.<br>방향키 / A·D 이동 · SPACE / ↑ 점프<br>상자를 아래에서 두드려 거대화 · 불꽃탄 · 말티즈를 만나!</p>
+      <button id="play">▶ 모험 시작</button>
+    </div>
+  </div>
+  <div class="touch" aria-label="모바일 조작">
+    <div class="touch-move">
+      <button data-key="left" aria-label="왼쪽"><span class="control-glyph">◀</span><small>LEFT</small></button>
+      <button data-key="right" aria-label="오른쪽"><span class="control-glyph">▶</span><small>RIGHT</small></button>
+    </div>
+    <button data-key="fire" class="fire"><span class="control-glyph">✦</span> 불꽃 <kbd>X</kbd></button>
+    <button class="jump" data-key="jump"><span class="control-glyph">↥</span> 점프 <kbd>SPACE</kbd></button>
+  </div>
+  <nav id="stages" aria-label="스테이지 선택"></nav>
+  <p class="tip">게는 돌진하고, 딱정벌레는 두 번 밟아야 해. 박쥐와 마법사의 탄환도 조심해! · 깃발에서 재시작</p>
+</main>
+<script src="pixel-art.js"></script><script src="adventure.js"></script><script src="child-nav.js"></script>
+</body></html>

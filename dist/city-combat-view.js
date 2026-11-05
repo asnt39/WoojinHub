@@ -11,8 +11,18 @@ window.CityCombatView={create({player,combat,enemies,sound=()=>{}}){
   if(e.kind==='respawn')show('편의점 앞에서 회복했어. 체력 100 · 다시 도전해봐.');
   if(e.kind==='escape')show('대련 구역을 벗어났어. 태오에게 돌아가면 다시 시작할 수 있어.');
  }
- function update(dt){toastTime=Math.max(0,toastTime-dt);impact=Math.max(0,impact-dt);if(!toastTime)$('combatToast').textContent='';for(let i=effects.length-1;i>=0;i--){effects[i].t-=dt;if(effects[i].t<=0)effects.splice(i,1);}}
- function hud(){const hp=Math.ceil(player.fight.hp);$('healthText').textContent=hp+' / 100';$('healthFill').style.width=hp+'%';$('weaponName').textContent=combat.weapon==='club'?'나무봉':'주먹';$('weapon').textContent=combat.clubUnlocked?'무기 Q':'봉 찾기';$('combatHint').textContent=combat.engaged?'대련 중 · 공격 J / Space · 무기 Q':'남쪽 골목에서 대련 · J 공격 / Q 무기';}
+ function update(dt){toastTime=Math.max(0,toastTime-dt);impact=Math.max(0,impact-dt);if(!toastTime&&$('combatToast').textContent)$('combatToast').textContent='';for(let i=effects.length-1;i>=0;i--){effects[i].t-=dt;if(effects[i].t<=0)effects.splice(i,1);}}
+ function setText(id,text){const node=typeof id==='string'?$(id):id;if(node&&node.textContent!==text)node.textContent=text;}
+ function hud(){
+  const hp=Math.ceil(player.fight.hp),hpWidth=hp+'%';
+  setText('healthText',hp+' / 100');
+  if($('healthFill').style.width!==hpWidth)$('healthFill').style.width=hpWidth;
+  setText('weaponName',combat.weapon==='club'?'나무봉':'주먹');
+  // Keep button icons, keyboard hints, and accessible labels during weapon swaps.
+  const button=$('weapon'),label=button.querySelector?.('.action-label')||button;
+  setText(label,combat.clubUnlocked?'무기':'봉 찾기');
+  setText('combatHint',combat.engaged?'대련 중 · 공격 J / Space · 무기 Q':'남쪽 골목에서 대련 · J 공격 / Q 무기');
+ }
  function playerPose(c){const f=player.fight;if(f.mode==='idle')return false;
   S.shadow(c,player.x,player.y,11);
   if(f.mode==='hurt'||f.mode==='down'){

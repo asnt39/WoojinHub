@@ -54,7 +54,21 @@ $('sound').onclick=()=>{state.sound=!state.sound;render();save()};
 $('reset').onclick=()=>{if(confirm('모든 보유 금액과 업그레이드, 도전과제를 초기화할까?')){state=fresh();feverUntil=0;snackUntil=0;visualGrowth=0;document.body.classList.remove('fever-active');nextSnack=Date.now()+randomDelay();lastDraw='';render();save();toast('새로운 모험을 시작해!')}};
 $('feverSnack').onclick=()=>{if(Date.now()>snackUntil)return;snackUntil=0;feverUntil=Date.now()+10000;nextSnack=Date.now()+randomDelay();document.body.classList.add('fever-active');state.fevers++;$('feverSnack').classList.add('hidden');beep();toast('피버 타임! 10초 동안 터치 수익 2배!');render();save()};
 $('shareCard').onclick=async()=>{try{const c=document.createElement('canvas');c.width=900;c.height=1100;const x=c.getContext('2d');x.fillStyle='#f6efdf';x.fillRect(0,0,c.width,c.height);x.fillStyle='#5b3e2a';x.font='bold 46px sans-serif';x.fillText('우진이 키우기',60,95);x.drawImage($('photo'),150,140,600,800);x.fillStyle='#fffaf0';x.fillRect(150,800,600,230);x.fillStyle='#523a29';x.font='bold 44px sans-serif';x.fillText('LV. '+level()+'  ·  '+state.title,185,870);x.font='30px sans-serif';x.fillText('누적 '+format(state.total)+'원',185,930);x.font='22px sans-serif';x.fillText('woojingame.asnt1.chatgpt.site',185,990);const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));if(!blob)throw Error('이미지 생성 실패');const file=new File([blob],'woojin-record.png',{type:'image/png'});if(navigator.share&&navigator.canShare?.({files:[file]})){try{await navigator.share({title:'우진이 키우기',files:[file]});return}catch(e){if(e.name==='AbortError')return}}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);toast('기록 카드를 저장했어!')}catch{toast('기록 카드를 만들지 못했어. 다시 시도해줘.')}};
-function frame(now){const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;const target=growthTarget(),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(Math.abs(target-visualGrowth)>.0001){visualGrowth=reduced?target:visualGrowth+(target-visualGrowth)*Math.min(1,dt*10);drawPhoto()}bounceEnergy*=Math.exp(-10*dt);const motion=reduced?0:bounceEnergy,bodyScale=1+visualGrowth*.22;$('photo').style.transform=`translateY(${-5*motion}px) scale(${bodyScale*(1+.018*motion)},${bodyScale*(1-.012*motion)})`;requestAnimationFrame(frame)}requestAnimationFrame(frame);
+let sceneVisible=true,lastPhotoTransform='';
+const reducedMotionQuery=matchMedia('(prefers-reduced-motion: reduce)');
+function frame(now){
+ if(!sceneVisible||document.hidden){lastFrame=now;requestAnimationFrame(frame);return}
+ const dt=Math.min(.05,(now-lastFrame)/1000);lastFrame=now;
+ const target=growthTarget(),reduced=reducedMotionQuery.matches;
+ if(Math.abs(target-visualGrowth)>.0001){visualGrowth=reduced?target:visualGrowth+(target-visualGrowth)*Math.min(1,dt*10);drawPhoto()}
+ bounceEnergy*=Math.exp(-10*dt);if(bounceEnergy<.001)bounceEnergy=0;
+ const motion=reduced?0:bounceEnergy,bodyScale=1+visualGrowth*.22;
+ const transform=`translateY(${-5*motion}px) scale(${bodyScale*(1+.018*motion)},${bodyScale*(1-.012*motion)})`;
+ if(transform!==lastPhotoTransform){$('photo').style.transform=transform;lastPhotoTransform=transform}
+ requestAnimationFrame(frame);
+}
+addEventListener('message',event=>{if(event.origin!==location.origin||event.data?.type!=='game-visibility')return;sceneVisible=!!event.data.active;lastFrame=performance.now();if(!sceneVisible)bounceEnergy=0});
+requestAnimationFrame(frame);
 function autoGain(amount){gain(amount,false);const bubble=document.createElement('span');bubble.className='income-bubble';bubble.textContent='+'+format(amount)+'원';$('incomeStream').append(bubble);setTimeout(()=>bubble.remove(),1500)}
 // All automatic producers settle together, once per second.
 setInterval(()=>{if(!document.hidden&&power('auto')>0)autoGain(power('auto'))},1000);

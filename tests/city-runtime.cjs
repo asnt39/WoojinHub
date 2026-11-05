@@ -9,12 +9,14 @@ const root = path.resolve(__dirname, '..');
 (async()=>{
 const local = new Map();
 const elements = new Map();
+const windowEvents = new Map(), elementEvents = new Map();
 function element(id) {
   if (elements.has(id)) return elements.get(id);
   const node = ['city', 'map'].includes(id) ? createCanvas(id === 'map' ? 144 : 640, id === 'map' ? 144 : 400) : {
     textContent:'', hidden:id==='dialog' || id==='pause', checked:true,
     value:id==='zoom'?'2':'',style:{},firstElementChild:{style:{}},
-    addEventListener(){}, setPointerCapture(){}, getBoundingClientRect(){return{x:0,y:0,width:140,height:140,left:0,top:0}}
+    addEventListener(type,fn){const key=id+':'+type;elementEvents.set(key,[...(elementEvents.get(key)||[]),fn])},
+    setPointerCapture(){}, getBoundingClientRect(){return{x:0,y:0,width:140,height:140,left:0,top:0}}
   };
   elements.set(id,node);
   return node;
@@ -27,7 +29,7 @@ const env={
   innerWidth:1280,innerHeight:800,
   location:{hostname:'localhost',origin:'http://localhost'},
   requestAnimationFrame(){return 0},
-  addEventListener(){},
+  addEventListener(type,fn){windowEvents.set(type,[...(windowEvents.get(type)||[]),fn])},
   clearInput(){},
   AudioContext:class {},
   Audio:class {}
@@ -67,6 +69,20 @@ assert.equal(t.state.mission,2,'bag pickup');element('dialog').hidden=true;
 t.p.x=t.npcs[0].x;t.p.y=t.npcs[0].y+15;t.interact();
 assert.equal(t.state.mission,3,'mission completion');
 assert.equal(t.state.money,500,'reward');
+// A dialogue must be dismissed by the same E key that started it. Input
+// should be locked while it is visible, then restored after dismissal.
+assert.equal(element('dialog').hidden,false);
+const keydown=windowEvents.get('keydown')[0];
+keydown({key:'e',target:{tagName:'CANVAS'},preventDefault(){},repeat:false});
+assert.equal(element('dialog').hidden,true,'E dismisses the active conversation');
+// Releasing a movement finger during a separate attack must not cancel combat.
+for(let i=0;i<35;i++)t.tick(1/60); // Finish the earlier vehicle exit animation.
+t.p.dir=2;assert.equal(t.attack(),true);
+const fightMode=t.p.fight.mode;
+element('stick').onpointerdown({pointerId:19,clientX:110,clientY:70,preventDefault(){}});
+for(const fn of elementEvents.get('stick:pointerup')||[])fn({pointerId:19});
+assert.equal(t.p.fight.mode,fightMode,'joystick release does not interrupt the attack');
+for(let i=0;i<100;i++)t.tick(1/60);
 element('dialog').hidden=true;
 t.save();t.state.money=0;t.restore();
 assert.equal(t.state.money,500,'primary save restoration');
