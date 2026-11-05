@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const $=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d'),H=540,DT=1/120;let W=innerWidth<600?640:960;
+const $=id=>document.getElementById(id),canvas=$('world'),ctx=canvas.getContext('2d'),H=620,PIT_LIMIT=640,DT=1/120;let W=innerWidth<600?640:960;
 canvas.width=W/2;canvas.height=H/2;ctx.setTransform(.5,0,0,.5,0,0);ctx.imageSmoothingEnabled=false;
 const music=window.WoorioAudio?.create();let options={music:true,sound:true};try{const v=JSON.parse(localStorage.getItem('woorio-options-v1'));if(typeof v?.music==='boolean')options.music=v.music;if(typeof v?.sound==='boolean')options.sound=v.sound}catch{}let musicEnabled=options.music;music?.setEnabled(musicEnabled);const effectCounts={death:0,shot:0,pickup:0},effectVoices=new Set();
 const heroSheet=new Image();heroSheet.src='art/woorio/hero.png';
@@ -215,7 +215,7 @@ function tick(dt){if(!running||paused)return;time+=dt;if(deathPhase){advanceDeat
  }world.shots=world.shots.filter(s=>s.life>0);
  if(world.boss&&world.boss.hp>0&&overlap(player,world.boss)){const b=world.boss;if(b.kind==='stone'&&old.y+old.h<=b.y+22&&player.vy>0&&b.hitTimer<=0){b.hp--;b.hitTimer=.6;player.vy=-480;if(b.hp===0)b.defeated=true;updateHud()}else hurt();}
  if(player.pet){player.petX+=(player.x-player.facing*38-player.petX)*Math.min(1,dt*7);player.petY+=(player.y+player.h-28-player.petY)*Math.min(1,dt*9)}
- if(player.y>H+100){die('pit');return}if(!checkpoint&&player.x>world.flag){checkpoint=true;sfx(900);burst(world.flag,400,'#a8f1da');updateHud()}if(world.bossSpawn&&!bossCheckpoint&&player.x>world.bossFlag){bossCheckpoint=true;sfx(960);burst(world.bossFlag,400,'#f2d78a');updateHud()}if(player.x>=world.goal&&(!world.boss||world.boss.hp===0))finish();camera=clamp(player.x-W*.36,0,world.length-W);
+ if(player.y>PIT_LIMIT){die('pit');return}if(!checkpoint&&player.x>world.flag){checkpoint=true;sfx(900);burst(world.flag,400,'#a8f1da');updateHud()}if(world.bossSpawn&&!bossCheckpoint&&player.x>world.bossFlag){bossCheckpoint=true;sfx(960);burst(world.bossFlag,400,'#f2d78a');updateHud()}if(player.x>=world.goal&&(!world.boss||world.boss.hp===0))finish();camera=clamp(player.x-W*.36,0,world.length-W);
  for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=400*dt;p.life-=dt}particles=particles.filter(p=>p.life>0);
 }
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x/2)*2,Math.round(y/2)*2,w,h)}
@@ -285,7 +285,7 @@ function resizeGame(){const view=canvas.parentElement;if(!view?.getBoundingClien
 addEventListener('resize',()=>requestAnimationFrame(resizeGame));document.addEventListener('fullscreenchange',()=>{releaseKeys();requestAnimationFrame(resizeGame)});
 $('fullscreen').onclick=async()=>{releaseKeys();const main=document.querySelector('main');try{if(document.fullscreenElement){await document.exitFullscreen();return}if(main.classList.contains('play-fullscreen')){main.classList.remove('play-fullscreen');requestAnimationFrame(resizeGame);return}if(main.requestFullscreen){await main.requestFullscreen();return}}catch{}main.classList.toggle('play-fullscreen');requestAnimationFrame(resizeGame)};
 let settingsWasPaused=false;
-function syncOptions(){options={music:musicEnabled,sound};music?.setEnabled(musicEnabled);$('music').setAttribute('aria-pressed',String(musicEnabled));$('music').textContent=musicEnabled?'BGM ON':'BGM OFF';$('sound').textContent=sound?'♪':'♩';$('settingMusic').checked=musicEnabled;$('settingSound').checked=sound;try{localStorage.setItem('woorio-options-v1',JSON.stringify(options))}catch{}if(!sound){for(const o of effectVoices)try{o.stop()}catch{}effectVoices.clear()}}
+function syncOptions(){options={music:musicEnabled,sound};music?.setEnabled(musicEnabled);$('music').setAttribute('aria-pressed',String(musicEnabled));$('music').textContent=musicEnabled?'♫':'♩';$('music').setAttribute('aria-label',musicEnabled?'배경음악 켬':'배경음악 끔');$('sound').textContent=sound?'♪':'♩';$('sound').setAttribute('aria-label',sound?'효과음 켬':'효과음 끔');$('settingMusic').checked=musicEnabled;$('settingSound').checked=sound;try{localStorage.setItem('woorio-options-v1',JSON.stringify(options))}catch{}if(!sound){for(const o of effectVoices)try{o.stop()}catch{}effectVoices.clear()}}
 $('settings').onclick=()=>{settingsWasPaused=paused;paused=true;releaseKeys();$('settingsPanel').hidden=false;syncOptions();syncFireControl()};
 $('closeSettings').onclick=()=>{$('settingsPanel').hidden=true;paused=settingsWasPaused;releaseKeys();syncFireControl()};
 $('settingMusic').onchange=()=>{musicEnabled=$('settingMusic').checked;music?.unlock();syncOptions()};$('settingSound').onchange=()=>{sound=$('settingSound').checked;syncOptions()};
