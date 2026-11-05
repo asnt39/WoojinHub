@@ -58,3 +58,10 @@ Next: real phone rotate/native fullscreen tests, more capable upper-route/combat
 and human balance testing of late density. Keep pet limits tied to map assignments.
 Do not reset user progression or silently remove public access. Safe rollback source
 bf5de23, previous deployed version28. Never force push.
+
+## Confirmed deployment
+- Source531aeac516d8698319f04b610d5bf94956d911c9 pushed to GitHub/Sites.
+- Version29: appgprj_6ae9c47115308191b262fff9998049d6~appgver_efd7978065348191b4bbfa05113b3468.
+- Deployment appgdep_6aecbcff7b78819198b7a962a5139cdd returned succeeded.
+- URL https://woojingame.asnt1.chatgpt.site/#adventure . Public audience retained.
+- Final monster totals6,6,7,9,13,13,18,18,31. Final AI1/9clear and local50/50 unchanged.
