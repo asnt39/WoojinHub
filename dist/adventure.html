@@ -9,25 +9,25 @@
     <div class="tools"><button id="sound" aria-label="효과음" title="효과음">♪</button><button id="pause">Ⅱ 일시정지</button><button id="retry">↻ 다시 도전</button></div>
   </header>
   <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span></div>
-  <div class="ability-bar"><span id="power">기본 능력</span><span>상자 ↑ · 불꽃탄 X</span></div>
+  <div class="ability-bar" id="abilityBar" hidden><span id="power"></span></div>
   <div class="viewport">
     <div id="notice" role="status"></div>
     <canvas id="world" width="960" height="540" tabindex="0" aria-label="우리오. 방향키 또는 A D 이동, 스페이스 또는 위쪽 키 점프"></canvas>
+    <div id="deathCurtain" class="death-curtain" hidden aria-live="polite"><strong>다시 도전!</strong><small id="deathReturn">CHECKPOINT</small></div>
     <div id="panel" class="panel"><small>NEW ADVENTURE</small><h2 id="panelTitle">우리오</h2>
-      <p id="panelText">우진이와 함께 다섯 개의 픽셀 세계를 탐험해봐.<br>방향키 / A·D 이동 · SPACE / ↑ 점프<br>상자를 아래에서 두드려 거대화 · 불꽃탄 · 말티즈를 만나!</p>
+      <p id="panelText">우진이와 두부의 여덟 세계 모험! 마지막 세 세계는 초고난도야.<br>방향키 / A·D 이동 · SPACE / ↑ 점프<br>상자를 아래에서 두드려 거대화 · 불꽃탄 · 두부를 만나!</p>
       <button id="play">▶ 모험 시작</button>
     </div>
   </div>
   <div class="touch" aria-label="모바일 조작">
     <div class="touch-move">
-      <button data-key="left" aria-label="왼쪽"><span class="control-glyph">◀</span><small>LEFT</small></button>
-      <button data-key="right" aria-label="오른쪽"><span class="control-glyph">▶</span><small>RIGHT</small></button>
+      <button data-key="left" aria-label="왼쪽"><span class="control-glyph">◀</span></button>
+      <button data-key="right" aria-label="오른쪽"><span class="control-glyph">▶</span></button>
     </div>
-    <button data-key="fire" class="fire"><span class="control-glyph">✦</span> 불꽃 <kbd>X</kbd></button>
-    <button class="jump" data-key="jump"><span class="control-glyph">↥</span> 점프 <kbd>SPACE</kbd></button>
+    <button data-key="fire" class="fire" aria-label="불꽃 발사"><span class="control-glyph">✦</span><span>불꽃</span></button>
+    <button class="jump" data-key="jump" aria-label="점프"><span class="control-glyph">↥</span><span>점프</span></button>
   </div>
   <nav id="stages" aria-label="스테이지 선택"></nav>
-  <p class="tip">게는 돌진하고, 딱정벌레는 두 번 밟아야 해. 박쥐와 마법사의 탄환도 조심해! · 깃발에서 재시작</p>
 </main>
 <script src="pixel-art.js"></script><script src="adventure.js"></script><script src="child-nav.js"></script>
 </body></html>

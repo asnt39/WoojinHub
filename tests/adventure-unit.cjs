@@ -24,7 +24,8 @@ t.grant('fire');assert.equal(t.state.player.powerTime,5,'fire lasts 5 seconds');
 t.fire();const shot=t.state.world.shots.find(s=>!s.hostile);assert.ok(shot,'fire projectile exists');
 assert.ok(shot.life<=.85&&Math.abs(shot.vx)<=345,'fire projectile range has been reduced');
 for(let stage=0;stage<5;stage++){
- t.start(stage);t.state.world.enemies=[];let hold=0,maxX=0,firstDeathAt=null,oldDeaths=0;
+ // Geometry-only runner: lethal spikes are verified separately in adventure-v20.cjs.
+ t.start(stage);t.state.world.enemies=[];t.state.world.hazards=[];let hold=0,maxX=0,firstDeathAt=null,oldDeaths=0;
  for(let frame=0;frame<70000&&t.state.running;frame++){
   const {player:p,world:w}=t.state,front=p.x+p.w;
   const pit=w.gaps.some(([a,b])=>front>a-(p.y+p.h<450?100:45)&&front<b+5);
@@ -34,6 +35,6 @@ for(let stage=0;stage<5;stage++){
   t.tick(1/120);
   maxX=Math.max(maxX,t.state.player.x);if(t.state.deaths>oldDeaths&&firstDeathAt===null)firstDeathAt=front;oldDeaths=t.state.deaths;
  }
- assert.ok(t.state.stageDone,`stage ${stage} must be finishable: x=${t.state.player.x.toFixed(1)}, maxX=${maxX.toFixed(1)}, firstDeathAt=${firstDeathAt}, deaths=${t.state.deaths}, checkpoint=${t.state.checkpoint}`);
+ assert.ok(t.state.stageDone,`stage ${stage} geometry must be finishable: x=${t.state.player.x.toFixed(1)}, maxX=${maxX.toFixed(1)}, firstDeathAt=${firstDeathAt}, deaths=${t.state.deaths}, checkpoint=${t.state.checkpoint}`);
 }
 console.log('PASS: varied five-stage ground layouts, safe spike placement, five-second powers and shorter-range fire');

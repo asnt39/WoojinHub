@@ -307,3 +307,36 @@
   .game-city .healthHearts{min-height:24px;margin:4px 0 6px}
   .game-city .healthHearts .heart{font-size:18px}
 }
+
+/* Woorio v20: pixel gamepad with honest press states, minimal HUD and short death intermission. */
+.game-adventure .ability-bar[hidden],.game-adventure .death-curtain[hidden]{display:none!important}
+.game-adventure .hud{font-family:ui-monospace,monospace;font-size:13px;font-weight:800;border-radius:3px 3px 0 0;letter-spacing:.035em}
+.game-adventure .ability-bar{font-family:ui-monospace,monospace;font-weight:800;padding:7px 13px}
+.game-adventure #notice:not(:empty){font-family:ui-monospace,monospace;border-radius:2px;padding:8px 12px;background:#182e3dea}
+.game-adventure .viewport{border-radius:2px}
+.game-adventure nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.game-adventure nav button{font-family:ui-monospace,monospace;font-weight:850;border-radius:3px;min-height:44px;border:2px solid #627b80;box-shadow:inset 0 2px #ffffff1a,0 3px #0a1b28}
+.game-adventure nav button.selected{border-color:#f3d47b;box-shadow:inset 0 2px #d4ffcc33,0 3px #0a1b28}
+.game-adventure .touch button{font-family:ui-monospace,monospace;font-weight:900;border:3px solid #9ac3bc;border-radius:2px;background:#295469;box-shadow:inset 0 3px #5b8296,inset -3px -4px #122b3a,0 5px #081926;transition:none!important;image-rendering:pixelated}
+.game-adventure .touch .fire{background:#8c4735;border-color:#f1bd7c;box-shadow:inset 0 3px #c6774b,inset -3px -4px #542a31,0 5px #081926}
+.game-adventure .touch .jump{background:#536f42;border-color:#c9dc8a;box-shadow:inset 0 3px #8ba366,inset -3px -4px #334e38,0 5px #081926}
+.game-adventure .touch button:active{transform:translateY(3px);translate:none;box-shadow:inset 0 2px #0c2230,0 2px #081926;filter:brightness(1.18)}
+.game-adventure .touch .control-glyph{font-size:26px;line-height:1;font-weight:1000}
+.game-adventure .touch button span:last-child:not(.control-glyph){font-size:12px;letter-spacing:.02em}
+.game-adventure .death-curtain{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:repeating-linear-gradient(0deg,#12172b,#12172b 8px,#1e2641 8px,#1e2641 16px);animation:woorio-pixel-iris .68s steps(6,end) both}
+.game-adventure .death-curtain strong{font:900 clamp(24px,4.2vw,48px) ui-monospace,monospace;letter-spacing:.12em;color:#fff0c1;text-shadow:4px 4px #6c354d}
+.game-adventure .death-curtain small{font:800 12px ui-monospace,monospace;color:#a8d8d6;letter-spacing:.2em}
+@keyframes woorio-pixel-iris{0%{clip-path:inset(0 0 100% 0)}45%,80%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@media(max-width:600px){
+ .game-adventure main{padding:6px}
+ .game-adventure header{padding-bottom:8px;margin-bottom:6px}
+ .game-adventure .hud{padding:7px 9px;font-size:10px}
+ .game-adventure .touch{margin:9px 0}
+ .game-adventure .touch button{height:62px;width:57px;min-width:50px}
+ .game-adventure .touch .fire{width:73px}
+ .game-adventure .touch .jump{width:85px}
+ .game-adventure .touch .control-glyph{font-size:22px}
+ .game-adventure nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ .game-adventure nav button{font-size:10px;min-height:39px}
+}
+@media(prefers-reduced-motion:reduce){.game-adventure .death-curtain{animation:none}}
