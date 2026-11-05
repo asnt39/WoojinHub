@@ -26,7 +26,7 @@ for(const stage of stages){
    t.start(stage);const hero=t.state.player;hero.x=takeoff;hero.y=feet-64;hero.vx=265;hero.vy=0;hero.ground=true;
    t.key('right',true);t.key('jump',true);
    let crossed=false,maxX=takeoff,maxY=-Infinity,lastGround=null;
-   for(let f=0;f<180;f++){
+   for(let f=0;f<300;f++){
     if(f===60)t.key('jump',false);
     t.tick(DT);
     if(process.env.AI_DETAIL&&Number(process.env.AI_TRACE)===stage+1&&Number(process.env.AI_GAP||'0')===g+1&&Math.round(takeoff)===Number(process.env.AI_DETAIL)&&f%20===0)console.log('FRAME',f,'x',Math.round(hero.x),'y',Math.round(hero.y),'vy',Math.round(hero.vy),'ground',hero.ground,'death',t.state.deathCause);
@@ -47,7 +47,7 @@ for(const stage of stages){
      const takeoff=p.x+dx;if(takeoff>=a-7)continue;
      t.start(stage);const hero=t.state.player;hero.x=takeoff;hero.y=p.y-64;hero.vx=265;hero.vy=0;hero.ground=true;
      t.key('right',true);t.key('jump',true);
-     for(let f=0;f<180;f++){
+     for(let f=0;f<300;f++){
       if(f===60)t.key('jump',false);
       t.tick(DT);
       if(t.state.deathPhase)break;

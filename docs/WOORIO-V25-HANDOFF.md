@@ -75,3 +75,14 @@ three failed local crossings with AI_TRACE/AI_GAP, then full approach routes and
 mandatory stage-specific geometry. Keep existing9boss/capability systems; don't redo.
 Safe source rollback:ecdbbae baseline or placement checkpoint800500a on this branch.
 Keep saves; never force push. Public site has not been updated by this task.
+
+## Diagnostic correction checkpoint
+- Source checkpoint b303fb3 confirmed pushed to GitHub.
+- Local jump test's1.5sec horizon truncated a spring-assisted successful crossing
+  in stage2 gap9 while the player was still airborne. Extended observation to2.5sec;
+  success still requires a real grounded landing beyond the gap, with hazards/enemies
+  enabled. Final130/132, not129/132 above. Remaining stage5 gap10 andstage6 gap14
+  traces include enemy/spike hits; leave unresolved, do not infer impossible geometry.
+- Full input bot remains0/9. Logs retain exact failure coordinates/causes. Next work
+  needs approach-aware waiting, combat and platform planning; not relaxed success.
+- Published site is untouched. Both code checkpoints saved on feat/woorio-stage-polish.

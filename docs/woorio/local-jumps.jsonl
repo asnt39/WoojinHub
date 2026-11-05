@@ -1,5 +1,5 @@
 {"stage":1,"total":8,"reachable":8,"unreached":[]}
-{"stage":2,"total":10,"reachable":9,"unreached":[{"gap":9,"start":4994,"end":5098}]}
+{"stage":2,"total":10,"reachable":10,"unreached":[]}
 {"stage":3,"total":10,"reachable":10,"unreached":[]}
 {"stage":4,"total":14,"reachable":14,"unreached":[]}
 {"stage":5,"total":16,"reachable":15,"unreached":[{"gap":10,"start":4886,"end":5016}]}
@@ -7,4 +7,4 @@
 {"stage":7,"total":19,"reachable":19,"unreached":[]}
 {"stage":8,"total":20,"reachable":20,"unreached":[]}
 {"stage":9,"total":20,"reachable":20,"unreached":[]}
-LOCAL_JUMP_REACHABILITY 129/132
+LOCAL_JUMP_REACHABILITY 130/132
