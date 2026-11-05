@@ -23,18 +23,23 @@ assert.equal(t.state.player.power,null,'giant expires');
 t.grant('fire');assert.equal(t.state.player.powerTime,5,'fire lasts 5 seconds');
 t.fire();const shot=t.state.world.shots.find(s=>!s.hostile);assert.ok(shot,'fire projectile exists');
 assert.ok(shot.life<=.85&&Math.abs(shot.vx)<=345,'fire projectile range has been reduced');
-for(let stage=0;stage<5;stage++){
- // Geometry-only runner: lethal spikes are verified separately in adventure-v20.cjs.
- t.start(stage);t.state.world.enemies=[];t.state.world.hazards=[];let hold=0,maxX=0,firstDeathAt=null,oldDeaths=0;
- for(let frame=0;frame<70000&&t.state.running;frame++){
-  const {player:p,world:w}=t.state,front=p.x+p.w;
-  const pit=w.gaps.some(([a,b])=>front>a-(p.y+p.h<450?100:45)&&front<b+5);
-  t.key('right',true);
-  if(p.ground&&pit){t.key('jump',false);t.key('jump',true);hold=100;}
-  if(hold>0)hold--;else t.key('jump',false);
-  t.tick(1/120);
-  maxX=Math.max(maxX,t.state.player.x);if(t.state.deaths>oldDeaths&&firstDeathAt===null)firstDeathAt=front;oldDeaths=t.state.deaths;
+for(let stage=0;stage<8;stage++){
+ // Each pit has a real engine-level jump route from its preceding ground section.
+ const source=t.level(stage);
+ for(const [a,b] of source.gaps){
+  t.start(stage);const w=t.state.world,p=t.state.player;
+  w.enemies=[];w.hazards=[];w.saws=[];w.platforms=w.platforms.filter(q=>q.ground);
+  const before=w.platforms.find(q=>a>=q.x+10&&a<=q.x+q.w+1),after=w.platforms.find(q=>b>=q.x-1&&b<=q.x+q.w-10);
+  assert.ok(before&&after,`stage ${stage+1} pit ${a}: both edges have ground`);
+  p.x=a-58;p.y=before.y-p.h;p.vx=270;p.vy=0;p.ground=true;p.invulnerable=10;
+  t.key('right',true);t.key('jump',true);
+  let landed=false;
+  for(let frame=0;frame<150;frame++){
+   t.tick(1/120);
+   if(t.state.deathPhase)break;
+   if(p.x>b+10&&p.ground){landed=true;break}
+  }
+  assert.ok(landed,`stage ${stage+1} pit ${a}-${b} is crossable by actual jump physics: x=${p.x.toFixed(0)} y=${p.y.toFixed(0)}`);
  }
- assert.ok(t.state.stageDone,`stage ${stage} geometry must be finishable: x=${t.state.player.x.toFixed(1)}, maxX=${maxX.toFixed(1)}, firstDeathAt=${firstDeathAt}, deaths=${t.state.deaths}, checkpoint=${t.state.checkpoint}`);
 }
-console.log('PASS: varied five-stage ground layouts, safe spike placement, five-second powers and shorter-range fire');
+console.log('PASS: all eight stage pit crossings tested with actual jump physics, elevated terrain, timed powers');

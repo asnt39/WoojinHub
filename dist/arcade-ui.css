@@ -310,6 +310,10 @@
 
 /* Woorio v20: pixel gamepad with honest press states, minimal HUD and short death intermission. */
 .game-adventure .ability-bar[hidden],.game-adventure .death-curtain[hidden]{display:none!important}
+.game-adventure .boss-health[hidden]{display:none!important}
+.game-adventure .boss-health{padding:9px 13px 11px;background:#241c32;border:2px solid #bd8892;border-bottom:0;font:900 11px ui-monospace,monospace;letter-spacing:.12em;color:#ffe6a9;box-shadow:inset 0 2px #43304a}
+.game-adventure .boss-track{margin-top:7px;height:10px;background:#0c1727;border:2px solid #6d5169;box-shadow:inset 0 2px #060913}
+.game-adventure .boss-fill{height:100%;background:repeating-linear-gradient(90deg,#e46a65 0 22px,#d94c60 22px 25px);box-shadow:inset 0 2px #fda68a;width:100%;transition:width .12s steps(5)}
 .game-adventure .hud{font-family:ui-monospace,monospace;font-size:13px;font-weight:800;border-radius:3px 3px 0 0;letter-spacing:.035em}
 .game-adventure .ability-bar{font-family:ui-monospace,monospace;font-weight:800;padding:7px 13px}
 .game-adventure #notice:not(:empty){font-family:ui-monospace,monospace;border-radius:2px;padding:8px 12px;background:#182e3dea}
@@ -323,6 +327,14 @@
 .game-adventure .touch button:active{transform:translateY(3px);translate:none;box-shadow:inset 0 2px #0c2230,0 2px #081926;filter:brightness(1.18)}
 .game-adventure .touch .control-glyph{font-size:26px;line-height:1;font-weight:1000}
 .game-adventure .touch button span:last-child:not(.control-glyph){font-size:12px;letter-spacing:.02em}
+.game-adventure .touch button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:67px;overflow:hidden;color:#fff9e9;text-shadow:0 2px #122b37}
+.game-adventure .touch button:before{content:'';position:absolute;inset:3px 4px auto;height:3px;background:#ffffff4f;pointer-events:none}
+.game-adventure .touch button:after{content:'';position:absolute;inset:auto 5px 5px;height:3px;background:#080e2070;pointer-events:none}
+.game-adventure .touch button .control-caption{font-size:9px!important;letter-spacing:.10em!important;color:#e2f1ec;line-height:1}
+.game-adventure .touch button:focus-visible{outline:3px solid #ffeab0;outline-offset:3px}
+.game-adventure .touch button:active,.game-adventure .touch button[aria-pressed=true]{filter:brightness(1.2);transform:translateY(3px);box-shadow:inset 0 2px #142b37,0 2px #081926}
+.game-adventure .touch .fire{color:#fff0ce}
+.game-adventure .touch .jump{color:#fff9d9}
 .game-adventure .death-curtain{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:repeating-linear-gradient(0deg,#12172b,#12172b 8px,#1e2641 8px,#1e2641 16px);animation:woorio-pixel-iris .68s steps(6,end) both}
 .game-adventure .death-curtain strong{font:900 clamp(24px,4.2vw,48px) ui-monospace,monospace;letter-spacing:.12em;color:#fff0c1;text-shadow:4px 4px #6c354d}
 .game-adventure .death-curtain small{font:800 12px ui-monospace,monospace;color:#a8d8d6;letter-spacing:.2em}

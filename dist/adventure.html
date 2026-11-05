@@ -10,6 +10,7 @@
   </header>
   <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span></div>
   <div class="ability-bar" id="abilityBar" hidden><span id="power"></span></div>
+  <div id="bossHealth" class="boss-health" hidden aria-live="polite"><span id="bossHpText">성벽의 수호자</span><div class="boss-track"><div id="bossHp" class="boss-fill"></div></div></div>
   <div class="viewport">
     <div id="notice" role="status"></div>
     <canvas id="world" width="960" height="540" tabindex="0" aria-label="우리오. 방향키 또는 A D 이동, 스페이스 또는 위쪽 키 점프"></canvas>
@@ -21,8 +22,8 @@
   </div>
   <div class="touch" aria-label="모바일 조작">
     <div class="touch-move">
-      <button data-key="left" aria-label="왼쪽"><span class="control-glyph">◀</span></button>
-      <button data-key="right" aria-label="오른쪽"><span class="control-glyph">▶</span></button>
+      <button data-key="left" aria-label="왼쪽"><span class="control-glyph">◀</span><span class="control-caption">이동</span></button>
+      <button data-key="right" aria-label="오른쪽"><span class="control-glyph">▶</span><span class="control-caption">이동</span></button>
     </div>
     <button data-key="fire" class="fire" aria-label="불꽃 발사"><span class="control-glyph">✦</span><span>불꽃</span></button>
     <button class="jump" data-key="jump" aria-label="점프"><span class="control-glyph">↥</span><span>점프</span></button>
