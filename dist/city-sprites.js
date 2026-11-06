@@ -2,7 +2,7 @@
 // Source artwork is kept outside dist. See assets/city/manifest.json for provenance.
 window.CitySprites = (() => {
   const images = {}, frames = new Map();
-  const names = ['store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','actions','npc-0','npc-1','npc-2','woojin-combat','troublemaker',...['vendor','office','jogger','guard','nurse','worker','busker'].map(role=>'resident-'+role)];
+  const names = ['motorcycle','shelf','counter','fridge','sofa','table','plant','workbench','store','records','tree-a','tree-b','sedan','van','bench','vending','bin','lamp','bike','woojin','actions','npc-0','npc-1','npc-2','woojin-combat','troublemaker',...['vendor','office','jogger','guard','nurse','worker','busker'].map(role=>'resident-'+role)];
   const ready = Promise.all(names.map(name => new Promise((resolve,reject) => {
     const img = new Image();
     img.onload = () => { images[name] = img; resolve(); };

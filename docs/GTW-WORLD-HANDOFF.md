@@ -44,3 +44,18 @@ GTW browser suites;8765 for other games. Never force push/reset user changes.
   city-runtime60,000ticks. Day/night desktop and night mobile captures in docs/gtw-world;
   opened desktop image: road/actors readable; lighting is modest, not dynamic shadows.
 - No deployment. Next C: data-defined interiors / entrance / safe exit / local NPC.
+
+## C. Interiors checkpoint
+- Data-defined store/garage,0.4s fade with midpoint swap, room walls/furniture colliders,
+  local clerk and30won/35HP purchase, garage workbench healing, safe exit candidates.
+  Existing outdoor NPCs/cars freeze inside; money/mission/combat/activity state retained.
+- Optional interior save; legacy p remains exterior coordinates so old readers can
+  restore safely. Invalid room/player data defaults safely. No fights/vehicle entry inside.
+- Generated one transparent8-prop atlas from existing environment reference; source at
+  assets/gtw-world-generated/props-source.png, extraction script and provenance manifest.
+ 8 hard-alpha PNGs; existing sedan/van retained. Motorcycle and home decor prepared for
+  later checkpoints. New art is modest-detail matching current runtime, not reference parity.
+- PASS city-interiors-unit/browser,city-world-art,city-runtime,city.cjs. Store/garage
+  desktop and garage390x844 captures opened. Room floor/lighting remain simpler than
+  outdoor store art; no claim of commercial graphics completeness. No deployment.
+- Next D: home selection/placement with connectivity and entrance validation.
