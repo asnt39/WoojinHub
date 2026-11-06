@@ -184,3 +184,10 @@ node tests/city-stability.cjs
    do not reset current checkout or remove optional fields from player's save.
 6. Artwork rebuild: `python scripts/prepare-world-art.py` (Pillow,numpy). Originals at
    assets/gtw-world-generated/props-source.png;runtime provenance dist/assets/city/world-manifest.json.
+
+## Publication authorized — 2026-11-06
+Owner now explicitly requests deployment and automatic publication after future
+verified edits. This supersedes the earlier no-deploy instruction above. Product
+commit0a1c4b3 is unchanged;21GTW checks and known baseline Woorio failure remain as
+recorded. Fetched Sites main again:45c92b4,ancestor of this branch;no intervening source
+changes. Audience remains public revision4. Publication result will be recorded below.
