@@ -330,7 +330,8 @@ $('closeSettings').onclick=()=>{$('settingsPanel').hidden=true;paused=settingsWa
 $('settingMusic').onchange=()=>{musicEnabled=$('settingMusic').checked;music?.unlock();syncOptions()};$('settingSound').onchange=()=>{sound=$('settingSound').checked;syncOptions()};
 syncOptions();requestAnimationFrame(resizeGame);
 $('music').onclick=()=>{musicEnabled=!musicEnabled;music?.unlock();syncOptions()};
-$('pause').onclick=togglePause;$('retry').onclick=()=>{if(confirm('이 스테이지를 다시 시작할까?'))start(stage)};$('sound').onclick=()=>{sound=!sound;syncOptions()};$('play').onclick=()=>{if(paused){togglePause();return}if(completed){start(0);return}start(stageDone?stage+1:stage)};$('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b&&!b.disabled&&(!running||confirm('진행 중인 스테이지를 나가고 다른 맵으로 이동할까?')))start(+b.dataset.stage)};
+$('rankingForm').onsubmit=submitRank;$('shareResult').onclick=shareFinish;$('showRanking').onclick=()=>{$('rankingBoard').open=true;renderRanking();$('rankingBoard').scrollIntoView?.({behavior:'smooth',block:'nearest'})};$('rankingBoard').addEventListener?.('toggle',()=>{if($('rankingBoard').open)renderRanking()});
+$('pause').onclick=togglePause;$('retry').onclick=()=>{if(confirm('이 스테이지를 다시 시작할까?'))start(stage,'retry')};$('sound').onclick=()=>{sound=!sound;syncOptions()};$('play').onclick=()=>{if(paused){togglePause();return}if(completed){start(0,'select');return}start(stageDone?stage+1:stage,stageDone?'next':ranking?.resumeStage===stage?'resume':'select')};$('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b&&!b.disabled&&(!running||confirm('진행 중인 스테이지를 나가고 다른 맵으로 이동할까?')))start(+b.dataset.stage,'select')};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused){shellPaused=true;togglePause()}if(!document.hidden){last=0;acc=0}});
 addEventListener('message',e=>{
  if(e.origin!==location.origin||e.data?.type!=='game-visibility')return;
@@ -338,6 +339,6 @@ addEventListener('message',e=>{
  if(!sceneVisible&&running&&!paused){shellPaused=true;togglePause()}
  else if(sceneVisible&&shellPaused){shellPaused=false;if(paused)togglePause()}
 });
-addEventListener('blur',releaseKeys);world=level(0);player={x:70,y:390,w:34,h:64,vx:0,vy:0};updateStages();updateHud();requestAnimationFrame(frame);
-if(['localhost','127.0.0.1'].includes(location.hostname))window.adventureTest={start,tick,level,key,die,grant,bump,fire,burst,draw,levelCount:names.length,get music(){return music?.state},get effects(){return{...effectCounts}},get viewWidth(){return W},get state(){return{stage,world,player,checkpoint,bossCheckpoint,unlocked,total,running,paused,stageDone,deaths,deathPhase,deathCause,keys,particlesCount:particles.length}},warpGoal(){player.x=world.goal;tick(DT)}};
+addEventListener('blur',releaseKeys);if(ranking?.resumeStage!==null&&ranking?.resumeStage!==undefined){stage=ranking.resumeStage;$('play').textContent='▶ 이어하기'}world=level(stage);player={x:70,y:390,w:34,h:64,vx:0,vy:0};updateStages();updateHud();requestAnimationFrame(frame);
+if(['localhost','127.0.0.1'].includes(location.hostname))window.adventureTest={start,tick,level,key,die,grant,bump,fire,burst,draw,levelCount:names.length,get music(){return music?.state},get effects(){return{...effectCounts}},get viewWidth(){return W},get state(){return{stage,world,player,checkpoint,bossCheckpoint,unlocked,total,running,paused,stageDone,deaths,rankedDeaths:ranking?.deaths,rankEligible:ranking?.eligible,finishResult,deathPhase,deathCause,keys,particlesCount:particles.length}},warpGoal(){player.x=world.goal;tick(DT)}};
 })();
