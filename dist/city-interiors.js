@@ -8,7 +8,7 @@
    {art:'counter',x:207,y:123,w:106,h:52}],
    npc:{x:260,y:115,dir:2,role:'npc-0'},points:[{id:'shop',x:260,y:204,label:'E · 주먹밥 / 직원과 대화'}]},
   garage:{id:'garage',name:'우진의 차고 · 개인 거점',w:520,h:380,door:{x:880,y:972},spawn:{x:260,y:330,dir:0},exit:{x:260,y:346},objects:[
-   {art:'workbench',x:32,y:54,w:130,h:67},{art:'fridge',x:440,y:58,w:48,h:60}],
+   {art:'workbench',x:32,y:54,w:130,h:67},{art:'fridge',x:440,y:58,w:48,h:60},{solidOnly:true,x:224,y:86,w:40,h:88}],
    points:[{id:'workbench',x:96,y:149,label:'E · 작업대 / 휴식'},{id:'decor',x:409,y:243,label:'E · 거점 꾸미기'},{id:'fleet',x:244,y:187,label:'E · 보관 차량 선택'}]}
  };
  function create(){let current=null,busy=null,position=null,outside=null,extra=[];
@@ -18,7 +18,7 @@
    nearDoor(p){return Object.values(rooms).find(r=>Math.hypot(p.x-r.door.x,p.y-r.door.y)<27)},
    target(p){if(!current)return null;if(Math.hypot(p.x-current.exit.x,p.y-current.exit.y)<27)return{id:'exit',label:'E · 남빛동으로 나가기'};return current.points.find(o=>Math.hypot(p.x-o.x,p.y-o.y)<38)||null},
    enter(id,from){if(current||busy||!rooms[id])return false;outside={...rooms[id].door,...from};busy={t:0,swapped:false,next:rooms[id],pos:{...rooms[id].spawn}};return true},
-   exit(worldBlocked){if(!current||busy)return false;const d=rooms[current.id].door,candidates=[outside,d,{x:d.x,y:d.y+20},{x:d.x-30,y:d.y},{x:d.x+30,y:d.y}].filter(Boolean),pos=candidates.find(q=>Number.isFinite(q.x+q.y)&&!worldBlocked(q.x,q.y,9));if(!pos)return false;busy={t:0,swapped:false,next:null,pos:{...pos,dir:2}};return true},
+   exit(worldBlocked){if(!current||busy)return false;const d=rooms[current.id].door,candidates=[outside,d,...[[0,20],[-30,0],[30,0],[-48,28],[48,28],[-72,48],[72,48],[0,88]].map(([x,y])=>({x:d.x+x,y:d.y+y}))].filter(Boolean),pos=candidates.find(q=>Number.isFinite(q.x+q.y)&&!worldBlocked(q.x,q.y,9));if(!pos)return false;busy={t:0,swapped:false,next:null,pos:{...pos,dir:2}};return true},
    step(dt){if(!busy)return false;busy.t+=dt;let changed=false;if(!busy.swapped&&busy.t>=.2){current=busy.next;position={...busy.pos};busy.swapped=true;changed=true;}if(busy.t>=.4)busy=null;return changed},
    save(p=position){return current?{id:current.id,p:{x:p.x,y:p.y,dir:p.dir},outside:{...outside}}:null},
    load(s){current=null;busy=null;position=null;outside=null;if(!rooms[s?.id])return;current=rooms[s.id];outside={...current.door};if(Number.isFinite(s.outside?.x+s.outside?.y)&&Math.hypot(s.outside.x-current.door.x,s.outside.y-current.door.y)<80)outside={...s.outside};position=Number.isFinite(s.p?.x+s.p?.y)&&!api.blocked(s.p.x,s.p.y,8)?{x:s.p.x,y:s.p.y,dir:[0,1,2,3].includes(s.p.dir)?s.p.dir:2}:{...current.spawn}}
@@ -32,7 +32,7 @@
  }
  function draw(ctx,room,{p,camera,canvas,S,drawPerson,furniture=[],fleetArt='sedan'}){
  ctx.fillStyle='#161e24';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.save();ctx.translate(-Math.round(camera.x),-Math.round(camera.y));ctx.drawImage(floor(room),0,0);
- const items=room.objects.concat(room.id==='garage'?furniture:[]).map(o=>({y:o.y+o.h,draw(){S.shadow(ctx,o.x+o.w/2,o.y+o.h,o.w*.45);if(S.images[o.art])ctx.drawImage(S.images[o.art],o.x,o.y,o.w,o.h)}}));
+ const items=room.objects.concat(room.id==='garage'?furniture:[]).filter(o=>!o.solidOnly).map(o=>({y:o.y+o.h,draw(){S.shadow(ctx,o.x+o.w/2,o.y+o.h,o.w*.45);if(S.images[o.art])ctx.drawImage(S.images[o.art],o.x,o.y,o.w,o.h)}}));
  if(room.npc)items.push({y:room.npc.y,draw(){drawPerson({...room.npc,walk:0,moving:false})}});
  if(room.id==='garage'){const im=S.images[fleetArt];if(im)items.push({y:190,draw(){S.shadow(ctx,244,178,25);ctx.drawImage(im,244-im.width/2,140-im.height/2)}})}
  items.push({y:p.y,draw(){drawPerson(p,true)}});items.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());

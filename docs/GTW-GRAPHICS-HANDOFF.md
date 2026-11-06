@@ -192,3 +192,8 @@ Newer user Sites source795251f integrated on feat/gtw-activities. See
 [GTW-ACTIVITIES-HANDOFF.md](GTW-ACTIVITIES-HANDOFF.md) for current source, tests,
 NPC sprites and job state. Older combat branch is a retained checkpoint, not the
 latest whole application. User explicitly requested keeping current public audience.
+
+## Latest world systems checkpoint — 2026-11-06
+Continue from [GTW-WORLD-HANDOFF.md](GTW-WORLD-HANDOFF.md), branch
+`feat/gtw-world-systems`, based on verified Sitesv33. Adds day/night,store/garage
+interiors,personal furniture and typed fleet. No deployment authorized or performed.

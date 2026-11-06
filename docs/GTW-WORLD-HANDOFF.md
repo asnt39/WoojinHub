@@ -91,3 +91,96 @@ GTW browser suites;8765 for other games. Never force push/reset user changes.
   support Enter without closing dialogue prematurely. No deployment.
 - Next F: old/backup save fixtures,transition/input/exit edge cases,all-mode regressions
   and final screenshots. Current verified local changes saved at this checkpoint.
+
+## F. Integration / final handoff
+- All four requested feature groups implemented. No site source push,version save,
+  deployment or audience mutation. At final check Sites stillv33/public revision4.
+- Last confirmed remote checkpoint before this final commit: d16c99a81137295f62e32a6f81495c75f965c9d3.
+  Final verification commit is the commit containing this section; use `git log -1`.
+  Origin URL remains asnt39/woojingame; GitHub now redirects to asnt39/WoojinHub.
+- Added end-to-end original v1 + backup fixture retaining54321won,63HP,club,mission2,
+  active supply job and unrelated localStorage bytes. New optional fields do not reset
+  old progress. Old sedan's position/angle persist. Inside-room legacy p stays outside.
+- Safe exit search now includes wider nearby points if a parked van covers doorway.
+  Reproduced the trap in integration test before fixing; test passes after correction.
+  Garage preview vehicle has a solid footprint so actors cannot walk through it.
+- Reproduced secondary-touch sprint problem: old click-only toggle did not fire while
+  primary joystick was down. Pointerdown now toggles once; keyboard-generated click
+  still works. Updated obsolete stability fixture to current toggle and10NPC contract.
+  Chromium CDP touchEnd must release all contacts for this test; partial-contact end
+  produced a misleading joystick-release failure,diagnosed using pointer event trace.
+- Landscape editor originally wrapped every direction button to full width; screenshot
+  exposed a hidden completion button. Fixed widths/compact rows; test now asserts
+  completion button itself is within viewport at844x390,not just outer panel bounds.
+
+### Tests actually executed (all GTW below PASS)
+No server:
+```
+node tests/city-time-unit.cjs
+node tests/city-interiors-unit.cjs
+node tests/city-home-unit.cjs
+node tests/city-vehicles-unit.cjs
+node tests/city-world-art.cjs
+node tests/city-combat-unit.cjs
+node tests/city-residents-unit.cjs
+node tests/city-activities-unit.cjs
+node tests/city-runtime.cjs
+```
+With `python -m http.server 8766 --directory dist`:
+```
+node tests/city-world-integration.cjs
+node tests/city-world-play.cjs
+node tests/city-time-browser.cjs
+node tests/city-interiors-browser.cjs
+node tests/city-home-browser.cjs
+node tests/city-vehicles-browser.cjs
+node tests/city.cjs
+node tests/city-combat-browser.cjs
+node tests/city-residents-browser.cjs
+node tests/city-activities-browser.cjs
+node tests/city-graphics.cjs
+node tests/city-stability.cjs
+```
+- Real browser keyboard walks store spawn→counter→purchase→exit; real mobile joystick
+  walks garage spawn→vehicle station→van selection. Outdoor approach and some long
+  mission scenarios use arranged fixtures,not a claimed full human traversal.
+- Stability:60,000ticks in both headless runtime and Chromium;1,000simulated seconds.
+  Graphics diagnostic600draw submissions averaged0.08ms on runner;NOT device FPS.
+- PASS other games:browser.cjs(grow),merge.cjs,quality.cjs,ui-polish.cjs,
+  adventure-unit.cjs,woorio-retro-contract.cjs,adventure-corrosion-boss.cjs.
+  Grow/merge browser suites use server8765. Existing product files unchanged fromv33.
+- Known baseline FAIL:adventure-arcade-browser.cjs `landscape uses whole screen width`.
+  Reproduced on untouched45c92b4 in separate /tmp/gtw-v33-baseline worktree; therefore
+  pre-existing Woorio issue,not hidden or fixed as part of GTW. Subsequent independent
+  Woorio tests above passed. Full9-stage AI completion not attempted for this task.
+- `git diff --check` passed. No physical phone,real long-duration FPS,mobile GPU battery
+  test or production playthrough. Direct live assets403;version provenance verified
+  through Sites metadata/source only. Older city-scene test not rerun.
+
+### Visual review / remaining limits
+- Opened actual1280x800 day/night/store/garage/home/motorcycle and390x844 night/home/
+  van captures; final844x390 home editor opened after correction. All in docs/gtw-world.
+- Existing upper-left art light,pixel scaling,feet anchors retained. Eight new discrete
+  sprites use original environment palette; interior floor is cached tile drawing,
+  NOT a pasted whole-room backdrop. Store shelves/counter/fridge rendered individually.
+- Indoor floor/lighting is simpler than mature outdoor storefront,not commercial-art
+  parity. Garage fridge is a compressed display cabinet; improve proportions/art next.
+  Motorcycle rider reuses boarding crouch,not dedicated directional ride animation.
+  Exterior lighting uses a low-cost tint/light pools/windows,not full occlusion lighting.
+- Doors can be entered only on foot/out of combat;E prioritizes active supplies pickup,
+  then entry,then nearby parked vehicle. Interior services and all existing jobs retained.
+- Only3furniture kinds,2interiors,3vehicle types. They are data catalogs for extension.
+  No new building interiors for record shop/houses,advanced furniture rotation,traffic
+  AI or external service introduced. Those were outside first requested scope.
+
+### Resume / rollback
+1. Read this doc and `git status`,fetch origin;inspect current feature branch before edits.
+2. Run time/interior/home/vehicle units and city-world-integration with server8766.
+3. Highest next priority:physical-phone feel/performance and indoor art/vehicle riding
+   polish. Investigate existing Woorio landscape issue separately if requested.
+4. Deploy ONLY after owner approval. Do not merge/revert public site automatically.
+5. Safe baseline view: `git worktree add --detach /tmp/gtw-before-world 45c92b4`.
+   Existing publicv33 is untouched. Preserve gtw-city-v1 and its backup when comparing;
+   do not reset current checkout or remove optional fields from player's save.
+6. Artwork rebuild: `python scripts/prepare-world-art.py` (Pillow,numpy). Originals at
+   assets/gtw-world-generated/props-source.png;runtime provenance dist/assets/city/world-manifest.json.
