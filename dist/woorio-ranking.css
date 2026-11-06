@@ -1,0 +1,40 @@
+/* Woorio local end-run results and low-death ranking. Scoped to the game. */
+.game-adventure #runDeaths{color:#f7bf8e;white-space:nowrap;font-variant-numeric:tabular-nums}
+.game-adventure .finish-summary{width:min(100%,390px);max-height:65%;overflow-y:auto;scrollbar-width:thin;padding:10px 12px;background:#101e35;border:2px solid #bd9257;box-shadow:3px 3px #070e1d;color:#f3e3bd;text-align:center}
+.game-adventure .finish-summary[hidden]{display:none}
+.game-adventure .finish-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.game-adventure .finish-metrics>div{border:1px solid #9b7d4c;background:#1b2c45;padding:8px 4px}
+.game-adventure .finish-metrics small{display:block;letter-spacing:.02em;font-size:11px}
+.game-adventure .finish-metrics strong{display:block;font-size:clamp(25px,5vw,42px);color:#fff2c7;font-variant-numeric:tabular-nums;line-height:1.15}
+.game-adventure .ranking-form{display:grid;gap:6px;text-align:left;margin-bottom:8px}
+.game-adventure .ranking-form label{font-size:11px;color:#ebcf92}
+.game-adventure .ranking-form>div{display:flex;gap:6px}
+.game-adventure .ranking-form input{flex:1;min-width:0;border:2px solid #a48954;background:#071323;color:#fff2cb;padding:8px;font:inherit;font-size:12px;outline-offset:2px}
+.game-adventure .ranking-form input:focus-visible{outline:2px solid #fff2b5}
+.game-adventure .finish-summary button{margin:0;border:2px solid #c19e62;background:#2d4260;padding:8px 10px;box-shadow:2px 2px #050b17;font-size:11px}
+.game-adventure .finish-summary button:disabled{opacity:.55}
+.game-adventure .finish-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.game-adventure .finish-summary #rankingFeedback{min-height:1.35em;color:#f7cd86;font-size:11px;margin:7px 0}
+.game-adventure .finish-summary>small{font-size:9px;letter-spacing:0;color:#c1b38f}
+.game-adventure .ranking-board{margin:10px 0;background:#0f1c33;border:2px solid #96784b;padding:0}
+.game-adventure .ranking-board summary{cursor:pointer;list-style-position:inside;padding:10px;color:#f1daaa;font-weight:700}
+.game-adventure .ranking-board p{padding:2px 12px;color:#c5cde0;font-size:11px;line-height:1.5}
+.game-adventure .ranking-board ol{margin:0;padding:2px 12px 12px 38px;color:#f5d9a2}
+.game-adventure .ranking-board li{padding:6px 2px;border-bottom:1px solid #5c566052;font-size:12px}
+.game-adventure .ranking-board .rank-entry{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.game-adventure .ranking-board .rank-score{font-variant-numeric:tabular-nums;color:#ffe4a6}
+@media(max-width:600px){
+ .game-adventure .hud #runDeaths{font-size:8px;letter-spacing:-.045em}
+ .game-adventure .finish-summary{max-height:75%;padding:7px 9px}
+ .game-adventure .finish-metrics{margin-bottom:6px}
+ .game-adventure .finish-metrics strong{font-size:25px}
+ .game-adventure .finish-summary button{padding:6px 8px}
+ .game-adventure .ranking-form input{font-size:11px}
+}
+@media(max-height:490px) and (orientation:landscape){
+ .game-adventure .finish-summary{max-height:70%;padding:4px 8px}
+ .game-adventure .finish-metrics{margin-bottom:4px}
+ .game-adventure .finish-metrics>div{padding:3px}
+ .game-adventure .finish-metrics strong{font-size:20px}
+ .game-adventure .finish-summary button{padding:3px 7px}
+}
