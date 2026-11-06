@@ -191,3 +191,17 @@ verified edits. This supersedes the earlier no-deploy instruction above. Product
 commit0a1c4b3 is unchanged;21GTW checks and known baseline Woorio failure remain as
 recorded. Fetched Sites main again:45c92b4,ancestor of this branch;no intervening source
 changes. Audience remains public revision4. Publication result will be recorded below.
+
+## Confirmed public deployment — v34
+- SUCCEEDED2026-11-06T05:39:22UTC,https://woojingame.asnt1.chatgpt.site/#city.
+- Exact pushed source:5a17d0dcbbb255850ca2bb24747d5f628f17b5a6;product unchanged from0a1c4b3.
+- Saved version:appgprj_6ae9c47115308191b262fff9998049d6~appgver_bd5c7a3259b0819181ad4dee04d8799c.
+- Deployment:appgdep_6aed67fd00c08191b66d4841d8e506ae,status succeeded.
+- Audience public revision4 retained. No save key changes or access-setting mutations.
+- Sites workflow helper was unavailable in executor/cloud skill resources. Used ordinary
+  authenticated Git fetch/fast-forward push and exact `git archive HEAD .openai/hosting.json dist`,
+  then native save_site_version/deploy_site_version. Archive137files/36444160bytes,
+  hashsha256:ed00b5547548d633183c63dda2e6b2da9ff619e0665c84ebf6befb4cb962fa19.
+- Native deployment success verified;no production browser playthrough claimed.
+- Any following commit is handoff-only,not a different unverified product build.
+- Future game edits:verify then publish by default per latest owner instruction.
