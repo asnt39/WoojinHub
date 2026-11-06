@@ -59,3 +59,15 @@ GTW browser suites;8765 for other games. Never force push/reset user changes.
   desktop and garage390x844 captures opened. Room floor/lighting remain simpler than
   outdoor store art; no claim of commercial graphics completeness. No deployment.
 - Next D: home selection/placement with connectivity and entrance validation.
+
+## D. Personal base checkpoint
+- Garage reuses interiors,three catalog furniture types (sofa/table/plant),plan touch
+  placement,8px directional adjustment,store/remove; selected kind and errors visible.
+- Pure CityHome validates full visual bounds/overlap,player clearance,door/vehicle pad,
+  service targets,plus16px-grid flood-fill to all room targets/exit. Optional home field,
+  safe default furniture for old saves, invalid entries ignored individually.
+- PASS city-home-unit (including many placement proposals),home-browser on desktop and
+ 390x844 with actual editor button clicks/save/reload,interiors-browser,city-runtime.
+  Captures opened; crisp small sprites but indoor floor and lighting deliberately simple.
+- Editor pauses simulation, clears movement on open/close; garage NPCs not duplicated.
+  No vehicle collection selection yet; next E shared fleet and garage selection UI.

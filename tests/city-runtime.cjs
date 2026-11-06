@@ -12,8 +12,8 @@ const elements = new Map();
 const windowEvents = new Map(), elementEvents = new Map();
 function element(id) {
   if (elements.has(id)) return elements.get(id);
-  const node = ['city', 'map'].includes(id) ? createCanvas(id === 'map' ? 144 : 640, id === 'map' ? 144 : 400) : {
-    textContent:'', hidden:id==='dialog' || id==='pause', checked:true,
+  const node = ['city', 'map','homePlan'].includes(id) ? createCanvas(id === 'map' ? 144 : 640, id === 'map' ? 144 : 400) : {
+    textContent:'', hidden:['dialog','pause','homeEditor'].includes(id), checked:true,
     value:id==='zoom'?'2':'',style:{},firstElementChild:{style:{}},
     addEventListener(type,fn){const key=id+':'+type;elementEvents.set(key,[...(elementEvents.get(key)||[]),fn])},
     setPointerCapture(){}, getBoundingClientRect(){return{x:0,y:0,width:140,height:140,left:0,top:0}}
@@ -36,7 +36,7 @@ const env={
 };
 env.window=env;
 vm.createContext(env);
-for(const name of ['city-art.js','city-scene.js','city-sprites.js','city-ground.js','city-combat.js','city-combat-view.js','city-residents.js','city-activities.js','city-time.js','city-interiors.js']) {
+for(const name of ['city-art.js','city-scene.js','city-sprites.js','city-ground.js','city-combat.js','city-combat-view.js','city-residents.js','city-activities.js','city-time.js','city-interiors.js','city-home.js','city-home-view.js']) {
   vm.runInContext(readFileSync(path.join(root,'dist',name),'utf8'),env,{filename:name});
 }
 await env.CitySprites.ready;

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#101924">
   <title>Grand Theft Woojin · WoojinHub</title>
   <link rel="stylesheet" href="city.css">
-  <link rel="stylesheet" href="arcade-ui.css">
+  <link rel="stylesheet" href="arcade-ui.css"><link rel="stylesheet" href="city-world.css">
 </head>
 <body class="game-city">
   <div id="artLoading" role="status">남빛동으로 가는 중…</div>
@@ -45,6 +45,13 @@
       <p id="saveStatus">자동 저장 사용 중</p>
     </article>
   </div>
+  <section id="homeEditor" role="dialog" aria-modal="true" aria-labelledby="homeHeading" hidden>
+    <article><small>WOOJIN GARAGE · PERSONAL SPACE</small><h2 id="homeHeading">나의 작은 거점</h2>
+    <div class="decor-catalog"><button id="decor-sofa" type="button">소파</button><button id="decor-table" type="button">테이블</button><button id="decor-plant" type="button">화분</button></div>
+    <canvas id="homePlan" width="312" height="228" aria-label="가구 배치 평면도. 아래 방향 버튼으로도 이동할 수 있어."></canvas>
+    <div class="decor-adjust"><button id="decor-left" type="button" aria-label="가구 왼쪽으로">←</button><button id="decor-up" type="button" aria-label="가구 위로">↑</button><button id="decor-down" type="button" aria-label="가구 아래로">↓</button><button id="decor-right" type="button" aria-label="가구 오른쪽으로">→</button><button id="decor-remove" type="button">보관</button></div>
+    <p id="homeStatus" role="status"></p><button id="homeClose" type="button">배치 완료 · 돌아가기</button></article>
+  </section>
   <div id="touch" aria-label="터치 조작">
     <div class="movement"><div id="stick" role="group" aria-label="이동 조이스틱"><i></i></div><span class="movement-label">MOVE · 이동</span></div>
     <div class="actions">
@@ -56,6 +63,6 @@
   </div>
   <script src="city-art.js"></script><script src="city-scene.js"></script><script src="city-sprites.js"></script>
   <script src="city-ground.js"></script><script src="city-combat.js"></script><script src="city-combat-view.js"></script>
-  <script src="city-interiors.js"></script><script src="city-time.js"></script><script src="city-residents.js"></script><script src="city-activities.js"></script><script src="city.js"></script><script src="child-nav.js"></script>
+  <script src="city-home.js"></script><script src="city-home-view.js"></script><script src="city-interiors.js"></script><script src="city-time.js"></script><script src="city-residents.js"></script><script src="city-activities.js"></script><script src="city.js"></script><script src="child-nav.js"></script>
 </body>
 </html>

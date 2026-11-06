@@ -36,7 +36,7 @@
  if(room.npc)items.push({y:room.npc.y,draw(){drawPerson({...room.npc,walk:0,moving:false})}});
  if(room.id==='garage'){const im=S.images[fleetArt];if(im)items.push({y:190,draw(){S.shadow(ctx,244,178,25);ctx.drawImage(im,244-im.width/2,140-im.height/2)}})}
  items.push({y:p.y,draw(){drawPerson(p,true)}});items.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());
- const marker=(x,y,color)=>{ctx.fillStyle=color;ctx.fillRect(x-5,y-2,10,2);ctx.fillRect(x-2,y-5,4,2)};marker(room.exit.x,room.exit.y,'#dbd098');for(const o of room.points)marker(o.x,o.y,'#8ec4af');
+ const marker=(x,y,color)=>{ctx.fillStyle=color;ctx.fillRect(x-5,y-2,10,2);ctx.fillRect(x-2,y-5,4,2)};marker(room.exit.x,room.exit.y,'#dbd098');for(const o of room.points){marker(o.x,o.y,'#8ec4af');ctx.font='7px monospace';ctx.textAlign='center';ctx.fillStyle='#e6d9ad';ctx.fillText(({shop:'COUNTER',workbench:'REST',decor:'DECOR',fleet:'GARAGE'})[o.id],o.x,o.y+11)}
  ctx.font='8px monospace';ctx.textAlign='center';ctx.fillStyle='#eeddb6';ctx.fillText(room.id==='store'?'NAMBIT 24 · OPEN 24 HOURS':'WOOJIN GARAGE · HOME',room.w/2,16);ctx.restore();
  }
  return{rooms,create,draw};
