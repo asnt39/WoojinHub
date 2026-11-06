@@ -36,7 +36,7 @@ const env={
 };
 env.window=env;
 vm.createContext(env);
-for(const name of ['city-art.js','city-scene.js','city-sprites.js','city-ground.js','city-combat.js','city-combat-view.js','city-residents.js','city-activities.js']) {
+for(const name of ['city-art.js','city-scene.js','city-sprites.js','city-ground.js','city-combat.js','city-combat-view.js','city-residents.js','city-activities.js','city-time.js']) {
   vm.runInContext(readFileSync(path.join(root,'dist',name),'utf8'),env,{filename:name});
 }
 await env.CitySprites.ready;

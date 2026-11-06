@@ -30,3 +30,5 @@ header small{color:#e6dcc7;text-shadow:1px 1px #252831}
 #activityHud{position:absolute;left:22px;top:206px;max-width:280px;padding:10px 32px 10px 14px;background:#142b30ee;border-left:3px solid #8fcabb;font-size:12px}#activityHud[hidden]{display:none}#activityHud strong,#activityHud span{display:block;margin-top:5px}#cancelActivity{position:absolute;right:3px;top:3px;padding:2px 6px;border:0;background:none} @media(max-width:700px){#activityHud{top:230px;left:12px;max-width:205px;font-size:10px;padding:8px 28px 8px 10px}#dialog{max-height:65dvh;overflow:auto}}
 
 .game-city #activityHud{top:230px;border-radius:10px;box-shadow:0 4px 12px #07101866}.game-city #combatHud .healthHearts .heart{flex:1;min-width:0;text-align:center}@media(max-width:700px){.game-city #activityHud{top:292px}.game-city #combatHud .healthHearts .heart{font-size:14px}}@media(max-height:500px){.game-city #activityHud{top:10px;left:240px;max-width:220px}.game-city #combatHud .healthHearts .heart{font-size:12px}}
+
+.game-city #worldClock{display:block;font-size:11px;letter-spacing:.06em;margin:4px 0 0;color:#f0d9a6}

@@ -34,3 +34,13 @@ F. New core unit/browser scenarios + old regression suites, screenshots and insp
 Only A completed. No deployment authorized for this task. Next: B clock tests and
 implementation, then test/commit/push each checkpoint. Use HTTP server on8766 for
 GTW browser suites;8765 for other games. Never force push/reset user changes.
+
+## B. Clock checkpoint
+- Added CityTime:20-minute default day,10/20/40 setting,24-hour wrap, persisted
+  optional worldTime, dawn/dusk tint, restrained night tint and four lamp/window lights.
+- Office worker/runner/busker rest at night without teleporting; other residents retain
+  normal routes. Clock uses simulation dt, freezes on pause/inactive/dialog as movement.
+- PASS city-time-unit, city-time-browser (real reload/pause/hub-message freeze),
+  city-runtime60,000ticks. Day/night desktop and night mobile captures in docs/gtw-world;
+  opened desktop image: road/actors readable; lighting is modest, not dynamic shadows.
+- No deployment. Next C: data-defined interiors / entrance / safe exit / local NPC.
