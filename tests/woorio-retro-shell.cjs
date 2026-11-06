@@ -26,16 +26,18 @@ const {chromium} = require('playwright');
     assert.equal(await page.locator('#notice').evaluate(el => getComputedStyle(el).display), 'none', 'no permanent quest banner');
 
     await page.locator('#play').click();
+    const hudBefore = await page.locator('.hud').boundingBox();
     const before = await page.locator('#world').boundingBox();
     assert.ok(before.height / before.width > .92, 'portrait gameplay area is meaningfully taller than previous 640x540 ratio');
     await page.evaluate(() => adventureTest.grant('shield'));
     const alert = await page.locator('#notice').boundingBox();
-    assert.ok(alert.y >= before.y && alert.y < before.y + before.height, 'ability notice overlays canvas without taking layout space');
+    assert.ok(alert.y >= hudBefore.y && alert.y + alert.height <= before.y + 1, 'ability notice stays in HUD above canvas');
+    assert.deepEqual(await page.locator('.hud').boundingBox(), hudBefore, 'the status bar never grows after a pickup');
     const after = await page.locator('#world').boundingBox();
     assert.deepEqual(after, before, 'ability notification cannot shift gameplay viewport');
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'no horizontal scroll');
     assert.deepEqual(errors, [], 'no browser runtime errors');
-    console.log('PASS: compact Woorio toolbar, unified pixel HUD, stable notice overlay and taller portrait playfield');
+    console.log('PASS: compact toolbar, pixel HUD, stable above-canvas item notice and taller portrait playfield');
   } finally {
     await browser.close();
   }
