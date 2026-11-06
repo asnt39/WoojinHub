@@ -12,7 +12,7 @@ env.window=env;vm.createContext(env);
 for(const file of ['pixel-art.js','adventure.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),env,{filename:file});
 const t=env.adventureTest,DT=1/120,tick=n=>{for(let i=0;i<n;i++)t.tick(DT)};
 assert.equal(t.levelCount,9,'nine stages');
-const expectedBosses={2:'stone',5:'storm',8:'shadow'};
+const expectedBosses={2:'corrosion',5:'storm',8:'shadow'};
 for(let i=0;i<9;i++){
  t.start(i);const w=t.state.world;
  assert.equal(w.boss?.kind,expectedBosses[i],'boss only on stages 3, 6, 9, with distinct kind');
