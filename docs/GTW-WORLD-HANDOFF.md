@@ -71,3 +71,23 @@ GTW browser suites;8765 for other games. Never force push/reset user changes.
   Captures opened; crisp small sprites but indoor floor and lighting deliberately simple.
 - Editor pauses simulation, clears movement on open/close; garage NPCs not duplicated.
   No vehicle collection selection yet; next E shared fleet and garage selection UI.
+
+## E. Fleet checkpoint
+- Shared CityVehicles type table/controller: original sedan accel110/max155/turn1.65/
+  radius30 unchanged; motorcycle185/195/2.2/r22; delivery van78/125/1.2/r34.
+- Three non-overlapping parked vehicles; swept collisions against world and parked
+  cars,8 exit candidates,car selection/recall from garage with safe exterior placement.
+  Legacy car field ALWAYS remains sedan; optional vehicles adds all3 and selection.
+  Invalid vehicle entries fall back safely; old combat/money/mission keys preserved.
+- Existing van PNG reused; motorcycle from prepared source. Rider reuses a crouch pose
+  (not a newly drawn full riding animation). Interior returns also check parked cars.
+- PASS vehicles-unit/browser (3 actual keyboard types,real CDP two-finger van controls),
+  city.cjs,combat-browser,residents-browser,activities-browser,home-browser,runtime.
+- Failures investigated/fixed: van-specific slower acceleration needed a matching
+  movement assertion (observed31-33speed vs sedan47-49 after0.5s); combat test's temporary
+  car fixture must be restored because cars now obstruct melee sight; real regression
+  store door intercepted supply pickup -> active pickup now takes priority over entry.
+- Night-rest actors now use idle pose,not their last walking contact. Fleet buttons
+  support Enter without closing dialogue prematurely. No deployment.
+- Next F: old/backup save fixtures,transition/input/exit edge cases,all-mode regressions
+  and final screenshots. Current verified local changes saved at this checkpoint.

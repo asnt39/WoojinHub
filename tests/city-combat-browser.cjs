@@ -15,7 +15,10 @@ const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=r
  assert.ok(await p.evaluate(()=>cityTest.enemies[0].fight.hp<80));
  fs.mkdirSync('docs/gtw-combat',{recursive:true});await p.screenshot({path:'docs/gtw-combat/desktop.png'});
  // Mode restrictions: F cannot be used to cancel an active encounter.
- await p.evaluate(()=>{cityTest.car.x=cityTest.p.x+30;cityTest.car.y=cityTest.p.y});await p.keyboard.press('f');assert.equal(await p.evaluate(()=>cityTest.state.driving),false);
+ const carBefore=await p.evaluate(()=>({...cityTest.car}));await p.evaluate(()=>{cityTest.car.x=cityTest.p.x+30;cityTest.car.y=cityTest.p.y});await p.keyboard.press('f');assert.equal(await p.evaluate(()=>cityTest.state.driving),false);
+ // Restore the temporary mode-restriction fixture: parked vehicles now correctly
+ // collide and block melee sight, so leaving it in the duel changes that scenario.
+ await p.evaluate(car=>Object.assign(cityTest.car,car),carBefore);
  // One complete playable encounter using legal attacks/steps (deterministic setup,
  // not a claim of a human playthrough): move next to target, face, attack, recover.
  const result=await p.evaluate(()=>{const t=cityTest,e=t.enemies[0];for(let swing=0;swing<15&&e.fight.hp>0;swing++){

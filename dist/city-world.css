@@ -10,3 +10,4 @@
 #homeStatus{min-height:42px;font-size:11px!important;line-height:1.7!important;margin:10px 0!important;color:#e8d7a6!important}
 #homeEditor #homeClose{width:100%;background:#3d6258}
 @media(max-height:510px){#homeEditor article{width:460px;display:grid;grid-template-columns:1fr 1fr;column-gap:12px}#homeEditor small,#homeHeading{grid-column:span 2}#homeEditor #homePlan{grid-column:1;grid-row:3/span 4}.decor-catalog,.decor-adjust,#homeStatus,#homeClose{grid-column:2}#homeEditor h2{margin:4px 0}#homeEditor .decor-adjust{flex-wrap:wrap}}
+#dialog .fleet-choices{display:flex;gap:6px;flex-wrap:wrap}#dialog .fleet-choices button{float:none;flex:1;font-size:12px;margin:4px 0;background:#3d5c62}#dialog .fleet-choices button[hidden]{display:none}
