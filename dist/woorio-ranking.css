@@ -38,3 +38,9 @@
  .game-adventure .finish-metrics strong{font-size:20px}
  .game-adventure .finish-summary button{padding:3px 7px}
 }
+
+/* Keep the counter visible without clipping stage names on small phones. */
+@media(max-width:420px){
+ .game-adventure .hud{flex-wrap:wrap;row-gap:3px}
+ .game-adventure .hud #runDeaths{margin-left:auto}
+}
