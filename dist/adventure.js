@@ -128,7 +128,7 @@ function syncFireControl(){const value=String(!(running&&!paused&&!deathPhase&&p
 function updateHud(){syncFireControl();const ability=({giant:'⬆ 거대화',fire:'✦ 불꽃',shoes:'🪽 날개신발',shield:'◆ 수호방패'})[player?.power]||'';const bossCharge=player?.bossAmmo?' · ✦ 왕관탄 '+player.bossAmmo:'';const values={
   stageLabel:'STAGE '+(stage+1)+' · '+names[stage],
   coins:'◆ '+coins,
-   runDeaths:'TOTAL DEATH '+(ranking?.deaths??deaths),
+   runDeaths:((ranking?.eligible||finishResult?.eligible)?'TOTAL DEATH ':'STAGE DEATH ')+(ranking?.deaths??deaths),
   checkpoint:bossCheckpoint?'⚑ 보스 체크포인트':checkpoint?'⚑ 체크포인트':'',
   power:ability+(player?.pet?(ability?' · ':'')+(player.petGold?'★ 황금 두부':'🐾 두부'):'')+bossCharge
  };for(const [id,value] of Object.entries(values))if($(id).textContent!==value)$(id).textContent=value;$('abilityBar').hidden=!values.power;
