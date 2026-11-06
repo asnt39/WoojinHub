@@ -2,13 +2,13 @@
 <html lang="ko">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0d152c"><title>우리오 · WoojinHub</title>
-<link rel="stylesheet" href="adventure.css"><link rel="stylesheet" href="arcade-ui.css"><link rel="stylesheet" href="woorio-polish.css"><link rel="stylesheet" href="woorio-arcade.css"><link rel="stylesheet" href="woorio-mobile.css"><link rel="stylesheet" href="woorio-retro.css"></head>
+<link rel="stylesheet" href="adventure.css"><link rel="stylesheet" href="arcade-ui.css"><link rel="stylesheet" href="woorio-polish.css"><link rel="stylesheet" href="woorio-arcade.css"><link rel="stylesheet" href="woorio-mobile.css"><link rel="stylesheet" href="woorio-retro.css"><link rel="stylesheet" href="woorio-ranking.css"></head>
 <body class="game-adventure">
 <main>
   <header><h1>우리오 <span class="title-roman">Woorio</span></h1>
     <div class="tools"><button id="settings" aria-label="설정" title="설정">⚙</button><button id="fullscreen" aria-label="전체화면" title="전체화면">⛶</button><button id="music" aria-label="배경음악 켬" title="배경음악" aria-pressed="true">♫</button><button id="sound" aria-label="효과음 켬" title="효과음">♪</button><button id="pause" aria-label="일시정지" title="일시정지">Ⅱ</button><button id="retry" aria-label="다시 도전" title="다시 도전">↻</button></div>
   </header>
-  <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span><div id="notice" class="notice-shelf" role="status" aria-live="polite"></div></div>
+  <div class="hud"><span id="stageLabel"></span><span id="coins">◆ 0</span><span id="checkpoint">체크포인트 찾기</span><span id="runDeaths" title="이번 9스테이지 연속 도전 사망 횟수">TOTAL DEATH 0</span><div id="notice" class="notice-shelf" role="status" aria-live="polite"></div></div>
   <div class="viewport">
   <div class="ability-bar" id="abilityBar" hidden><span id="power"></span><div id="powerGauge" class="power-gauge" hidden aria-label="능력 지속 시간"><div id="powerFill" class="power-fill"></div></div></div>
   <div id="bossHealth" class="boss-health" hidden aria-live="polite"><span id="bossHpText">성벽의 수호자</span><div class="boss-track"><div id="bossHp" class="boss-fill"></div></div></div>
@@ -17,6 +17,15 @@
     <div id="deathCurtain" class="death-curtain" hidden aria-live="polite"><strong>다시 도전!</strong><small id="deathReturn">CHECKPOINT</small></div>
     <div id="panel" class="panel"><h2 id="panelTitle">우리오</h2>
       <p id="panelText"></p>
+      <div id="finishSummary" class="finish-summary" hidden>
+        <div class="finish-metrics"><div><small>TOTAL DEATH</small><strong id="finishDeaths">0</strong></div><div><small>빛 조각 ◆</small><strong id="finishFragments">0</strong></div></div>
+        <form id="rankingForm" class="ranking-form"><label for="rankingName">랭킹에 사용할 닉네임</label>
+          <div><input id="rankingName" type="text" maxlength="24" autocomplete="nickname" placeholder="닉네임 (1~12글자)" required><button type="submit">기록 등록</button></div>
+        </form>
+        <div class="finish-actions"><button id="shareResult" type="button">결과 이미지 공유</button><button id="showRanking" type="button">순위표 보기</button></div>
+        <p id="rankingFeedback" role="status" aria-live="polite"></p>
+        <small>이 기기에 저장되는 개인 랭킹 · 온라인 통합 순위 아님</small>
+      </div>
       <button id="play">▶ 모험 시작</button>
     </div>
   </div>
@@ -28,7 +37,11 @@
     <button id="fireControl" data-key="fire" class="fire" aria-label="불꽃 발사" aria-disabled="true"></button>
     <button class="jump" data-key="jump" aria-label="점프"></button>
   </div>
+  <details id="rankingBoard" class="ranking-board"><summary>최저 사망 랭킹 (이 기기)</summary>
+    <p>1~9스테이지 순서대로 완주한 기록만 등록돼. 사망 횟수가 적은 순, 동률이면 빛 조각이 많은 순이야.</p>
+    <ol id="rankingList" aria-label="완주 기록 순위"></ol>
+  </details>
   <details id="stageMenu"><summary>스테이지 선택</summary><nav id="stages" aria-label="스테이지 선택"></nav></details>
 <div id="settingsPanel" class="settings-panel" role="dialog" aria-modal="true" aria-label="우리오 설정" hidden><section><h2>게임 설정</h2><label><input id="settingSound" type="checkbox" checked> 효과음</label><label><input id="settingMusic" type="checkbox" checked> 배경음악</label><button id="closeSettings">게임으로 돌아가기</button></section></div></main>
-<script src="pixel-art.js"></script><script src="woorio-audio.js"></script><script src="adventure.js"></script><script src="child-nav.js"></script>
+<script src="pixel-art.js"></script><script src="woorio-audio.js"></script><script src="woorio-leaderboard.js"></script><script src="adventure.js"></script><script src="child-nav.js"></script>
 </body></html>
