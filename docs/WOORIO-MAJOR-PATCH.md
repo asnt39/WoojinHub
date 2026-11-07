@@ -68,3 +68,10 @@ Fetched Sites source before publishing;still5cb3bde,ancestor of current branch.
 EX full traversal remains unverified;AI failure documented above. Original1..9
 geometry retained primarily to preserve validated paths;map updates focus on EX
 and safe enemy placement. A wholesale original9-map reauthor is not claimed.
+
+Published v39 SUCCEEDED2026-11-07T01:36:32UTC (10:36KST).
+Source70eac3e7dcdbdb4c8ec86bc96701e034c201b49e.
+Versionappgprj_6ae9c47115308191b262fff9998049d6~appgver_b309eab3fd4481919e8f45fbbcefa423.
+Deploymentappgdep_6aee80936d1081919f4999c81c783049.
+URLhttps://woojingame.asnt1.chatgpt.site/#adventure,current public audience retained.
+Native deployment success verified;no post-publication physical-phone playthrough.
