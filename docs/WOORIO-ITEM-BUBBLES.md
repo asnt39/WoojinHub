@@ -73,3 +73,14 @@ Deploymentappgdep_6aee8da8ab388191ada63a5a97ab3768.
 URLhttps://woojingame.asnt1.chatgpt.site/#adventure.
 Sprite regression unit rerun PASS;product unchanged from tested feature commit.
 Native publication success confirmed;physical Samsung playthrough not claimed.
+
+## Size / immediate pickup correction — latest behavior
+Owner feedback afterv40:icons were too large. Display now24logical(icon),32logical
+(bubble),half ofv40's48/64;24x24hitbox unchanged. This supersedes the larger-display
+notes above. At390wide this is approximately14pxicon/19pxbubble,similar to old pickups.
+Removed the.24second collection age gate for ALL5types. Test overlap before physics
+integration and after movement,so an item already touching at spawn is collected on
+that first simulation tick even if its upward velocity would move it away.
+PASS woorio-instant-pickup(all5age-zero grants),woorio-item-sprites,ability duration,
+item-bubbles browser andrun-shield browser. Updated mobile screenshot opened.
+Owner requests publication;audience retained. No other ability/save changes.

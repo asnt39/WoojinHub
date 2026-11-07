@@ -31,15 +31,15 @@
   }
   function bubble(){if(cache.has('bubble'))return cache.get('bubble');const c=canvas(32,32),g=c.getContext('2d');for(let y=0;y<32;y++)for(let x=0;x<32;x++){const d=Math.hypot(x-15.5,y-15.5);if(d>15.6)continue;g.fillStyle=d>14.4?'#b7a8ffb8':d>13.3?'#809ff969':'#739ff01a';g.fillRect(x,y,1,1)}g.fillStyle='#ffffffeb';g.fillRect(6,6,5,2);g.fillRect(5,8,3,2);g.fillRect(12,4,2,2);g.fillStyle='#e2f2ff8a';g.fillRect(12,28,7,1);cache.set('bubble',c);return c;}
   function freeClip(ctx,x,y,w,h,platforms){for(const p of platforms)if(!p.broken&&x+w>p.x&&x<p.x+p.w&&y+h>p.y&&y<p.y+p.h){ctx.beginPath();ctx.rect(x,y,w,h);ctx.rect(p.x,p.y,p.w,p.h);ctx.clip('evenodd');}}
-  function drawPickup(ctx,item,time,platforms=[]){const art=icon(item.type);if(!art)return false;const x=Math.round((item.x-20)/2)*2,y=Math.round((item.y-40-(2+Math.sin(time*2.7+item.x)*2))/2)*2;
+  function drawPickup(ctx,item,time,platforms=[]){const art=icon(item.type);if(!art)return false;const x=Math.round((item.x-4)/2)*2,y=Math.round((item.y-8-(1+Math.sin(time*2.7+item.x)))/2)*2;
    ctx.save();ctx.imageSmoothingEnabled=false;
    // Visual-only clipping: bobbing/bubble can never paint into a solid tile.
-   freeClip(ctx,x-2,y-2,68,68,platforms);
-   ctx.drawImage(bubble(),x,y,64,64);ctx.drawImage(art,x+8,y+8,48,48);if(Math.sin(time*2+item.x)>.92){ctx.fillStyle='#ffffffbb';ctx.fillRect(x+50,y+14,2,6);ctx.fillRect(x+48,y+16,6,2);}ctx.restore();return true;
+   freeClip(ctx,x-2,y-2,36,36,platforms);
+   ctx.drawImage(bubble(),x,y,32,32);ctx.drawImage(art,x+4,y+4,24,24);if(Math.sin(time*2+item.x)>.92){ctx.fillStyle='#ffffffbb';ctx.fillRect(x+25,y+7,1,3);ctx.fillRect(x+24,y+8,3,1);}ctx.restore();return true;
   }
-  function pop(item){if(!types.includes(item.type))return;pops.push({x:item.x+12,y:item.y-8,age:0});if(pops.length>12)pops.shift()}
+  function pop(item){if(!types.includes(item.type))return;pops.push({x:item.x+12,y:item.y+8,age:0});if(pops.length>12)pops.shift()}
   function step(dt){for(const p of pops)p.age+=dt;for(let i=pops.length-1;i>=0;i--)if(pops[i].age>=.24)pops.splice(i,1)}
-  function drawPops(ctx,platforms=[]){ctx.save();for(const p of pops){ctx.save();freeClip(ctx,p.x-44,p.y-44,88,88,platforms);ctx.globalAlpha=1-p.age/.24;ctx.fillStyle='#d7ecff';const r=28+p.age*50;for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.fillRect(Math.round((p.x+Math.cos(a)*r)/2)*2,Math.round((p.y+Math.sin(a)*r)/2)*2,4,4)}ctx.restore()}ctx.restore()}
+  function drawPops(ctx,platforms=[]){ctx.save();for(const p of pops){ctx.save();freeClip(ctx,p.x-26,p.y-26,52,52,platforms);ctx.globalAlpha=1-p.age/.24;ctx.fillStyle='#d7ecff';const r=14+p.age*30;for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.fillRect(Math.round((p.x+Math.cos(a)*r)/2)*2,Math.round((p.y+Math.sin(a)*r)/2)*2,2,2)}ctx.restore()}ctx.restore()}
   return{icon,bubble,drawPickup,pop,step,drawPops,reset(){pops.length=0},get popCount(){return pops.length},get cacheSize(){return cache.size}};
  }
  return{types,create};
