@@ -24,7 +24,7 @@ const stages=process.env.AI_STAGES?process.env.AI_STAGES.split(',').map(x=>Numbe
 const attempts=Number(process.env.AI_ATTEMPTS||3);
 
 function simulate(stage,variant){
- t.start(stage);
+ if(process.env.AI_EXTREME==='1')t.startChallenge();else t.start(stage);
  let highestX=70,frames=0,lastMovedX=70,stuck=0,hold=0,rest=0,leaps=0,shots=0;
  const startingDeaths=t.state.deaths;
  let previousDeath=startingDeaths,deathCauses={},deathPoints=[],checkpointReached=false,bossHp=t.state.world.boss?.hp??null;

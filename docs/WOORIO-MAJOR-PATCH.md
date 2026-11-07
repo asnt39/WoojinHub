@@ -17,7 +17,43 @@ collection range and death reset. Fire480 vs345,life.70 vs.97 yields336 vs334.65
 nominal horizontal range. Substeps<=6px prevent narrow-hit tunneling. Enemy0 chase
 multiplier2.05 (stage4+) vs1.8;projectile enemies slightly shorter cooldown,min floors
 unchanged. No boss attack logic edits. Three costume palettes share the same hero
-atlas/collision;separate optional woоrio-skin-v1. EX uses new9room layout over existing
+atlas/collision;separate optional woorio-skin-v1. EX uses new9room layout over existing
 factory theme,23enemies,8gaps,combined moving/crumble and cycling spikes. 9-stage
 ranking untouched;EX is explicitly unranked. Eight isolated EX ground-gap physics
 checks passed;full EX traversal not proven.
+
+Final verification / limitations
+- PASS: node tests/adventure-unit.cjs;adventure-v24.cjs;adventure-power-duration.cjs;
+  woorio-leaderboard.cjs;woorio-major-unit.cjs;ui-polish.cjs;
+  adventure-corrosion-boss.cjs;adventure-ai-jump-reachability.cjs (50/50 local links).
+  Correct spelling of leaderboard test: tests/woorio-leaderboard.cjs.
+- Browser server: python -m http.server 8765 --directory dist.
+  PASS woorio-major-browser.cjs (correct filename:woorio-major-browser.cjs),
+  woorio-ranking-motion-browser.cjs,woorio-run-shield-browser.cjs,browser.cjs(grow),
+  merge.cjs. Actual1280x800 and390x844 screenshots in docs/woorio-major opened.
+- FAIL/expected exploratory limit: AI_EXTREME=1 AI_STAGES=7 AI_ATTEMPTS=1 node
+  tests/adventure-ai-playthrough.cjs ->0/1 clear,4pit deaths nearx861,highestx859/10%.
+  Controller's first jump was atx307,too early for first gap780..920. This does not
+  establish impossibility;EX eight isolated pit routes passed with engine physics.
+- Full EX human completion,new obstacle/monster chains and all nine full playthroughs
+  remain UNVERIFIED. EX exit test uses warpGoal;not a claim of real completion.
+- Tests do not establish zero bugs. Physical Samsung Browser airborne jitter and
+  haptic motor strength unsupported on runner;neither claimed fixed/verified.
+- Existing1..9 terrain mostly preserved;full terrain/monster-placement redesign is
+  PARTIAL. New authored EX layout and pressure tweaks are implemented. Automatic
+  geometry-validator still executes for each level and EX;no wholesale unsafe placements.
+- Difficulty evidence: companion no longer kills;stage4+ type0 speed multiplier2.05
+  vs1.8;shooter cooldown reduction;fire faster but near-identical range. EX9rooms,
+ 23enemies,8gaps,collapse.42s vs.58s and pulse spikes. Overall human difficulty NOT
+  quantitatively established. Most difficult possible is a goal,not a verified claim.
+- Costume classic/navy/forest are runtime palette variants,not3new illustrated heroes;
+  same atlas/feet/body dimensions and physics. Selection persists separately.
+- Haptics use feature detection and try/catch;preferences survive audio changes.
+- No boss attack values/states changed.6/9boss redesign and new boss patterns deferred.
+- Existing saves/ranking keys and9-stage result/share implementation retained;EX
+  excluded from ranking and last9-stage finish record. New EX has no own leaderboard
+  or dedicated PNG share card. New storage only optional woorio-skin-v1 (ASCII actual
+  key is woorio-skin-v1);haptics adds optional field to woorio-options-v1.
+- No deployment or source push to Sites;GitHub feature branch only. No changes to GTW,
+  grow,merge or site access. Resume by reading this doc,checking origin,rerunning units
+  then physically playing EX and iterating fair timings. Do not publish without request.
