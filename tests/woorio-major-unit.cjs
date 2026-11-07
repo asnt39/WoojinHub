@@ -1,3 +1,4 @@
+process.env.WOORIO_TEST_CLEAR_ALL='1';
 const assert=require('node:assert/strict'),{t,DT}=require('./woorio-harness.cjs');
 t.start(0);let p=t.state.player,w=t.state.world;w.hazards=[];w.saws=[];w.platforms=[{x:0,y:470,w:3000,h:100,ground:true}];const e=w.enemies[0];w.enemies=[e];Object.assign(e,{x:120,y:430,vx:0,min:120,max:120,alive:true});p.x=70;p.y=406;t.grant('pet');p.petX=120;p.petY=430;for(let i=0;i<20;i++)t.tick(DT);assert.equal(e.alive,true,'Tofu never auto-kills');
 t.grant('fire');t.fire();const shot=w.shots[0];assert.equal(shot.vx,480);Object.assign(shot,{x:120,y:430,vx:1500,vy:0});Object.assign(e,{x:138,y:430,w:8,alive:true});t.tick(1/30);assert.equal(e.alive,false,'fast projectile hits narrow target between endpoints');

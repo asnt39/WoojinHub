@@ -12,12 +12,12 @@ function node(id){
  if(!nodes.has(id))nodes.set(id,{textContent:'',innerHTML:'',hidden:false,style:{},classList:{add(){},remove(){}},setAttribute(){}});
  return nodes.get(id);
 }
-const env={console,Math,Date,JSON,Set,Map,innerWidth:390,innerHeight:844,location:{hostname:'localhost',origin:'http://localhost'},
+const env={process,console,Math,Date,JSON,Set,Map,innerWidth:390,innerHeight:844,location:{hostname:'localhost',origin:'http://localhost'},
  document:{getElementById:node,createElement(){return createCanvas(1,1)},querySelectorAll(){return[]},addEventListener(){},hidden:false},
- localStorage:{getItem(){return null},setItem(){}},Image:class{set src(value){this.path=value}get complete(){return false}},
+ localStorage:{getItem(k){return process.env.AI_EXTREME==='1'&&k==='woorio-last-finish-v1'?JSON.stringify({eligible:true,deaths:4,fragments:100,at:1}):null},setItem(){}},Image:class{set src(value){this.path=value}get complete(){return false}},
  requestAnimationFrame(){},addEventListener(){},matchMedia(){return{matches:true}},confirm(){return true}};
 env.window=env;vm.createContext(env);
-for(const file of ['pixel-art.js','adventure.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),env,{filename:file});
+for(const file of ['pixel-art.js','woorio-clear-progress.js','woorio-extreme.js','adventure.js'])vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),env,{filename:file});
 const t=env.adventureTest,DT=1/120,MAX_FRAMES=135000;
 const results=[];
 const stages=process.env.AI_STAGES?process.env.AI_STAGES.split(',').map(x=>Number(x)-1):Array.from({length:t.levelCount},(_,i)=>i);

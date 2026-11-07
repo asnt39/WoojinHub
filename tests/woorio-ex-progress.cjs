@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),{restore}=require('../dist/woorio-clear-progress.js');
+const storage=data=>({getItem:k=>data[k]===undefined?null:JSON.stringify(data[k])});
+const result={eligible:true,deaths:4,fragments:99,at:1700000000000};
+assert.equal(restore({unlocked:8},storage({})).some(Boolean),false,'stage availability never proves a clear');
+assert.deepEqual(restore({clearedStages:[true,false,1,'true']},storage({})),[true,false,false,false,false,false,false,false,false]);
+for(const bad of [null,{}, {...result,eligible:false},{...result,deaths:-1},{...result,at:0}])assert.equal(restore({},storage({'woorio-last-finish-v1':bad})).every(Boolean),false);
+assert.equal(restore({},storage({'woorio-last-finish-v1':result})).every(Boolean),true);
+assert.equal(restore({},storage({'woorio-local-ranking-v1':[{...result,name:'완주자'}]})).every(Boolean),true);
+assert.equal(restore({},storage({'woorio-ranked-run-v1':{next:8,deaths:2,fragments:20}})).filter(Boolean).length,8,'in-progress ninth stage does not unlock EX');
+assert.equal(restore({},storage({'woorio-ranked-run-v1':{next:9,deaths:2,fragments:20}})).some(Boolean),false);
+assert.equal(restore({}, {getItem(){throw Error('blocked')}}).some(Boolean),false);
+console.log('PASS: explicit stage clears, legitimate legacy finish/board/run migration, malformed save and unlock-only rejection');
