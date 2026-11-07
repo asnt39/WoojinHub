@@ -13,9 +13,7 @@ window.CitySprites = (() => {
   function person(dir, phase, moving, running, role='woojin') {
     const hero = role === 'woojin', count = hero ? 5 : 3;
     // Neutral passing pose between alternating foot contacts, distance-driven timing.
-    // Do not flash the idle pose on every other stride while sprinting:
-    // switching run → idle → run made the torso appear to shiver at high speed.
-    const cycle = running && hero ? [3,3,4,4] : [1,0,2,0];
+    const cycle = running && hero ? [3,0,4,0] : [1,0,2,0];
     const pose = moving ? cycle[Math.floor(phase)%4] : 0;
     const index = directionRow[dir]*count+pose, key=role+':'+index;
     if (!frames.has(key)) {
