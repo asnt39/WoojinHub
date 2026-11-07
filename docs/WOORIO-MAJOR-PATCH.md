@@ -57,3 +57,14 @@ Final verification / limitations
 - No deployment or source push to Sites;GitHub feature branch only. No changes to GTW,
   grow,merge or site access. Resume by reading this doc,checking origin,rerunning units
   then physically playing EX and iterating fair timings. Do not publish without request.
+
+Latest owner steering (supersedes no-publication instruction above)
+2026-11-07: intermediate requests add to ongoing task;do not cancel earlier scope.
+Owner now explicitly requests saving result to public Site. Preserve existing public
+access. Final product adds stage4+ enemy start position/direction alternation within
+already validated patrol intervals. Re-ran major units,normal9-stage units,v24,power
+ durations,major PC/mobile browser,ranking,run/shield browser tests:all PASS.
+Fetched Sites source before publishing;still5cb3bde,ancestor of current branch.
+EX full traversal remains unverified;AI failure documented above. Original1..9
+geometry retained primarily to preserve validated paths;map updates focus on EX
+and safe enemy placement. A wholesale original9-map reauthor is not claimed.
