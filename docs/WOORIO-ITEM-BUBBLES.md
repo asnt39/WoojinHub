@@ -84,3 +84,7 @@ that first simulation tick even if its upward velocity would move it away.
 PASS woorio-instant-pickup(all5age-zero grants),woorio-item-sprites,ability duration,
 item-bubbles browser andrun-shield browser. Updated mobile screenshot opened.
 Owner requests publication;audience retained. No other ability/save changes.
+Size/contact correction published v41 SUCCEEDED2026-11-07T02:36:48UTC.
+Source08336a2a817be52b0f53bca8dc4db0c01d4324c6.
+Deploymentappgdep_6aee8eb430388191962baf27682ac1ed.
+Versionappgprj_6ae9c47115308191b262fff9998049d6~appgver_1ebc23652d4c8191a709b146ff0ad791.
