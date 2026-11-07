@@ -31,9 +31,9 @@ Regenerate from repo root: node scripts/export-woorio-items.cjs.
 All5field item labels removed;HUD/power names,timers,notices retained.
 Bubble onlyfire/shoes/giant. Shield original pixel drawing retained. Dog source rows
 and palette unchanged. Removed solid blue square behind dog item. Dog item/follower
-now render32x20logical at even positions:exact2x source geometry vs previous uneven
-32x30/34x28stretch,so boundary columns do not shimmer. Dog is slightly shorter as a
-consequence of restoring original sprite aspect;no pet ability or collection changes.
+retain their previous32x30/34x28logical dimensions and render at even positions,
+so the half-resolution Canvas never lands them on half-pixel origins. Existing dog
+shape,relative size,pet ability and collection behavior are preserved.
 No save schema/key changes;no modifications to other games or ranking module.
 
 ## Actual checks
