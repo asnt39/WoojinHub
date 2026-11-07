@@ -95,3 +95,16 @@
 5. 승인 없이 사이트에 배포하지 않는다.
 
 되돌리기: 이 브랜치를 병합/배포하지 않고 기준 `fix/woorio-small-pickups`(`71736e6`)를 별도 worktree에서 사용하면 기존 제품 상태를 확인할 수 있다. 현재 브랜치나 사용자의 저장 데이터를 reset/삭제할 필요가 없다. 강제 푸시하지 않는다.
+
+## 사용자 승인 후 공개 배포 — 앞선 배포 제외 지시 대체
+
+2026-11-07 사용자가 별도로 사이트 배포를 명시적으로 요청했다.
+- Sites **v42**, `succeeded`, 2026-11-07T03:22:55.882038Z (12:22 KST).
+- 제품 소스: `23824026e6bbeedab282bb2b56cab509f11e0924`.
+- 사이트 원격 main `08336a2`가 제품 커밋의 조상임을 확인하고 fast-forward push. 다른 변경 덮어쓰기/강제 푸시 없음.
+- 정확한 커밋의 tracked `.openai/hosting.json`과 `dist/`를 archive로 저장·배포. 공개 범위 유지.
+- Saved version: `appgprj_6ae9c47115308191b262fff9998049d6~appgver_3e2b5c3aa8908191a86df1ced3131a98`.
+- Deployment: `appgdep_6aee998172408191a902b2c5c6ef8f83`.
+- URL: https://woojingame.asnt1.chatgpt.site/#adventure
+- 배포 전 EX 진행/해금·배치·일반 9맵 동일성·국소 점프/문/기둥 테스트 재실행 통과. 제품 코드는 앞선 브라우저 검증 이후 변경 없음.
+- 위의 전체 연속 완주·실기기 검증 한계는 그대로 남는다. 네이티브 Sites 배포 결과로 공개 성공 확인. 이 절의 배포 기록 커밋은 문서만 변경한다.
