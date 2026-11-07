@@ -28,3 +28,12 @@
 
 ## Backward compatibility
 - Keeps original `woojin-adventure-v1` storage and `total/unlocked` fields unchanged. New ranking data uses distinct localStorage keys. GTW and other games were not edited.
+
+
+## 2026-11-07 Woorio running shake correction (NOT deployed)
+- User explicitly clarified that **Woorio**, not GTW, is the game whose running character shivers. Earlier GTW sprint diagnosis was a mistaken target. This branch has restored both GTW files to the original `feat/gtw-world-systems` blobs and removed the unrelated GTW sprint test; separate GTW fix branch has NOT been deployed.
+- Actual Woorio root-cause candidates in `dist/adventure.js`: the draw camera offset is quantized to 2 world units because Canvas is half resolution, but the hero sprite used a separately rounded 1-world-unit position; this can generate a 1-pixel alternating offset during camera tracking. Additionally a moving pose sequence `[1,0,2,0]` inserted the idle pose between each running step.
+- Fix: share `cameraPixel` with the canvas transform and snap the hero (plus fallback art) to the camera-relative 2-world-unit pixel grid; use `[1,1,2,2]` for running frames. Physics, boss logic, stage layouts, saved progress keys and other games unchanged.
+- Test: JavaScript syntax, 80 numerical movement/camera samples (previous 2 distinct screen positions, fixed 1), isolated mocked Canvas2D runtime including multiple ticks and draw calls, and earlier 9-stage ranking model sanity test passed. `tests/woorio-run-jitter.cjs` is committed. No Chromium/real-Android playback or full human 9-stage completion test performed.
+- Live ChatGPT Sites project `appgprj_6ae9c47115308191b262fff9998049d6` **has NOT been deployed from this branch**. Deployment action is not accessible in current agent tools. Existing production `https://woojingame.asnt1.chatgpt.site/#adventure` must not be described as fixed until a Sites version has been saved and deployed successfully.
+- Next: use Sites-authorized Work session, compare latest Sites source with this GitHub branch, copy only the 4 Woorio dist changed/added files (`adventure.js`, `adventure.html`, `woorio-leaderboard.js`, `woorio-ranking.css`), run Woorio + other game regressions, deploy, then verify the production browser on phone.
