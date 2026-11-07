@@ -2,6 +2,7 @@
 const assert=require('node:assert/strict'),{restore}=require('../dist/woorio-clear-progress.js');
 const storage=data=>({getItem:k=>data[k]===undefined?null:JSON.stringify(data[k])});
 const result={eligible:true,deaths:4,fragments:99,at:1700000000000};
+assert.equal(restore({clearedStages:Object.fromEntries(Array.from({length:9},(_,i)=>[i,true]))},storage({})).some(Boolean),false,'malformed flags object is not a clear record');
 assert.equal(restore({unlocked:8},storage({})).some(Boolean),false,'stage availability never proves a clear');
 assert.deepEqual(restore({clearedStages:[true,false,1,'true']},storage({})),[true,false,false,false,false,false,false,false,false]);
 for(const bad of [null,{}, {...result,eligible:false},{...result,deaths:-1},{...result,at:0}])assert.equal(restore({},storage({'woorio-last-finish-v1':bad})).every(Boolean),false);

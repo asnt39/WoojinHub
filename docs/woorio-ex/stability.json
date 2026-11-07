@@ -1,0 +1,7 @@
+{
+  "simulatedSeconds": 600,
+  "wallSeconds": 6.382,
+  "maxShots": 2,
+  "maxParticles": 0,
+  "fixture": "stationary invulnerable avatar; one render per simulated second; NOT device FPS or continuous play"
+}

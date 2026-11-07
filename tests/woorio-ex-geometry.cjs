@@ -13,6 +13,6 @@ for(const p of w.platforms.filter(p=>!p.ground))for(const h of w.hazards)assert.
 for(const s of w.saws){const body={x:s.baseX-s.range-s.r,y:s.baseY-17-s.r,w:(s.range+s.r)*2,h:(s.r+17)*2};for(const p of w.platforms)assert.ok(!hit(body,motion(p)),`saw ${s.baseX} swept into platform ${p.x}`)}
 for(const c of w.coins)assert.ok(!w.platforms.some(p=>hit({x:c.x-9,y:c.y-14,w:18,h:28},motion(p))),'collectible in solid');
 for(const spawn of [{x:70,y:w.rooms[0].y-64},w.checkpointSpawn]){const body={...spawn,w:34,h:64};assert.ok(!w.enemies.some(e=>hit(body,{x:e.min,y:e.y,w:e.max-e.min+e.w,h:e.h})));assert.ok(!w.hazards.some(h=>hit(body,h)));assert.ok(w.platforms.some(p=>p.ground&&body.x>=p.x&&body.x+34<=p.x+p.w&&body.y+64===p.y));}
-for(const sw of w.switches){assert.ok(sw.duration>(sw.gate.x+sw.gate.w-sw.x-sw.w)/288+.15,'gate cannot be reached in time');assert.ok(sw.gate.y<-170,'gate cannot be bypassed overhead')}
-assert.ok(w.enemies.some(e=>e.x>w.goal-100));
+for(const sw of w.switches){assert.ok(w.platforms.some(p=>p.ground&&sw.x>=p.x&&sw.x+sw.w<=p.x+p.w&&sw.y+sw.h===p.y),'switch has no supporting floor');assert.ok(!w.saws.some(s=>hit({x:sw.x,y:sw.y-18,w:sw.w,h:64},{x:s.baseX-s.range-s.r,y:s.baseY-17-s.r,w:2*(s.range+s.r),h:2*(17+s.r)})),'switch inside saw sweep');assert.ok(sw.duration>(sw.gate.x+sw.gate.w-sw.x-sw.w)/288+.15,'gate cannot be reached in time');assert.ok(sw.gate.y<-170,'gate cannot be bypassed overhead')}
+assert.ok(w.enemies.some(e=>e.x>w.goal-100));assert.ok(w.goal<=w.length-34,'goal beyond avatar world clamp');
 console.log('PASS: no EX boxes/items, 58 varied enemies, full patrol/moving-platform/saw sweeps, collectible clearance, safe spawns and timed-gate margin');

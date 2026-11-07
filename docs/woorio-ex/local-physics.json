@@ -1,0 +1,275 @@
+{
+  "localGaps": [
+    {
+      "gap": [
+        920,
+        1076
+      ],
+      "solution": {
+        "takeoff": 885,
+        "landed": 1123,
+        "frames": 99,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        1996,
+        2152
+      ],
+      "solution": {
+        "takeoff": 1961,
+        "landed": 2223,
+        "frames": 109,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        2732,
+        2827
+      ],
+      "solution": {
+        "takeoff": 2657,
+        "landed": 2898,
+        "frames": 148,
+        "hold": 60,
+        "from": "elevated"
+      }
+    },
+    {
+      "gap": [
+        3072,
+        3228
+      ],
+      "solution": {
+        "takeoff": 3037,
+        "landed": 3265,
+        "frames": 95,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        4148,
+        4304
+      ],
+      "solution": {
+        "takeoff": 4113,
+        "landed": 4377,
+        "frames": 110,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        4884,
+        4979
+      ],
+      "solution": {
+        "takeoff": 4809,
+        "landed": 5203,
+        "frames": 164,
+        "hold": 60,
+        "from": "elevated"
+      }
+    },
+    {
+      "gap": [
+        5224,
+        5380
+      ],
+      "solution": {
+        "takeoff": 5189,
+        "landed": 5427,
+        "frames": 99,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        6300,
+        6456
+      ],
+      "solution": {
+        "takeoff": 6265,
+        "landed": 6529,
+        "frames": 110,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        7036,
+        7131
+      ],
+      "solution": {
+        "takeoff": 6921,
+        "landed": 7178,
+        "frames": 133,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        7376,
+        7532
+      ],
+      "solution": {
+        "takeoff": 7341,
+        "landed": 7569,
+        "frames": 95,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        8452,
+        8608
+      ],
+      "solution": {
+        "takeoff": 8417,
+        "landed": 8677,
+        "frames": 109,
+        "hold": 60,
+        "from": "ground"
+      }
+    },
+    {
+      "gap": [
+        9188,
+        9283
+      ],
+      "solution": {
+        "takeoff": 9113,
+        "landed": 9354,
+        "frames": 161,
+        "hold": 60,
+        "from": "elevated"
+      }
+    }
+  ],
+  "localGateCrossings": [
+    {
+      "switchX": 2696,
+      "crossed": true,
+      "solution": {
+        "hold": 6,
+        "wait": 120,
+        "frames": 115
+      }
+    },
+    {
+      "switchX": 5924,
+      "crossed": true,
+      "solution": {
+        "hold": 6,
+        "wait": 0,
+        "frames": 115
+      }
+    },
+    {
+      "switchX": 8076,
+      "crossed": true,
+      "solution": {
+        "hold": 6,
+        "wait": 30,
+        "frames": 101
+      }
+    },
+    {
+      "switchX": 9152,
+      "crossed": true,
+      "solution": {
+        "hold": 20,
+        "wait": 30,
+        "frames": 128
+      }
+    }
+  ],
+  "columnLandings": [
+    {
+      "x": 250,
+      "landed": true
+    },
+    {
+      "x": 500,
+      "landed": true
+    },
+    {
+      "x": 1326,
+      "landed": true
+    },
+    {
+      "x": 1576,
+      "landed": true
+    },
+    {
+      "x": 2402,
+      "landed": true
+    },
+    {
+      "x": 2652,
+      "landed": true
+    },
+    {
+      "x": 3478,
+      "landed": true
+    },
+    {
+      "x": 3728,
+      "landed": true
+    },
+    {
+      "x": 4554,
+      "landed": true
+    },
+    {
+      "x": 4804,
+      "landed": true
+    },
+    {
+      "x": 5630,
+      "landed": true
+    },
+    {
+      "x": 5880,
+      "landed": true
+    },
+    {
+      "x": 6706,
+      "landed": true
+    },
+    {
+      "x": 6956,
+      "landed": true
+    },
+    {
+      "x": 7782,
+      "landed": true
+    },
+    {
+      "x": 8032,
+      "landed": true
+    },
+    {
+      "x": 8858,
+      "landed": true
+    },
+    {
+      "x": 9108,
+      "landed": true
+    }
+  ],
+  "crumble": true,
+  "itemDenial": true,
+  "continuousClear": false
+}
