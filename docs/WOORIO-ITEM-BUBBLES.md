@@ -62,3 +62,14 @@ while emerging from its box or touching a wall. That is intentional,not broken a
 Check physical-device readability and acquisition feel before publication. User has
 explicitly requested no publication for this task. Re-read latest instruction before
 any later deploy. Resume from feature branch and run unit + browser checks above.
+
+## Owner-approved publication — supersedes no-deploy instruction above
+2026-11-07:owner explicitly requested publication after implementation.
+Sitesv40 SUCCEEDED2026-11-07T02:32:22UTC(11:32KST),public audience retained.
+Sourcee7b1e2fdb1ec8eef2087f0679784ea1642a72e1d;remote Sites main was70eac3e,
+confirmed ancestor before fast-forward push. Exact tracked static archive uploaded.
+Versionappgprj_6ae9c47115308191b262fff9998049d6~appgver_074bfd93ac988191a38d5cc5a21db466.
+Deploymentappgdep_6aee8da8ab388191ada63a5a97ab3768.
+URLhttps://woojingame.asnt1.chatgpt.site/#adventure.
+Sprite regression unit rerun PASS;product unchanged from tested feature commit.
+Native publication success confirmed;physical Samsung playthrough not claimed.
