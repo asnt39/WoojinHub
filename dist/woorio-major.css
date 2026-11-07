@@ -1,0 +1,6 @@
+.game-adventure,.game-adventure button,.game-adventure input,.game-adventure select,.game-adventure summary{font-family:WoorioPixel,monospace!important}
+.game-adventure #bossHpText{color:#ff8e8e;text-shadow:1px 1px #19080d;font-weight:bold}
+.game-adventure .power-gauge{background:#08101f!important;border:2px solid #f5e5ad!important;height:12px!important;overflow:hidden}
+.game-adventure .power-fill{background:#ffc35c!important;box-shadow:inset 0 2px #fff1bd}
+.game-adventure .power-fill[data-type=shoes]{background:#7debff!important}
+.game-adventure #power{font-weight:bold;color:#fff2c5}
